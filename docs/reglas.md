@@ -1,4 +1,4 @@
-# Futbol Cards — Registro oficial de reglas
+﻿# Futbol Cards — Registro oficial de reglas
 
 Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 Última actualización: 2026-11-22.
@@ -208,7 +208,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 ## 13. Interfaz (versión de prueba)
 
 - `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
-- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (balón dorado sobre roca, aportado por el usuario) con **brasas de fuego animadas** (`js/ui/brasas.js`: canvas detrás del menú, suben con viento suave, parpadean y se apagan; se detienen al salir del inicio y se reducen si el sistema pide menos movimiento). Encima del fondo, un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
+- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (balón dorado sobre roca, aportado por el usuario) con **chispas de fuego animadas** (`js/ui/brasas.js`: canvas detrás del menú; trazos alargados en diagonal hacia arriba, núcleo amarillo con halo naranja y profundidad (las cercanas más grandes, rápidas y difusas); parpadean y se apagan; se detienen al salir del inicio y se reducen si el sistema pide menos movimiento). Encima del fondo, un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
   - **Mi Club**: formación, estrategias, roles, capitán y alineación.
   - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
   - **Mercado de Fichajes**: solo abre en ciertas fechas (por ahora, cerrado).
