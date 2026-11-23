@@ -53,14 +53,20 @@ Además: rol natural + hasta 2 secundarios, pie bueno / pie malo (1–5), nacion
 ## 4. Media visible y encaje (oculto)
 
 - **Media visible** = media de la rareza en el rol asignado + **ajuste de encaje** + **bonificaciones**.
-- El ajuste de encaje depende de: rol asignado, formación, estrategia ofensiva, estrategia defensiva, química con los compañeros cercanos.
 - El usuario **solo ve el resultado final** (ej. Messi Legendario 96 o 102), nunca el desglose.
 - La media puede superar 99.
+- El ajuste se suma a **todos** los atributos del jugador (por eso mueve la media y el rendimiento en el partido). Se compone de:
+  - **Rol**: natural 0, 1.er secundario −3, 2.º secundario −5, fuera de sus roles −12.
+  - **Afinidad con las estrategias** (−4…+4): lo que destacan sus atributos clave para la estrategia elegida respecto a las demás. Pesa más la ofensiva en delanteros (80 %), mitad y mitad en medios, más la defensiva en defensas (80 %). Porteros: sin afinidad.
+  - **Química** (−2…+3), ver §5.
+- La media de cada rol es un promedio ponderado de atributos (`ROLES` en js/motor/reglas.js).
+- Roles: Portero, Central, Líbero, Lateral, Carrilero, Ancla, Regista, Box-to-box, Mediapunta, Extremo, Delantero interior, Falso 9, Delantero de área.
 
 ## 5. Química
 
-- Solo entre compañeros conectados en la formación.
-- Vínculos: misma nación, misma escuela de juego.
+- Solo entre compañeros **vinculados** en la formación. Cada formación tiene exactamente 17 vínculos (ninguna tiene más química posible que otra).
+- Cada vínculo da 1 punto por misma nación y 1 por misma escuela de juego.
+- Puntos → ajuste: 0 → −2, 1 → −1, 2 → 0, 3 → +1, 4 → +2, 5 o más → +3.
 - **No hay bonus por duplas históricas**: el juego premia inventar combinaciones nuevas (ej. Matthäus + Iniesta), no copiar equipos reales.
 
 ## 6. Bonificaciones de jugador y de capitán
@@ -76,7 +82,7 @@ Además: rol natural + hasta 2 secundarios, pie bueno / pie malo (1–5), nacion
 Ningún elemento es superior a los demás. En cada familia (estrategias ofensivas, defensivas, formaciones…), cada opción tiene contra las opciones rivales exactamente:
 **una Mucha ventaja, una Neutral +, una Neutral − y una Mucha desventaja**.
 
-### Estrategias ofensivas vs defensivas (propuesta inicial)
+### Estrategias ofensivas vs defensivas
 
 | Ataque \ Defensa | Presión alta | Bloque medio | Bloque bajo | Marcaje al hombre |
 |---|---|---|---|---|
@@ -86,16 +92,57 @@ Ningún elemento es superior a los demás. En cada familia (estrategias ofensiva
 | Juego por bandas | − | −− | + | ++ |
 
 Cada fila y cada columna contienen ++, +, −, −− una sola vez.
-Las formaciones seguirán la misma regla (por definir y validar con simulaciones).
 
-## 8. Motor de partidos
+Cada estrategia cambia también **qué atributos pesan** en cada fase, por qué carriles se ataca, el ritmo, cuánto se recicla el balón y el cansancio:
 
-- Campo en 9 zonas (3 franjas × 3 carriles). La formación reparte jugadores por zona.
-- El partido son ~120–160 posesiones. Cada avance es un duelo mano a mano según posición (ej. delantero centro vs central).
-- Probabilidad de cada duelo = función logística de (atacante + modificadores) − (defensor + modificadores).
-- Modificadores: rol, encaje, superioridad numérica en la zona, química, estrategia (tabla de §7), cansancio, moral/momentum, bonificaciones, azar controlado.
-- Semilla aleatoria: un partido se puede repetir idéntico (repeticiones, anti-trampas).
-- Objetivo de balance: un equipo 5 puntos de media inferior pero bien armado gana ~35–40 %.
+- **Posesión**: pase corto, control, visión, compostura. Ataca por el centro, recicla mucho y juega lento.
+- **Contraataque**: velocidad, regate, pase largo. Tras recuperar el balón, 35 % de saltarse una fase.
+- **Juego directo**: pase largo, fuerza, cabeza, posicionamiento. Remata mucho de cabeza.
+- **Juego por bandas**: velocidad, regate, centros, resistencia. Ataca por fuera y remata mucho de cabeza.
+- **Presión alta**: velocidad, resistencia, entrada. Más gente arriba; cansa ×1.5.
+- **Bloque medio**: anticipación, posicionamiento, entrada. Domina el centro del campo.
+- **Bloque bajo**: marcaje, posicionamiento, fuerza, salto. Más gente atrás; cansa ×0.85.
+- **Marcaje al hombre**: marcaje, velocidad, fuerza. Cansa ×1.2.
+
+### Formaciones
+
+| Formación \ Rival | 4-4-2 | 4-3-3 | 4-2-3-1 | 3-5-2 | 5-3-2 |
+|---|---|---|---|---|---|
+| 4-4-2 | = | ++ | − | + | −− |
+| 4-3-3 | −− | = | ++ | − | + |
+| 4-2-3-1 | + | −− | = | ++ | − |
+| 3-5-2 | − | + | −− | = | ++ |
+| 5-3-2 | ++ | − | + | −− | = |
+
+Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carriles (izquierda, centro, derecha), lo que crea superioridades numéricas en cada zona.
+
+## 8. Motor de partidos (js/motor/partido.js)
+
+- Campo en 9 zonas (3 franjas × 3 carriles). La formación y el rol reparten la presencia de cada jugador por zona.
+- El partido es una sucesión de posesiones (~150). Cada posesión avanza por fases: **salida → creación → ocasión → remate**.
+- Cada fase es un **duelo** entre los jugadores del atacante y del defensor presentes en esa zona. Probabilidad = logística de:
+  - base de la fase
+  - + (rating atacante − rating defensor) / 34. El rating es 50 % media en su rol + 50 % atributos que pide la estrategia, multiplicado por el cansancio.
+  - + 0.6 × ln(presencia atacante / presencia defensora) (superioridad numérica)
+  - + tabla de estrategias (++ 0.17, + 0.06, − −0.06, −− −0.17)
+  - + tabla de formaciones (++ 0.09, + 0.04, − −0.04, −− −0.09)
+  - + moral (+0.1 durante 10 minutos tras marcar)
+  - + calibración automática
+- Si pierde el duelo, el equipo puede **reciclar** (volver atrás conservando el balón) o **pierde** la posesión. El rival recupera en la zona espejo, así que perder el balón en la salida es peligroso.
+- **Remate**: con el pie, de cabeza o desde lejos. Probabilidad de gol = xG de la jugada × e^((rematador − portero)/30), entre 1 % y 70 %.
+- **Cansancio**: baja con los minutos según la estrategia defensiva y la Resistencia; en el descanso se recupera un poco.
+- **En vivo**: cambios tácticos y hasta 5 sustituciones; la energía de los que siguen se conserva.
+- **Semilla**: el mismo partido con la misma semilla se repite idéntico (repeticiones, anti-trampas).
+
+### Calibración y equilibrio
+
+- `node herramientas/calibrar.mjs` ajusta pequeños valores ocultos para que cada estrategia y formación ronde el 50 % de puntos contra rivales al azar. Hay que volver a ejecutarlo cuando cambien las reglas o el conjunto de jugadores.
+- `node herramientas/balance.mjs` genera el informe. El último está en docs/balance-ultimo.txt.
+- Objetivos:
+  - Cada estrategia y formación entre 48 y 52 %.
+  - ~2.8 goles por partido y ~23 % de empates.
+  - Un equipo con +5 de media gana ~60 %.
+  - Un equipo con −5 de media pero con ++ en todo gana ~45 % y pierde ~36 %.
 
 ## 9. Modos de juego
 
@@ -124,4 +171,6 @@ Las formaciones seguirán la misma regla (por definir y validar con simulaciones
 
 ## Pendiente de decidir
 
-- Lista de formaciones y su tabla de ventajas.
+- Más formaciones (si se añaden, la tabla debe seguir dando a cada una ++, +, −, −−).
+- Rasgos de jugador (Partidos grandes, Pulmón…): aún no implementados.
+- Jugadores reales: se crean a partir de las fotos del usuario.
