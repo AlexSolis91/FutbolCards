@@ -110,31 +110,40 @@ body.en-lobby {
 :root { --velo-1: rgba(5, 8, 12, 0.15); --velo-2: rgba(5, 8, 12, 0.7); }
 :root[data-tema='claro'] { --velo-1: rgba(244, 245, 247, 0.5); --velo-2: rgba(244, 245, 247, 0.75); }
 body.en-lobby .cabecera { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
-.lobby { display: grid; gap: 18px; max-width: 980px; margin: 0 auto; }
+body.en-lobby main { max-width: none; }
+/* El lobby ocupa toda la pantalla: la barra del club arriba y los recuadros
+   reparten el resto del alto (3×2 en PC, 2×3 en celular). */
+.lobby {
+  display: grid; grid-template-rows: auto 1fr; gap: clamp(12px, 1.6vw, 24px);
+  width: min(1600px, 100%); margin: 0 auto;
+  min-height: calc(100dvh - 54px - 32px);
+}
 .lobby-club {
-  display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--radio);
+  display: flex; align-items: center; gap: clamp(12px, 1.4vw, 22px); padding: clamp(10px, min(1.4vw, 2vh), 22px) clamp(14px, 1.8vw, 28px); border-radius: var(--radio);
   background: color-mix(in srgb, var(--superficie) 72%, transparent); backdrop-filter: blur(12px);
   border: 1px solid color-mix(in srgb, var(--borde) 70%, transparent);
 }
-.lobby-club h1 { margin: 0; font-size: 22px; }
-.lobby-club p { margin: 2px 0 0; color: var(--texto-2); font-size: 14px; }
-.lobby-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.lobby-club .escudo { width: clamp(48px, min(5vw, 8vh), 84px); height: clamp(48px, min(5vw, 8vh), 84px); font-size: clamp(24px, 2.2vw, 36px); }
+.lobby-club h1 { margin: 0; font-size: clamp(22px, 2.2vw, 36px); }
+.lobby-club p { margin: 2px 0 0; color: var(--texto-2); font-size: clamp(14px, 1.1vw, 18px); }
+.lobby-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(150px, 1fr); gap: clamp(12px, 1.6vw, 24px); }
 .recuadro {
-  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left;
-  min-height: 150px; padding: 16px; border-radius: 18px;
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: clamp(6px, 0.8vw, 12px); text-align: left;
+  padding: clamp(14px, min(2.2vw, 3.2vh), 36px); border-radius: clamp(16px, 1.6vw, 26px);
   background: color-mix(in srgb, var(--superficie) 78%, transparent); backdrop-filter: blur(12px);
   border: 1px solid color-mix(in srgb, var(--borde) 80%, transparent);
   box-shadow: var(--sombra); transition: transform 0.15s ease, border-color 0.15s ease;
 }
 .recuadro:hover, .recuadro:focus-visible { transform: translateY(-3px); border-color: var(--acento); outline: none; }
 .recuadro-icono {
-  width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px;
+  width: clamp(40px, min(5vw, 7.5vh), 84px); height: clamp(40px, min(5vw, 7.5vh), 84px); border-radius: clamp(12px, 1.2vw, 20px);
+  display: grid; place-items: center; font-size: clamp(20px, min(2.6vw, 4vh), 44px); margin-bottom: auto;
   background: color-mix(in srgb, var(--acento) 18%, transparent);
 }
-.recuadro-titulo { font-family: var(--fuente-num); font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.05; }
-.recuadro-texto { font-size: 13px; color: var(--texto-2); }
+.recuadro-titulo { font-family: var(--fuente-num); font-size: clamp(20px, min(2.6vw, 4.4vh), 44px); font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.05; }
+.recuadro-texto { font-size: clamp(13px, 1.15vw, 19px); color: var(--texto-2); max-width: 36ch; }
 .recuadro-estado {
-  position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+  position: absolute; top: clamp(12px, 1.4vw, 22px); right: clamp(12px, 1.4vw, 22px); font-size: clamp(11px, 0.9vw, 15px); font-weight: 700; padding: 3px 10px; border-radius: 999px;
   background: color-mix(in srgb, var(--acento) 20%, transparent); color: var(--acento);
 }
 .recuadro-estado.cerrado { background: color-mix(in srgb, var(--peligro) 18%, transparent); color: var(--peligro); }
@@ -325,8 +334,7 @@ body.en-lobby .cabecera { background: transparent; border-bottom-color: transpar
 .modal { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; }
 
 @media (min-width: 760px) {
-  .lobby-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .recuadro { min-height: 170px; }
+  .lobby-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(160px, 1fr); }
 }
 @media (min-width: 900px) {
   .inicio { grid-template-columns: 1.2fr 1fr; }
@@ -338,7 +346,6 @@ body.en-lobby .cabecera { background: transparent; border-bottom-color: transpar
   .cabecera { gap: 6px; padding: 10px 10px; }
   .nav { gap: 0; }
   .nav button { padding: 6px 7px; font-size: 13px; }
-  .recuadro { min-height: 140px; padding: 14px; }
   .recuadro-titulo { font-size: 19px; }
   .recuadro-texto { font-size: 12px; }
   .marca { font-size: 17px; }
