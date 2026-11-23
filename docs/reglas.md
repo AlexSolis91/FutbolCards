@@ -188,6 +188,12 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
   - **Temporadas**: Liga, Copa y Torneo de Campeones contra la IA (próximamente); de momento, amistoso contra la IA.
   - **Liga Master**: contra los clubes de los amigos y la IA (próximamente).
   - **Tienda del Club**: sobres (próximamente).
+- **Música** (`js/ui/musica.js`, archivos en `assets/audio/musica/`):
+  - Las pistas de `PISTAS` suenan una tras otra y, al acabar la última, vuelve a empezar la primera. Con una sola pista, se repite.
+  - Sigue sonando al cambiar de pantalla.
+  - Botón 🔊 en la cabecera: panel con la pista actual, silenciar/activar y volumen 0–100. Se guarda en el navegador (`fc-musica`).
+  - Los navegadores no dejan sonar audio hasta que el usuario toca la página, así que si el arranque se bloquea empieza con el primer clic o tecla.
+  - Pistas: We Are One (Ole Ola).
 - En cada pantalla, la flecha ← vuelve al lobby (desde el partido, a Temporadas). Los avisos y confirmaciones usan diálogos del juego (`js/ui/dialogo.js`), nunca los del navegador.
 - Club de prueba: además de los ficticios trae 6 copias Común de cada jugador real aprobado, para probar la subida de rango (se quitará con los sobres).
 - **Tema**: oscuro por defecto, claro con el botón ☀️/🌙. Se guarda en el navegador.

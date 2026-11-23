@@ -20,6 +20,17 @@
     <button class="boton-icono" id="volver" aria-label="Volver al inicio" title="Volver al inicio">←</button>
     <button class="marca" id="marca" aria-label="Ir al inicio">Futbol <span>Cards</span></button>
     <span class="titulo-pantalla" id="titulo"></span>
+    <div class="control-sonido">
+      <button class="boton-icono" id="sonido" aria-label="Música: volumen y silencio" aria-haspopup="true" aria-expanded="false" title="Música">🔊</button>
+      <div class="panel-sonido" id="panel-sonido" hidden>
+        <div class="pista-actual" id="pista">♪</div>
+        <div class="fila-volumen">
+          <button class="boton-icono" id="silencio" aria-label="Silenciar o activar la música">🔊</button>
+          <input type="range" id="volumen" min="0" max="100" step="1" aria-label="Volumen de la música">
+          <span id="volumen-valor" class="volumen-valor">50</span>
+        </div>
+      </div>
+    </div>
     <button class="boton-icono" id="tema" aria-label="Cambiar entre modo oscuro y claro" title="Modo oscuro / claro">☀️</button>
   </header>
   <main id="app"></main>

@@ -8,6 +8,7 @@ import { pantallaAlineacion } from './alineacion.js';
 import { pantallaColeccion } from './coleccion.js';
 import { pantallaTemporadas, pantallaMercado, pantallaLigaMaster, pantallaTienda } from './secciones.js';
 import { pantallaPartido } from './partido.js';
+import { iniciarMusica, estadoMusica, cambiarVolumen, alternarSilencio, alCambiarMusica, iconoSonido } from './musica.js';
 
 const app = document.getElementById('app');
 const titulo = document.getElementById('titulo');
@@ -61,6 +62,37 @@ document.getElementById('marca').addEventListener('click', () => ir('inicio'));
 botonTema.addEventListener('click', () => { cambiarTema(); pintarBotonTema(); });
 window.addEventListener('hashchange', mostrar);
 
+// ---------------------------------------------------------------- Música
+const botonSonido = document.getElementById('sonido');
+const panelSonido = document.getElementById('panel-sonido');
+const botonSilencio = document.getElementById('silencio');
+const barraVolumen = document.getElementById('volumen');
+const valorVolumen = document.getElementById('volumen-valor');
+
+function pintarSonido(e = estadoMusica()) {
+  botonSonido.textContent = iconoSonido(e);
+  botonSilencio.textContent = iconoSonido(e);
+  botonSilencio.setAttribute('aria-pressed', String(e.silencio));
+  barraVolumen.value = Math.round(e.volumen * 100);
+  valorVolumen.textContent = Math.round(e.volumen * 100);
+  document.getElementById('pista').textContent = `♪ ${e.pista}`;
+}
+
+function abrirPanelSonido(abrir) {
+  panelSonido.hidden = !abrir;
+  botonSonido.setAttribute('aria-expanded', String(abrir));
+}
+
+botonSonido.addEventListener('click', (ev) => { ev.stopPropagation(); abrirPanelSonido(panelSonido.hidden); });
+panelSonido.addEventListener('click', (ev) => ev.stopPropagation());
+document.addEventListener('click', () => abrirPanelSonido(false));
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') abrirPanelSonido(false); });
+botonSilencio.addEventListener('click', alternarSilencio);
+barraVolumen.addEventListener('input', () => cambiarVolumen(barraVolumen.value / 100));
+alCambiarMusica(pintarSonido);
+
+iniciarMusica();
+pintarSonido();
 pintarBotonTema();
 mostrar();
 
