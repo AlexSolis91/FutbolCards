@@ -208,7 +208,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 ## 13. Interfaz (versión de prueba)
 
 - `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
-- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (estadio azul aportado por el usuario, encuadrado al 68 % para que en el celular se vea el campo; sin él se ve un degradado azul) con un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
+- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (balón dorado sobre roca, aportado por el usuario) con **brasas de fuego animadas** (`js/ui/brasas.js`: canvas detrás del menú, suben con viento suave, parpadean y se apagan; se detienen al salir del inicio y se reducen si el sistema pide menos movimiento). Encima del fondo, un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
   - **Mi Club**: formación, estrategias, roles, capitán y alineación.
   - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
   - **Mercado de Fichajes**: solo abre en ciertas fechas (por ahora, cerrado).
@@ -221,7 +221,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
   - Botón 🔊 en la cabecera: panel con la pista actual, silenciar/activar y volumen 0–100. Se guarda en el navegador (`fc-musica`).
   - Los navegadores no dejan sonar audio hasta que el usuario toca la página, así que si el arranque se bloquea empieza con el primer clic o tecla.
   - Pistas: We Are One (Ole Ola).
-- **Fondos por pantalla**: `app.js` pone `data-pantalla` en el body; Mi Club usa `assets/fondos/club.webp` (estadio de día, con un velo más fuerte para leer el campo y los paneles).
+- **Fondos por pantalla**: `app.js` pone `data-pantalla` en el body. Mi Club usa `assets/fondos/club.webp` (estadio de día, con un velo más fuerte para leer el campo y los paneles). Temporadas usa `assets/fondos/temporadas.webp` (el estadio azul, antiguo fondo del inicio).
 - En cada pantalla, la flecha ← vuelve al lobby (desde el partido, a Temporadas). Los avisos y confirmaciones usan diálogos del juego (`js/ui/dialogo.js`), nunca los del navegador.
 - Club de prueba: además de los ficticios trae 6 copias Común de cada jugador real aprobado, para probar la subida de rango (se quitará con los sobres).
 - **Tema**: oscuro por defecto, claro con el botón ☀️/🌙. Se guarda en el navegador.

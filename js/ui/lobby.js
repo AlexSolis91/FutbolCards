@@ -1,10 +1,11 @@
 // Lobby: pantalla de inicio con el fondo del juego y un recuadro por sección.
-// Fondo: assets/fondos/lobby.webp (si no existe, se ve un degradado).
+// Fondo: assets/fondos/lobby.webp (balón dorado) con brasas animadas encima.
 
 import { h } from './dom.js';
 import { iniciales } from './carta.js';
 import { prepararEquipo } from '../motor/encaje.js';
 import { definicionEquipo } from '../motor/alineacion.js';
+import { iniciarBrasas } from './brasas.js';
 
 export const SECCIONES = [
   { ruta: 'club', icono: '🛡️', titulo: 'Mi Club', texto: 'Formación, estrategias, roles y alineación de tus jugadores.' },
@@ -29,4 +30,5 @@ export function pantallaLobby(app, { club, ir }) {
         h('span', { class: 'recuadro-titulo' }, s.titulo),
         h('span', { class: 'recuadro-texto' }, s.texto),
         s.estado ? h('span', { class: `recuadro-estado ${{ 'Próximamente': 'pronto', Cerrado: 'cerrado' }[s.estado] ?? ''}` }, s.estado) : null)))));
+  return iniciarBrasas(); // al salir del inicio se detienen
 }

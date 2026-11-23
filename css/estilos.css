@@ -114,9 +114,21 @@ select {
 body.en-lobby {
   background:
     linear-gradient(180deg, var(--velo-1), var(--velo-2)),
-    url('../assets/fondos/lobby.webp') 68% center / cover no-repeat fixed,
+    url('../assets/fondos/lobby.webp') 78% center / cover no-repeat fixed,
+    radial-gradient(ellipse at 70% 30%, #8a4a12 0%, #3a1c06 45%, var(--fondo) 100%) fixed;
+}
+/* Temporadas: el estadio azul (antiguo fondo del inicio). */
+body[data-pantalla='temporadas'] {
+  background:
+    linear-gradient(180deg, var(--velo-1), var(--velo-2)),
+    url('../assets/fondos/temporadas.webp') 68% center / cover no-repeat fixed,
     radial-gradient(ellipse at 50% 0%, #123a6b 0%, #071a33 45%, var(--fondo) 100%) fixed;
 }
+body[data-pantalla='temporadas'] .cabecera { background: color-mix(in srgb, var(--fondo) 45%, transparent); border-bottom-color: transparent; }
+
+/* Brasas del inicio: canvas fijo detrás del menú, no recibe clics. */
+.brasas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.lobby { position: relative; z-index: 1; }
 :root { --velo-1: rgba(5, 8, 12, 0.15); --velo-2: rgba(5, 8, 12, 0.7); }
 :root[data-tema='claro'] { --velo-1: rgba(244, 245, 247, 0.5); --velo-2: rgba(244, 245, 247, 0.75); }
 /* Fondo de Mi Club: estadio de día (assets/fondos/club.webp) con un velo más
