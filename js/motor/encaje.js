@@ -3,14 +3,17 @@
 // El desglose (familiaridad, afinidad, química) es oculto para el usuario.
 
 import {
-  RAREZAS, ROLES, PUESTOS, FORMACIONES, OFENSIVAS, DEFENSIVAS, ENCAJE,
+  ORDEN_RAREZAS, PASO_RAREZA, rarezasDe, ROLES, PUESTOS, FORMACIONES, OFENSIVAS, DEFENSIVAS, ENCAJE,
   LISTA_ATRIBUTOS, carrilDeX,
 } from './reglas.js';
 import { aplicarBonificaciones } from './bonificaciones.js';
 
+// Atributos de la ficha están en su rareza más alta; cada rareza por debajo
+// resta PASO_RAREZA a todos los atributos (mínimo 1).
 export function atributosDeRareza(ficha, rareza) {
-  const resta = RAREZAS[rareza]?.resta;
-  if (resta === undefined) throw new Error(`Rareza desconocida: ${rareza}`);
+  const propias = rarezasDe(ficha);
+  if (!propias.includes(rareza)) throw new Error(`Rareza no disponible para ${ficha?.nombre ?? 'jugador'}: ${rareza}`);
+  const resta = PASO_RAREZA * (ORDEN_RAREZAS.indexOf(propias.at(-1)) - ORDEN_RAREZAS.indexOf(rareza));
   const out = {};
   for (const a of LISTA_ATRIBUTOS) out[a] = Math.max(1, (ficha.atributos[a] ?? 1) - resta);
   return out;

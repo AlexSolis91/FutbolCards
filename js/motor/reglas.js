@@ -29,14 +29,27 @@ export const LISTA_ATRIBUTOS = Object.keys(ATRIBUTOS);
 export const ATRIBUTOS_PORTERO = ['reflejos', 'colocacion', 'juegoAereo', 'juegoPie'];
 
 // ---------------------------------------------------------------- Rarezas
-// Los atributos de cada jugador se escriben en Legendario; cada rareza resta.
+// Probabilidad = de que una carta de sobre salga de esa rareza.
 export const RAREZAS = {
-  comun: { nombre: 'Común', color: 'blanco', resta: 18, probabilidad: 0.9 },
-  raro: { nombre: 'Raro', color: 'azul', resta: 12, probabilidad: 0.09 },
-  epico: { nombre: 'Épico', color: 'morado', resta: 6, probabilidad: 0.0099 },
-  legendario: { nombre: 'Legendario', color: 'dorado', resta: 0, probabilidad: 0.0001 },
+  comun: { nombre: 'Común', color: 'blanco', probabilidad: 0.9 },
+  raro: { nombre: 'Raro', color: 'azul', probabilidad: 0.09 },
+  epico: { nombre: 'Épico', color: 'morado', probabilidad: 0.0099 },
+  legendario: { nombre: 'Legendario', color: 'dorado', probabilidad: 0.0001 },
 };
 export const ORDEN_RAREZAS = ['comun', 'raro', 'epico', 'legendario'];
+// Cada jugador real existe solo en 2 rarezas seguidas, según su categoría.
+// Sus atributos se escriben en la rareza alta; la baja resta PASO_RAREZA.
+export const CATEGORIAS = {
+  estrella: { nombre: 'Estrella', rarezas: ['epico', 'legendario'] },
+  figura: { nombre: 'Figura', rarezas: ['raro', 'epico'] },
+  base: { nombre: 'Base', rarezas: ['comun', 'raro'] },
+};
+export const PASO_RAREZA = 6;
+// Rarezas en las que existe un jugador (los ficticios de prueba, sin
+// categoría, existen en las 4).
+export function rarezasDe(ficha) {
+  return CATEGORIAS[ficha?.categoria]?.rarezas ?? ORDEN_RAREZAS;
+}
 export const COPIAS_PARA_MEJORAR = 5;
 // Techo de la media base (rol natural, Legendario). Cristiano Ronaldo, Messi,
 // Pelé y Maradona son la cúspide y comparten este techo; nadie lo supera.

@@ -21,17 +21,26 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 | Épico | Morado | 0.99 % |
 | Legendario | Dorado | 0.01 % |
 
-- Cada jugador real tiene **4 cartas**, una por rareza, cada una con su propia imagen.
+- **Cada jugador real existe solo en 2 rarezas seguidas** (regla del 2026-11-23), según su categoría, cada una con su propia imagen:
+
+| Categoría | Rarezas | Ejemplos |
+|---|---|---|
+| Estrella | Épico y Legendario | Cristiano Ronaldo, Messi |
+| Figura | Raro y Épico | Shevchenko |
+| Base | Común y Raro | Rogelio Funes Mori |
+
+- El usuario manda 2 fotos por jugador, en orden (rareza baja, rareza alta).
+- Sobres (cuando existan): la rareza de cada carta sale con las probabilidades de la tabla y luego se elige un jugador que exista en esa rareza. Por eso un Legendario solo puede ser una Estrella.
 - Imágenes: el usuario pasa solo la foto. El juego dibuja el marco, el color, el nombre, la media y los datos.
 - Nombre de archivo = nombre del jugador + rareza (ej. `Messi Legendario.png`).
 
 ### Media por rareza
 
-- Cada jugador se define con sus atributos en **Legendario**.
-- Las otras rarezas restan a cada atributo: Épico −6, Raro −12, Común −18.
+- Cada jugador se define con sus atributos en su **rareza alta**; la rareza baja resta **6** a cada atributo.
+- Los jugadores ficticios de prueba (sin categoría) siguen en las 4 rarezas con base en Legendario.
 - **Techo: 96 de media base en Legendario** (rol natural). Cristiano Ronaldo, Messi, Pelé y Maradona son la cúspide del juego y comparten ese techo; nadie lo supera (prueba automática). Así ninguno de los cuatro queda "por encima" de otro.
 - El techo es de la media base: en el partido el encaje y las bonificaciones la suben o la bajan. Un crack mal usado (−5) puede quedar por debajo de otro jugador bien aprovechado (+6).
-- Ejemplo: Cristiano Ronaldo Común 78, Raro 84, Épico 90, Legendario 96.
+- Ejemplo: Cristiano Ronaldo Épico 90, Legendario 96.
 
 ### Fichas de jugadores reales
 
@@ -40,12 +49,12 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 - Fotos: `python herramientas/optimizar_imagenes.py` convierte `assets/originales/jugadores/<Nombre> <Rareza>.<ext>` en `assets/jugadores/<nombre>-<rareza>.webp`. Solo reduce, **nunca recorta**.
 - La carta encuadra la foto anclada arriba: si sobra, se recorta de abajo o de los lados, nunca la cabeza.
 - Escuelas de juego (estilos, no países): Tiki-taka, Jogo bonito, Catenaccio, Fútbol total, Gegenpressing, Garra, Vértigo, Potencia.
-- Aprobados: Cristiano Ronaldo (2026-11-23).
+- Aprobados: Cristiano Ronaldo (2026-11-23). Propuestos: Lionel Messi.
 
 ### Mejora por copias
 
 - Carta + 5 copias de la misma rareza = la carta sube a la siguiente rareza (se consumen las 5 copias).
-- Común → Raro → Épico → Legendario.
+- Solo dentro de sus 2 rarezas: una Estrella sube de Épico a Legendario, una Figura de Raro a Épico, una Base de Común a Raro. En la rareza alta ya no sube más.
 
 ## 3. Atributos (1–99)
 

@@ -1,10 +1,12 @@
-// Cristiano Ronaldo. Atributos en Legendario (las demás rarezas restan 6/12/18).
+// Cristiano Ronaldo. Categoría Estrella: solo Épico y Legendario.
+// Atributos en Legendario (Épico resta 6).
 // Medias resultantes: Delantero interior 96 · Delantero de área 95 · Extremo 92.
 export default {
   id: 'cristiano-ronaldo',
   nombre: 'Cristiano Ronaldo',
   nacion: 'Portugal',
   escuela: 'Vértigo',
+  categoria: 'estrella',
   roles: ['interior', 'delanteroArea', 'extremo'],
   pie: 'derecho',
   pieMalo: 4,

@@ -1,8 +1,9 @@
 // Colección del club (sin DOM): agrupar copias y subir de rango.
 // Regla: carta + 5 copias de la misma rareza → esa carta sube a la siguiente
-// rareza y se consumen las 5 copias (hacen falta 6 en total).
+// rareza y se consumen las 5 copias (hacen falta 6 en total). Cada jugador solo
+// tiene 2 rarezas: en la más alta ya no se puede subir.
 
-import { ORDEN_RAREZAS, COPIAS_PARA_MEJORAR } from './reglas.js';
+import { COPIAS_PARA_MEJORAR, rarezasDe } from './reglas.js';
 
 // Agrupa las cartas por jugador + rareza: [{ ficha, rareza, uids, copias }]
 export function agruparColeccion(cartas) {
@@ -15,14 +16,16 @@ export function agruparColeccion(cartas) {
   return [...grupos.values()].map((g) => ({ ...g, copias: g.uids.length }));
 }
 
-export function siguienteRareza(rareza) {
-  const i = ORDEN_RAREZAS.indexOf(rareza);
-  return i >= 0 && i < ORDEN_RAREZAS.length - 1 ? ORDEN_RAREZAS[i + 1] : null;
+export function siguienteRareza(rareza, ficha) {
+  const propias = rarezasDe(ficha);
+  const i = propias.indexOf(rareza);
+  return i >= 0 && i < propias.length - 1 ? propias[i + 1] : null;
 }
 
 export function puedeMejorar(cartas, fichaId, rareza) {
-  if (!siguienteRareza(rareza)) return false;
-  return cartas.filter((c) => c.ficha.id === fichaId && c.rareza === rareza).length >= COPIAS_PARA_MEJORAR + 1;
+  const grupo = cartas.filter((c) => c.ficha.id === fichaId && c.rareza === rareza);
+  if (!grupo.length || !siguienteRareza(rareza, grupo[0].ficha)) return false;
+  return grupo.length >= COPIAS_PARA_MEJORAR + 1;
 }
 
 // Devuelve { cartas, tactica, uid } nuevos. La carta que sube conserva su uid
@@ -34,7 +37,7 @@ export function mejorarCarta(cartas, tactica, fichaId, rareza) {
   const grupo = cartas.filter((c) => c.ficha.id === fichaId && c.rareza === rareza);
   const sube = grupo.find((c) => alineados.has(c.uid)) ?? grupo[0];
   const consumidas = new Set(grupo.filter((c) => c !== sube && !alineados.has(c.uid)).slice(0, COPIAS_PARA_MEJORAR).map((c) => c.uid));
-  const nuevaRareza = siguienteRareza(rareza);
+  const nuevaRareza = siguienteRareza(rareza, sube.ficha);
   return {
     uid: sube.uid,
     cartas: cartas

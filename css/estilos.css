@@ -234,6 +234,7 @@ body.en-lobby main { max-width: none; }
 }
 .lista-album { display: grid; gap: 16px; }
 .album-nombre { margin: 0 0 4px !important; font-size: 20px !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--texto) !important; }
+.etiqueta-propuesta { margin-left: 10px; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; vertical-align: middle; background: rgba(234, 179, 8, 0.18); color: #eab308; }
 .seccion { display: grid; gap: 16px; }
 .rejilla-competiciones { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .seccion-pronto { max-width: 640px; }

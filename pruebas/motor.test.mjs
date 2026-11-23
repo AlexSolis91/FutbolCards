@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { crearRng } from '../js/motor/rng.js';
 import {
-  RAREZAS, ORDEN_RAREZAS, FORMACIONES, ORDEN_FORMACIONES, PUESTOS, ROLES,
+  RAREZAS, ORDEN_RAREZAS, CATEGORIAS, rarezasDe, FORMACIONES, ORDEN_FORMACIONES, PUESTOS, ROLES,
   TABLA_ESTRATEGIAS, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS, ventajaFormacion,
 } from '../js/motor/reglas.js';
 import { atributosDeRareza, prepararEquipo, vecinosFormacion } from '../js/motor/encaje.js';
@@ -12,13 +12,24 @@ import { equipoAleatorio, generarFicha } from '../js/datos/prueba.js';
 
 const ordenar = (xs) => [...xs].sort((a, b) => a - b);
 
-test('rarezas: probabilidades suman 1 y restan 18/12/6/0', () => {
+test('rarezas: probabilidades suman 1; cada categoría son 2 rarezas seguidas y la baja resta 6', () => {
   const total = ORDEN_RAREZAS.reduce((s, r) => s + RAREZAS[r].probabilidad, 0);
   assert.ok(Math.abs(total - 1) < 1e-9);
-  assert.deepEqual(ORDEN_RAREZAS.map((r) => RAREZAS[r].resta), [18, 12, 6, 0]);
-  const ficha = { atributos: { definicion: 98, cabeza: 10 } };
-  assert.equal(atributosDeRareza(ficha, 'comun').definicion, 80);
-  assert.equal(atributosDeRareza(ficha, 'comun').cabeza, 1);
+  for (const c of Object.values(CATEGORIAS)) {
+    assert.equal(c.rarezas.length, 2);
+    assert.equal(ORDEN_RAREZAS.indexOf(c.rarezas[1]) - ORDEN_RAREZAS.indexOf(c.rarezas[0]), 1);
+  }
+  const estrella = { categoria: 'estrella', atributos: { definicion: 98, cabeza: 4 } };
+  assert.equal(atributosDeRareza(estrella, 'legendario').definicion, 98);
+  assert.equal(atributosDeRareza(estrella, 'epico').definicion, 92);
+  assert.equal(atributosDeRareza(estrella, 'epico').cabeza, 1);
+  assert.throws(() => atributosDeRareza(estrella, 'raro'));
+  const base = { categoria: 'base', atributos: { definicion: 80 } };
+  assert.equal(atributosDeRareza(base, 'raro').definicion, 80);
+  assert.equal(atributosDeRareza(base, 'comun').definicion, 74);
+  assert.throws(() => atributosDeRareza(base, 'epico'));
+  // Ficticios de prueba (sin categoría): 4 rarezas, base en Legendario.
+  assert.equal(atributosDeRareza({ atributos: { definicion: 98 } }, 'comun').definicion, 80);
 });
 
 test('regla de oro: cada estrategia tiene ++, +, −, −− una vez (filas y columnas)', () => {
@@ -138,6 +149,7 @@ test('jugadores reales: ninguno supera la media base máxima en Legendario y sus
     for (const a of LISTA_ATRIBUTOS) assert.ok(j.atributos[a] >= 1 && j.atributos[a] <= 99, `${j.id}.${a}`);
     for (const r of j.roles) assert.ok(ROLES[r], `${j.id}: rol ${r}`);
     assert.ok(escuelas.includes(j.escuela), `${j.id}: escuela ${j.escuela}`);
+    assert.ok(CATEGORIAS[j.categoria], `${j.id}: categoría ${j.categoria}`);
     for (const r of j.roles) {
       assert.ok(Math.round(mediaEnRol(j.atributos, r)) <= MEDIA_MAXIMA_LEGENDARIO, `${j.id} supera ${MEDIA_MAXIMA_LEGENDARIO} como ${r}`);
     }
@@ -159,4 +171,10 @@ test('colección: 6 copias suben a la siguiente rareza y consumen 5; la alineada
   assert.ok(!puedeMejorar(r.cartas, 'x', 'comun'));
   const leg = Array.from({ length: 6 }, (_, i) => ({ uid: `l${i}`, ficha, rareza: 'legendario' }));
   assert.ok(!puedeMejorar(leg, 'x', 'legendario'));
+  // Con 2 rarezas, la alta es el tope: una Figura no pasa de Épico.
+  const figura = { ...ficha, id: 'f', categoria: 'figura' };
+  const raros = Array.from({ length: 6 }, (_, i) => ({ uid: `f${i}`, ficha: figura, rareza: 'raro' }));
+  assert.equal(mejorarCarta(raros, { alineacion: [] }, 'f', 'raro').cartas[0].rareza, 'epico');
+  const epicos = raros.map((c) => ({ ...c, rareza: 'epico' }));
+  assert.ok(!puedeMejorar(epicos, 'f', 'epico'));
 });

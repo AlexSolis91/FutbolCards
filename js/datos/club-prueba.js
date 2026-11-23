@@ -1,7 +1,7 @@
 // Club y rival de prueba con jugadores ficticios, hasta que lleguen los reales.
 
 import { crearRng } from '../motor/rng.js';
-import { ORDEN_FORMACIONES, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS } from '../motor/reglas.js';
+import { ORDEN_FORMACIONES, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS, rarezasDe } from '../motor/reglas.js';
 import { autoAlinear } from '../motor/alineacion.js';
 import { generarFicha } from './prueba.js';
 import { APROBADOS } from './jugadores/index.js';
@@ -43,11 +43,11 @@ export function crearPlantillaPrueba(semilla, prefijo = 'p') {
   });
 }
 
-// Copias de jugadores reales para probar la Colección (6 Comunes = se puede
-// subir a Raro). Se quitará cuando existan los sobres.
-function copiasDemo() {
-  return APROBADOS.flatMap((ficha) =>
-    Array.from({ length: 6 }, (_, i) => ({ uid: `${ficha.id}-demo-${i + 1}`, ficha, rareza: 'comun' })));
+// Copias de jugadores reales para probar la Colección (6 de su rareza baja =
+// se puede subir a la alta). Se quitará cuando existan los sobres.
+export function copiasDemo(fichas = APROBADOS) {
+  return fichas.flatMap((ficha) =>
+    Array.from({ length: 6 }, (_, i) => ({ uid: `${ficha.id}-demo-${i + 1}`, ficha, rareza: rarezasDe(ficha)[0] })));
 }
 
 export function crearClubPrueba() {

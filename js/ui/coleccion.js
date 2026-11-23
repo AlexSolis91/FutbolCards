@@ -5,7 +5,7 @@ import { h, vaciar } from './dom.js';
 import { crearCarta, mediaNatural, abreviatura } from './carta.js';
 import { guardarClub } from './estado.js';
 import { confirmar, avisar } from './dialogo.js';
-import { ORDEN_RAREZAS, RAREZAS, ROLES, COPIAS_PARA_MEJORAR } from '../motor/reglas.js';
+import { ORDEN_RAREZAS, RAREZAS, ROLES, COPIAS_PARA_MEJORAR, rarezasDe } from '../motor/reglas.js';
 import { atributosDeRareza, mediaEnRol } from '../motor/encaje.js';
 import { agruparColeccion, siguienteRareza, mejorarCarta } from '../motor/coleccion.js';
 import { JUGADORES } from '../datos/jugadores/index.js';
@@ -17,7 +17,7 @@ export function pantallaColeccion(app, { club }) {
   app.append(raiz);
 
   async function subir(grupo) {
-    const destino = siguienteRareza(grupo.rareza);
+    const destino = siguienteRareza(grupo.rareza, grupo.ficha);
     const ok = await confirmar(
       'Subir de rango',
       `${grupo.ficha.nombre} pasará de ${RAREZAS[grupo.rareza].nombre} a ${RAREZAS[destino].nombre}. Se usarán ${COPIAS_PARA_MEJORAR} copias.`,
@@ -42,7 +42,7 @@ export function pantallaColeccion(app, { club }) {
       }, r === 'todas' ? 'Todas' : RAREZAS[r].nombre)));
     return [filtros, h('div', { class: 'rejilla-cartas' }, grupos.map((g) => {
       const { rol, media } = mediaNatural(g);
-      const destino = siguienteRareza(g.rareza);
+      const destino = siguienteRareza(g.rareza, g.ficha);
       const necesarias = COPIAS_PARA_MEJORAR + 1;
       return h('div', { class: 'item-coleccion' },
         h('div', { class: 'carta-con-copias' },
@@ -59,12 +59,14 @@ export function pantallaColeccion(app, { club }) {
   }
 
   function album() {
-    return JUGADORES.filter((j) => j.estado === 'aprobada').map((j) => {
+    // Aprobados primero; las propuestas se ven marcadas para poder revisarlas.
+    return [...JUGADORES].sort((a, b) => (a.estado === 'aprobada' ? 0 : 1) - (b.estado === 'aprobada' ? 0 : 1)).map((j) => {
       const rol = j.roles[0];
       return h('article', { class: 'panel' },
-        h('h3', { class: 'album-nombre' }, j.nombre),
+        h('h3', { class: 'album-nombre' }, j.nombre,
+          j.estado !== 'aprobada' ? h('span', { class: 'etiqueta-propuesta' }, 'Propuesta · pendiente de aprobar') : null),
         h('p', { class: 'ayuda', style: { margin: '0 0 12px' } }, `${j.nacion} · ${j.escuela} · ${j.roles.map((r) => ROLES[r].nombre).join(' / ')}`),
-        h('div', { class: 'galeria' }, ORDEN_RAREZAS.map((r) => crearCarta({
+        h('div', { class: 'galeria' }, rarezasDe(j).map((r) => crearCarta({
           ficha: j, rareza: r, etiqueta: abreviatura(rol),
           media: Math.round(mediaEnRol(atributosDeRareza(j, r), rol)),
           detalle: `${ROLES[rol].nombre} · ${j.nacion}`,
