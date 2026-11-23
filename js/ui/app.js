@@ -8,6 +8,7 @@ import { pantallaAlineacion } from './alineacion.js';
 import { pantallaColeccion } from './coleccion.js';
 import { pantallaTemporadas, pantallaMercado, pantallaLigaMaster, pantallaTienda } from './secciones.js';
 import { pantallaPartido } from './partido.js';
+import { mostrarPortada } from './portada.js';
 import { iniciarMusica, estadoMusica, cambiarVolumen, alternarSilencio, alCambiarMusica, iconoSonido } from './musica.js';
 
 const app = document.getElementById('app');
@@ -61,7 +62,7 @@ function pintarBotonTema() {
 botonVolver.addEventListener('click', () => ir(PANTALLAS[rutaActual()].volver ?? 'inicio'));
 document.getElementById('marca').addEventListener('click', () => ir('inicio'));
 botonTema.addEventListener('click', () => { cambiarTema(); pintarBotonTema(); });
-window.addEventListener('hashchange', mostrar);
+window.addEventListener('hashchange', () => { if (!document.querySelector('.portada')) mostrar(); });
 
 // ---------------------------------------------------------------- Música
 const botonSonido = document.getElementById('sonido');
@@ -92,10 +93,12 @@ botonSilencio.addEventListener('click', alternarSilencio);
 barraVolumen.addEventListener('input', () => cambiarVolumen(barraVolumen.value / 100));
 alCambiarMusica(pintarSonido);
 
+// La música intenta sonar ya en la portada; si el navegador lo bloquea, empieza
+// con el clic de "Iniciar". El menú se pinta al entrar.
 iniciarMusica();
 pintarSonido();
 pintarBotonTema();
-mostrar();
+mostrarPortada().then(mostrar);
 
 // Depuración desde la consola.
 window.__fc = { club };

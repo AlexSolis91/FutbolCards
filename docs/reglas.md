@@ -208,6 +208,11 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 ## 13. Interfaz (versión de prueba)
 
 - `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
+- **Portada** (`js/ui/portada.js`, lo primero al abrir el juego):
+  - Fondo del inicio con las chispas, el logo **FUTBOL CARDS** en grande (FUTBOL blanco, CARDS verde) e **INICIAR** apareciendo y desapareciendo.
+  - Un clic (o Enter/Espacio) entra al menú.
+  - La música intenta sonar ya en la portada; los navegadores suelen bloquear el sonido hasta el primer clic, así que en ese caso arranca con el clic de Iniciar.
+  - Sale en cada carga de la página.
 - **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (balón dorado sobre roca, aportado por el usuario) con **chispas de fuego animadas** (`js/ui/brasas.js`: canvas detrás del menú; trazos alargados en diagonal hacia arriba, núcleo amarillo con halo naranja y profundidad (las cercanas más grandes, rápidas y difusas); parpadean y se apagan; se detienen al salir del inicio y se reducen si el sistema pide menos movimiento). Encima del fondo, un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
   - **Mi Club**: formación, estrategias, roles, capitán y alineación.
   - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
