@@ -1,10 +1,10 @@
 // Jugadores y equipos de prueba (ficticios) para simular y equilibrar el motor.
-// No se usan en el juego: los jugadores reales vienen de js/datos/jugadores/.
+// También alimentan el modo de prueba de la interfaz hasta que lleguen los jugadores reales.
 
 import {
   ROLES, PUESTOS, FORMACIONES, ORDEN_FORMACIONES, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS,
   LISTA_ATRIBUTOS, ATRIBUTOS_PORTERO,
-} from '../js/motor/reglas.js';
+} from '../motor/reglas.js';
 
 export const NACIONES_PRUEBA = ['Argentina', 'Brasil', 'Francia', 'Italia', 'España', 'Alemania', 'Inglaterra', 'Uruguay'];
 export const ESCUELAS_PRUEBA = ['Tiki-taka', 'Jogo bonito', 'Catenaccio', 'Fútbol total', 'Garra', 'Gegenpressing'];

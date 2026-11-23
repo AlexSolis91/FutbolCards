@@ -8,7 +8,7 @@ import {
 } from '../js/motor/reglas.js';
 import { atributosDeRareza, prepararEquipo, vecinosFormacion } from '../js/motor/encaje.js';
 import { crearPartido, simularPartido } from '../js/motor/partido.js';
-import { equipoAleatorio, generarFicha } from '../herramientas/prueba.mjs';
+import { equipoAleatorio, generarFicha } from '../js/datos/prueba.js';
 
 const ordenar = (xs) => [...xs].sort((a, b) => a - b);
 
@@ -110,4 +110,16 @@ test('partido: cambio táctico y sustitución en vivo', () => {
   assert.equal(p.estado.eq[0].jugadores[10].energia, 100);
   p.jugarCompleto();
   assert.ok(p.terminado);
+});
+
+test('alineación: auto-alinear pone 11 distintos y un portero en la portería', async () => {
+  const { autoAlinear } = await import('../js/motor/alineacion.js');
+  const { crearPlantillaPrueba } = await import('../js/datos/club-prueba.js');
+  const cartas = crearPlantillaPrueba(2026, 'p');
+  for (const f of ORDEN_FORMACIONES) {
+    const xi = autoAlinear(cartas, f);
+    assert.equal(new Set(xi.map((a) => a.uid)).size, 11, f);
+    const portero = cartas.find((c) => c.uid === xi[0].uid);
+    assert.equal(portero.ficha.roles[0], 'portero', f);
+  }
 });

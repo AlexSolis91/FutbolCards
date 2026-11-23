@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { crearRng } from '../js/motor/rng.js';
 import { MOTOR, simularPartido } from '../js/motor/partido.js';
-import { equipoAleatorio } from './prueba.mjs';
+import { equipoAleatorio } from '../js/datos/prueba.js';
 
 const ITER = Number(process.argv[2] ?? 8);
 const N = Number(process.argv[3] ?? 3000);

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es" data-tema="oscuro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0c0f">
+  <title>Futbol Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+  <script>
+    // Aplica el tema guardado antes de pintar (evita parpadeo).
+    try { const t = localStorage.getItem('fc-tema'); if (t) document.documentElement.dataset.tema = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">Futbol <span>Cards</span></div>
+    <nav class="nav" id="nav">
+      <button data-ruta="inicio">Inicio</button>
+      <button data-ruta="alineacion">Alineación</button>
+      <button data-ruta="partido">Jugar</button>
+    </nav>
+    <button class="boton-icono" id="tema" aria-label="Cambiar entre modo oscuro y claro" title="Modo oscuro / claro">☀️</button>
+  </header>
+  <main id="app"></main>
+  <script type="module" src="js/ui/app.js"></script>
+</body>
+</html>

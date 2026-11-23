@@ -4,7 +4,7 @@
 import { crearRng } from '../js/motor/rng.js';
 import { simularPartido } from '../js/motor/partido.js';
 import { ORDEN_FORMACIONES, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS, TABLA_ESTRATEGIAS, ventajaFormacion } from '../js/motor/reglas.js';
-import { equipoAleatorio } from './prueba.mjs';
+import { equipoAleatorio } from '../js/datos/prueba.js';
 
 const N = Number(process.argv[2] ?? 4000);
 const rng = crearRng(12345);

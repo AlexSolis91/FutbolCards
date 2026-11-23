@@ -167,6 +167,21 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 - Recorrido por las funciones y opciones principales.
 - Acompaña a abrir los primeros sobres, armar el primer equipo, nombrar el club y crear el escudo.
 
+## 13. Interfaz (versión de prueba)
+
+- `python herramientas/servidor.py` → http://localhost:3300 (sin caché). Pantallas: Inicio, Alineación, Jugar.
+- **Tema**: oscuro por defecto, claro con el botón ☀️/🌙. Se guarda en el navegador.
+- **Cartas**: marco y panel con el color de la rareza; media + puesto arriba a la izquierda, "C" si es capitán. Foto en `assets/jugadores/<nombre>-<rareza>.webp` (ej. `lionel-messi-legendario.webp`); sin foto se ven las iniciales.
+- **Alineación**:
+  - Campo con las 11 cartas. Tocar un jugador y luego otro del campo (intercambio) o del banquillo (entra).
+  - Rol por jugador (★ = rol natural), capitán, formación, ataque, defensa y Auto-alinear.
+  - Las medias mostradas ya incluyen el encaje y las bonificaciones; el desglose nunca se ve. Los atributos mostrados son los finales.
+- **Partido**:
+  - Marcador, campo con el balón y la zona activa, crónica narrada y estadísticas (posesión, tiros, a puerta, goles esperados).
+  - Velocidad x1/x2/x4 y "Simular resultado".
+  - Cambio de táctica y hasta 5 sustituciones en vivo. Por defecto sale el más cansado y el banquillo se ordena por encaje en el puesto.
+- Los jugadores y el rival actuales son **ficticios** (`js/datos/club-prueba.js`) y el club se guarda en el navegador (`localStorage`) hasta que existan cuentas.
+
 ---
 
 ## Pendiente de decidir

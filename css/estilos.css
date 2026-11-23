@@ -1,0 +1,265 @@
+/* Futbol Cards — estilos. Modo oscuro (por defecto) y modo claro. */
+
+:root {
+  --fondo: #0a0c0f;
+  --superficie: #13161b;
+  --superficie-2: #1b1f26;
+  --superficie-3: #242932;
+  --borde: #2a3039;
+  --texto: #f3f5f8;
+  --texto-2: #9aa3b1;
+  --acento: #22c55e;
+  --acento-texto: #04130a;
+  --peligro: #ef4444;
+  --cesped-1: #12351f;
+  --cesped-2: #154026;
+  --linea-campo: rgba(255, 255, 255, 0.22);
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --radio: 14px;
+  --fuente-num: 'Barlow Condensed', system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+:root[data-tema='claro'] {
+  --fondo: #f4f5f7;
+  --superficie: #ffffff;
+  --superficie-2: #eef0f3;
+  --superficie-3: #e3e7ec;
+  --borde: #d9dee5;
+  --texto: #0e1217;
+  --texto-2: #5a6472;
+  --acento: #16a34a;
+  --acento-texto: #ffffff;
+  --cesped-1: #2f8a4c;
+  --cesped-2: #34965a;
+  --linea-campo: rgba(255, 255, 255, 0.55);
+  --sombra: 0 8px 24px rgba(15, 23, 42, 0.12);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+button, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+
+/* ------------------------------------------------------------ Estructura */
+.cabecera {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--fondo) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--borde);
+}
+.marca { white-space: nowrap; font-family: var(--fuente-num); font-weight: 800; font-size: 22px; letter-spacing: 0.5px; text-transform: uppercase; }
+.marca span { color: var(--acento); }
+.nav { display: flex; gap: 4px; margin-left: auto; }
+.nav button, .boton-icono {
+  background: transparent; border: 1px solid transparent; border-radius: 10px;
+  padding: 7px 12px; color: var(--texto-2); font-weight: 600;
+}
+.nav button[aria-current='page'] { background: var(--superficie-2); color: var(--texto); border-color: var(--borde); }
+.boton-icono { padding: 7px 10px; border-color: var(--borde); font-size: 16px; line-height: 1; }
+
+main { max-width: 1180px; margin: 0 auto; padding: 16px; }
+
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 16px; border-radius: 12px; font-weight: 700;
+  background: var(--superficie-2); border: 1px solid var(--borde);
+}
+.boton.primario { background: var(--acento); color: var(--acento-texto); border-color: transparent; }
+.boton:disabled { opacity: 0.45; cursor: not-allowed; }
+.boton.peque { padding: 6px 10px; font-size: 13px; border-radius: 9px; }
+
+.panel { min-width: 0; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); padding: 14px; }
+.panel h2, .panel h3 { margin: 0 0 10px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--texto-2); }
+.etiqueta { display: block; font-size: 12px; color: var(--texto-2); margin-bottom: 4px; font-weight: 600; }
+select {
+  width: 100%; padding: 9px 10px; border-radius: 10px;
+  background: var(--superficie-2); border: 1px solid var(--borde);
+}
+.fila { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+.fila > * { flex: 1 1 140px; min-width: 0; }
+.alineacion > *, .partido > *, .inicio > * { min-width: 0; }
+.oculto { display: none !important; }
+
+/* ------------------------------------------------------------ Inicio */
+.inicio { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.club-hero { display: flex; align-items: center; gap: 16px; }
+.escudo {
+  width: 64px; height: 64px; flex: none; border-radius: 18px;
+  display: grid; place-items: center;
+  background: linear-gradient(145deg, var(--acento), #0e7a3b);
+  color: #fff; font-family: var(--fuente-num); font-weight: 800; font-size: 26px;
+}
+.club-hero h1 { margin: 0; font-size: 26px; }
+.club-hero p { margin: 2px 0 0; color: var(--texto-2); }
+.acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+.aviso-prueba { font-size: 13px; color: var(--texto-2); border-left: 3px solid var(--acento); padding: 6px 10px; background: var(--superficie-2); border-radius: 8px; }
+.galeria { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ------------------------------------------------------------ Cartas */
+.carta {
+  --marco: #e9ecef; --marco-2: #ffffff; --panel: #ffffff; --panel-texto: #101418; --foto: #d9dde2;
+  position: relative; width: 132px; aspect-ratio: 5 / 7; flex: none;
+  border-radius: 12px; padding: 4px;
+  background: linear-gradient(160deg, var(--marco-2), var(--marco));
+  box-shadow: var(--sombra);
+  display: flex; flex-direction: column;
+  font-family: var(--fuente-num);
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.carta.raro { --marco: #1d4ed8; --marco-2: #60a5fa; --panel: #1e40af; --panel-texto: #ffffff; --foto: #1e3a8a; }
+.carta.epico { --marco: #6d28d9; --marco-2: #c084fc; --panel: #5b21b6; --panel-texto: #ffffff; --foto: #4c1d95; }
+.carta.legendario { --marco: #b8860b; --marco-2: #ffe48a; --panel: #d4a017; --panel-texto: #1b1300; --foto: #7a5a0a; }
+.carta .foto {
+  position: relative; flex: 1; border-radius: 9px 9px 0 0; overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--foto) 55%, #fff), var(--foto));
+  display: grid; place-items: center;
+}
+.carta .foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.carta .iniciales { font-size: 40px; font-weight: 800; color: rgba(255, 255, 255, 0.85); text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+.carta.comun .iniciales { color: rgba(0, 0, 0, 0.35); text-shadow: none; }
+.carta .media {
+  position: absolute; top: 6px; left: 7px; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; line-height: 0.9;
+  color: var(--panel-texto);
+  background: var(--panel); border-radius: 8px; padding: 4px 5px 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.carta .media b { font-size: 24px; font-weight: 800; }
+.carta .media small { font-size: 11px; font-weight: 700; letter-spacing: 0.4px; }
+.carta .capitan {
+  position: absolute; top: 6px; right: 7px; z-index: 1;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #111; color: #ffd84d; font-size: 12px; font-weight: 800;
+  display: grid; place-items: center; border: 1.5px solid #ffd84d;
+}
+.carta .info {
+  background: var(--panel); color: var(--panel-texto);
+  border-radius: 0 0 9px 9px; padding: 4px 6px 5px; text-align: center;
+}
+.carta .nombre { font-size: 15px; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+.carta .detalle { font-size: 11px; font-weight: 600; opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.carta.mini { width: 64px; border-radius: 9px; padding: 2px; }
+.carta.mini .foto { border-radius: 7px 7px 0 0; }
+.carta.mini .iniciales { font-size: 18px; }
+.carta.mini .media { top: 3px; left: 3px; padding: 2px 3px 1px; border-radius: 5px; }
+.carta.mini .media b { font-size: 15px; }
+.carta.mini .media small { font-size: 8px; }
+.carta.mini .capitan { top: 3px; right: 3px; width: 14px; height: 14px; font-size: 9px; border-width: 1px; }
+.carta.mini .info { padding: 2px 3px 3px; border-radius: 0 0 7px 7px; }
+.carta.mini .nombre { font-size: 10px; }
+.carta.mini .detalle { display: none; }
+.carta.seleccionada { outline: 3px solid var(--acento); outline-offset: 2px; }
+.carta.clic { cursor: pointer; transition: transform 0.12s ease; }
+.carta.clic:hover { transform: translateY(-2px); }
+
+/* ------------------------------------------------------------ Alineación */
+.alineacion { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.campo {
+  position: relative; width: 100%; max-width: 520px; margin: 0 auto; aspect-ratio: 68 / 92;
+  border-radius: var(--radio); overflow: hidden;
+  background: repeating-linear-gradient(0deg, var(--cesped-1) 0 10%, var(--cesped-2) 10% 20%);
+  border: 1px solid var(--borde);
+}
+.campo::before, .campo::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); border: 2px solid var(--linea-campo); }
+.campo::before { bottom: -2px; width: 46%; height: 15%; }
+.campo::after { top: -2px; width: 46%; height: 15%; }
+.campo .medio { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--linea-campo); }
+.campo .circulo { position: absolute; left: 50%; top: 50%; width: 26%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
+.hueco { position: absolute; transform: translate(-50%, 50%); }
+.hueco .carta.mini { width: clamp(52px, 13vw, 68px); }
+
+.banca { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: thin; }
+.detalle-jugador { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+.atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; font-size: 13px; }
+.atributos div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--borde); padding: 1px 0; }
+.atributos b { font-family: var(--fuente-num); font-size: 15px; }
+.media-equipo { font-family: var(--fuente-num); font-weight: 800; font-size: 30px; line-height: 1; }
+.ayuda { font-size: 13px; color: var(--texto-2); margin: 6px 0 0; }
+
+/* ------------------------------------------------------------ Partido */
+.marcador {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px;
+  padding: 14px;
+}
+.marcador .equipo { display: flex; align-items: center; gap: 10px; font-weight: 700; min-width: 0; }
+.marcador .equipo span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.marcador .equipo.visitante { flex-direction: row-reverse; text-align: right; }
+.marcador .escudo { width: 40px; height: 40px; border-radius: 12px; font-size: 17px; }
+.marcador .escudo.rival { background: linear-gradient(145deg, #64748b, #334155); }
+.marcador .goles { font-family: var(--fuente-num); font-size: 44px; font-weight: 800; text-align: center; line-height: 1; }
+.marcador .minuto { display: block; font-size: 15px; color: var(--acento); font-weight: 700; }
+.campo-h {
+  position: relative; width: 100%; aspect-ratio: 105 / 52; border-radius: var(--radio); overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--cesped-1) 0 10%, var(--cesped-2) 10% 20%);
+  border: 1px solid var(--borde);
+}
+.campo-h::before, .campo-h::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 44%; width: 14%; border: 2px solid var(--linea-campo); }
+.campo-h::before { left: -2px; }
+.campo-h::after { right: -2px; }
+.campo-h .medio-v { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px solid var(--linea-campo); }
+.campo-h .circulo { position: absolute; left: 50%; top: 50%; width: 17%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
+.balon {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25), 0 0 18px rgba(255, 255, 255, 0.7);
+  transform: translate(-50%, -50%); transition: left 0.45s ease, top 0.45s ease; z-index: 2;
+}
+.zona-activa {
+  position: absolute; width: 33.4%; height: 33.4%; transition: all 0.45s ease;
+  background: rgba(255, 255, 255, 0.07);
+}
+.zona-activa.local { box-shadow: inset 0 0 0 2px rgba(34, 197, 94, 0.55); }
+.zona-activa.visitante { box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.7); }
+.flash-gol {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 3;
+  font-family: var(--fuente-num); font-size: clamp(40px, 10vw, 84px); font-weight: 800; color: #fff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6); background: rgba(0, 0, 0, 0.35);
+  animation: flash 1.6s ease forwards; pointer-events: none;
+}
+@keyframes flash { 0% { opacity: 0; transform: scale(0.8); } 15% { opacity: 1; transform: scale(1.05); } 80% { opacity: 1; } 100% { opacity: 0; } }
+.partido { display: grid; gap: 14px; grid-template-columns: 1fr; }
+.controles { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.velocidad { display: inline-flex; border: 1px solid var(--borde); border-radius: 10px; overflow: hidden; }
+.velocidad button { border: 0; background: transparent; padding: 7px 11px; font-weight: 700; color: var(--texto-2); }
+.velocidad button[aria-pressed='true'] { background: var(--superficie-3); color: var(--texto); }
+.cronica { list-style: none; margin: 0; padding: 0; max-height: 340px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.cronica li { display: grid; grid-template-columns: 38px 1fr; gap: 8px; font-size: 14px; padding: 6px 8px; border-radius: 9px; background: var(--superficie-2); }
+.cronica li .min { font-family: var(--fuente-num); font-weight: 800; color: var(--texto-2); }
+.cronica li.gol { background: color-mix(in srgb, var(--acento) 22%, var(--superficie-2)); font-weight: 700; }
+.cronica li.local { border-left: 3px solid var(--acento); }
+.cronica li.visitante { border-left: 3px solid #94a3b8; }
+.estadisticas { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px 10px; font-size: 14px; }
+.estadisticas .v { font-family: var(--fuente-num); font-weight: 800; font-size: 17px; }
+.estadisticas .v.izq { text-align: right; }
+.estadisticas .n { color: var(--texto-2); text-align: center; }
+.modal-fondo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: grid; place-items: center; z-index: 50; padding: 16px; }
+.modal { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; }
+
+@media (min-width: 900px) {
+  .inicio { grid-template-columns: 1.2fr 1fr; }
+  .alineacion { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .partido { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+  .partido .ancho { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .cabecera { gap: 6px; padding: 10px 10px; }
+  .nav { gap: 0; }
+  .nav button { padding: 6px 7px; font-size: 13px; }
+  .marca { font-size: 17px; }
+  .boton-icono { padding: 6px 8px; }
+  .marcador .goles { font-size: 36px; }
+  .marcador .equipo span { font-size: 13px; }
+}
