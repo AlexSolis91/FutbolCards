@@ -60,7 +60,7 @@ button { cursor: pointer; }
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--borde);
 }
-.marca { white-space: nowrap; font-family: var(--fuente-num); font-weight: 800; font-size: 22px; letter-spacing: 0.5px; text-transform: uppercase; }
+.marca { background: none; border: 0; padding: 0; color: var(--texto); cursor: pointer; white-space: nowrap; font-family: var(--fuente-num); font-weight: 800; font-size: 22px; letter-spacing: 0.5px; text-transform: uppercase; }
 .marca span { color: var(--acento); }
 .nav { display: flex; gap: 4px; margin-left: auto; }
 .nav button, .boton-icono {
@@ -92,6 +92,74 @@ select {
 .fila > * { flex: 1 1 140px; min-width: 0; }
 .alineacion > *, .partido > *, .inicio > * { min-width: 0; }
 .oculto { display: none !important; }
+
+/* ------------------------------------------------------------ Cabecera de pantalla */
+.titulo-pantalla { margin-left: 4px; font-weight: 700; color: var(--texto-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+#tema { margin-left: auto; }
+.boton-icono[hidden] { display: none; }
+
+/* ------------------------------------------------------------ Lobby */
+/* Fondo del lobby: la imagen del usuario (assets/fondos/lobby.webp) con un
+   velo para que el menú se lea; si la imagen no existe se ve el degradado. */
+body.en-lobby {
+  background:
+    linear-gradient(180deg, var(--velo-1), var(--velo-2)),
+    url('../assets/fondos/lobby.webp') center / cover no-repeat fixed,
+    radial-gradient(ellipse at 50% 0%, #1f6b3a 0%, #0b2a17 45%, var(--fondo) 100%) fixed;
+}
+:root { --velo-1: rgba(5, 8, 12, 0.35); --velo-2: rgba(5, 8, 12, 0.8); }
+:root[data-tema='claro'] { --velo-1: rgba(244, 245, 247, 0.25); --velo-2: rgba(244, 245, 247, 0.75); }
+body.en-lobby .cabecera { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
+.lobby { display: grid; gap: 18px; max-width: 980px; margin: 0 auto; }
+.lobby-club {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--radio);
+  background: color-mix(in srgb, var(--superficie) 72%, transparent); backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--borde) 70%, transparent);
+}
+.lobby-club h1 { margin: 0; font-size: 22px; }
+.lobby-club p { margin: 2px 0 0; color: var(--texto-2); font-size: 14px; }
+.lobby-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.recuadro {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left;
+  min-height: 150px; padding: 16px; border-radius: 18px;
+  background: color-mix(in srgb, var(--superficie) 78%, transparent); backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--borde) 80%, transparent);
+  box-shadow: var(--sombra); transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.recuadro:hover, .recuadro:focus-visible { transform: translateY(-3px); border-color: var(--acento); outline: none; }
+.recuadro-icono {
+  width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px;
+  background: color-mix(in srgb, var(--acento) 18%, transparent);
+}
+.recuadro-titulo { font-family: var(--fuente-num); font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.05; }
+.recuadro-texto { font-size: 13px; color: var(--texto-2); }
+.recuadro-estado {
+  position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+  background: color-mix(in srgb, var(--acento) 20%, transparent); color: var(--acento);
+}
+.recuadro-estado.cerrado { background: color-mix(in srgb, var(--peligro) 18%, transparent); color: var(--peligro); }
+.recuadro-estado.pronto { background: color-mix(in srgb, var(--texto-2) 18%, transparent); color: var(--texto-2); }
+.competicion .recuadro-estado { position: static; display: inline-block; }
+
+/* ------------------------------------------------------------ Colección */
+.pestanas { display: flex; gap: 6px; margin-bottom: 12px; }
+.pestanas button, .chip { border: 1px solid var(--borde); background: var(--superficie); border-radius: 999px; padding: 7px 14px; font-weight: 700; color: var(--texto-2); }
+.pestanas button[aria-selected='true'], .chip[aria-pressed='true'] { background: var(--texto); color: var(--fondo); border-color: var(--texto); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.chip { padding: 5px 12px; font-size: 13px; }
+.rejilla-cartas { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px 12px; justify-items: center; }
+.item-coleccion { display: grid; gap: 8px; justify-items: center; }
+.carta-con-copias { position: relative; }
+.copias {
+  position: absolute; bottom: -8px; right: -8px; z-index: 2; min-width: 32px; padding: 3px 7px; border-radius: 999px;
+  background: var(--texto); color: var(--fondo); font-family: var(--fuente-num); font-weight: 800; font-size: 15px; text-align: center;
+}
+.lista-album { display: grid; gap: 16px; }
+.album-nombre { margin: 0 0 4px !important; font-size: 20px !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--texto) !important; }
+.seccion { display: grid; gap: 16px; }
+.rejilla-competiciones { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.seccion-pronto { max-width: 640px; }
+.seccion-pronto p { margin: 0; color: var(--texto-2); }
 
 /* ------------------------------------------------------------ Inicio */
 .inicio { display: grid; gap: 16px; grid-template-columns: 1fr; }
@@ -256,6 +324,10 @@ select {
 .modal-fondo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.55); display: grid; place-items: center; z-index: 50; padding: 16px; }
 .modal { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; }
 
+@media (min-width: 760px) {
+  .lobby-menu { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .recuadro { min-height: 170px; }
+}
 @media (min-width: 900px) {
   .inicio { grid-template-columns: 1.2fr 1fr; }
   .alineacion { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
@@ -266,6 +338,9 @@ select {
   .cabecera { gap: 6px; padding: 10px 10px; }
   .nav { gap: 0; }
   .nav button { padding: 6px 7px; font-size: 13px; }
+  .recuadro { min-height: 140px; padding: 14px; }
+  .recuadro-titulo { font-size: 19px; }
+  .recuadro-texto { font-size: 12px; }
   .marca { font-size: 17px; }
   .boton-icono { padding: 6px 8px; }
   .marcador .goles { font-size: 36px; }

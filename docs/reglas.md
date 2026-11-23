@@ -180,7 +180,16 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 
 ## 13. Interfaz (versión de prueba)
 
-- `python herramientas/servidor.py` → http://localhost:3300 (sin caché). Pantallas: Inicio, Alineación, Jugar.
+- `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
+- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (lo aporta el usuario; sin él se ve un degradado) con un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
+  - **Mi Club**: formación, estrategias, roles, capitán y alineación.
+  - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
+  - **Mercado de Fichajes**: solo abre en ciertas fechas (por ahora, cerrado).
+  - **Temporadas**: Liga, Copa y Torneo de Campeones contra la IA (próximamente); de momento, amistoso contra la IA.
+  - **Liga Master**: contra los clubes de los amigos y la IA (próximamente).
+  - **Tienda del Club**: sobres (próximamente).
+- En cada pantalla, la flecha ← vuelve al lobby (desde el partido, a Temporadas). Los avisos y confirmaciones usan diálogos del juego (`js/ui/dialogo.js`), nunca los del navegador.
+- Club de prueba: además de los ficticios trae 6 copias Común de cada jugador real aprobado, para probar la subida de rango (se quitará con los sobres).
 - **Tema**: oscuro por defecto, claro con el botón ☀️/🌙. Se guarda en el navegador.
 - **Cartas**: marco y panel con el color de la rareza; media + puesto arriba a la izquierda, "C" si es capitán. Foto en `assets/jugadores/<nombre>-<rareza>.webp` (ej. `lionel-messi-legendario.webp`); sin foto se ven las iniciales.
 - **Alineación**:

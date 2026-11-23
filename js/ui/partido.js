@@ -57,7 +57,7 @@ export function pantallaPartido(app, { club, ir }) {
   const botonCambio = h('button', { class: 'boton', onclick: abrirCambio }, '🔁 Cambio');
   const pie = h('div', { class: 'acciones oculto' },
     h('button', { class: 'boton primario', onclick: () => ir('partido') }, 'Jugar otro amistoso'),
-    h('button', { class: 'boton', onclick: () => ir('inicio') }, 'Volver al inicio'));
+    h('button', { class: 'boton', onclick: () => ir('temporadas') }, 'Volver'));
 
   app.append(h('section', { class: 'partido' },
     h('div', { class: 'panel marcador ancho' },

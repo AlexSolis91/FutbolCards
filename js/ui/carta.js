@@ -4,6 +4,7 @@
 
 import { h } from './dom.js';
 import { RAREZAS } from '../motor/reglas.js';
+import { atributosDeRareza, mediaEnRol } from '../motor/encaje.js';
 
 export function slug(texto) {
   return texto
@@ -46,4 +47,17 @@ export function crearCarta(o) {
       style: o.mini ? undefined : { fontSize: `${o.ficha.nombre.length <= 12 ? 15 : o.ficha.nombre.length <= 16 ? 13 : 11.5}px` },
     }, o.mini ? apellido : o.ficha.nombre),
     h('div', { class: 'detalle' }, o.detalle ?? `${o.ficha.nacion} · ${RAREZAS[o.rareza].nombre}`)));
+}
+
+// Media del jugador en su rol natural (sin encaje): la que se ve fuera del campo.
+export function mediaNatural(carta) {
+  const rol = carta.ficha.roles[0];
+  return { rol, media: Math.round(mediaEnRol(atributosDeRareza(carta.ficha, carta.rareza), rol)) };
+}
+
+export function abreviatura(rol) {
+  return {
+    portero: 'POR', central: 'DFC', libero: 'LIB', lateral: 'LAT', carrilero: 'CAR', ancla: 'MCD', regista: 'REG',
+    boxToBox: 'B2B', mediapunta: 'MCO', extremo: 'EXT', interior: 'INT', falso9: 'F9', delanteroArea: 'DC',
+  }[rol] ?? rol;
 }

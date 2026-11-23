@@ -141,3 +141,20 @@ test('jugadores reales: ninguno supera la media base máxima en Legendario y sus
     }
   }
 });
+
+test('colección: 6 copias suben a la siguiente rareza y consumen 5; la alineada conserva su sitio', async () => {
+  const { agruparColeccion, puedeMejorar, mejorarCarta } = await import('../js/motor/coleccion.js');
+  const ficha = { id: 'x', nombre: 'X', roles: ['delanteroArea'], atributos: {} };
+  const cartas = Array.from({ length: 7 }, (_, i) => ({ uid: `u${i}`, ficha, rareza: 'comun' }));
+  const tactica = { alineacion: [{ uid: 'u3', rol: 'delanteroArea' }] };
+  assert.equal(agruparColeccion(cartas)[0].copias, 7);
+  assert.ok(puedeMejorar(cartas, 'x', 'comun'));
+  assert.ok(!puedeMejorar(cartas.slice(0, 5), 'x', 'comun'));
+  const r = mejorarCarta(cartas, tactica, 'x', 'comun');
+  assert.equal(r.uid, 'u3');
+  assert.equal(r.cartas.length, 2);
+  assert.equal(r.cartas.find((c) => c.uid === 'u3').rareza, 'raro');
+  assert.ok(!puedeMejorar(r.cartas, 'x', 'comun'));
+  const leg = Array.from({ length: 6 }, (_, i) => ({ uid: `l${i}`, ficha, rareza: 'legendario' }));
+  assert.ok(!puedeMejorar(leg, 'x', 'legendario'));
+});

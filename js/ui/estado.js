@@ -7,7 +7,7 @@ const CLAVE = 'fc-club';
 export function cargarClub() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE));
-    if (guardado?.version === 1 && guardado.cartas?.length) return guardado;
+    if (guardado?.version === 2 && guardado.cartas?.length) return guardado;
   } catch (e) { /* almacenamiento no disponible o dañado */ }
   const club = crearClubPrueba();
   guardarClub(club);

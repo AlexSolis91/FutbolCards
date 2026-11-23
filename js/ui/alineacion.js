@@ -3,9 +3,8 @@
 // y las bonificaciones; el desglose nunca se muestra.
 
 import { h, vaciar, opcion } from './dom.js';
-import { crearCarta } from './carta.js';
+import { crearCarta, abreviatura, mediaNatural } from './carta.js';
 import { guardarClub } from './estado.js';
-import { abreviatura, mediaNatural } from './inicio.js';
 import {
   FORMACIONES, ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS,
   PUESTOS, ROLES, ATRIBUTOS, ATRIBUTOS_PORTERO, LISTA_ATRIBUTOS,
