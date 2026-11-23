@@ -9,7 +9,7 @@ export default {
   roles: ['falso9', 'extremo', 'mediapunta', 'segundoDelantero'],
   pie: 'izquierdo',
   pieMalo: 3,
-  estado: 'propuesta',
+  estado: 'aprobada', // aprobada por el usuario el 2026-11-23
   atributos: {
     definicion: 95, cabeza: 70, tiroLejano: 93,
     paseCorto: 94, paseLargo: 88, vision: 96, centros: 88,
