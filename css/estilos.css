@@ -319,7 +319,9 @@ body.en-lobby main { max-width: none; }
   position: relative; width: 100%; max-width: 520px; margin: 0 auto; aspect-ratio: 68 / 92;
   border-radius: var(--radio); overflow: hidden;
   background: repeating-linear-gradient(0deg, var(--cesped-1) 0 10%, var(--cesped-2) 10% 20%);
-  border: 1px solid var(--borde);
+  /* Contorno del campo: blanco y grueso (las líneas interiores siguen finas). */
+  border: clamp(4px, 0.5vw, 7px) solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 .campo::before, .campo::after { content: ''; position: absolute; left: 50%; transform: translateX(-50%); border: 2px solid var(--linea-campo); }
 .campo::before { bottom: -2px; width: 46%; height: 15%; }
@@ -367,7 +369,8 @@ body.en-lobby main { max-width: none; }
 .campo-h {
   position: relative; width: 100%; aspect-ratio: 105 / 52; border-radius: var(--radio); overflow: hidden;
   background: repeating-linear-gradient(90deg, var(--cesped-1) 0 10%, var(--cesped-2) 10% 20%);
-  border: 1px solid var(--borde);
+  border: clamp(4px, 0.5vw, 7px) solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 12px 40px rgba(0, 0, 0, 0.45);
 }
 .campo-h::before, .campo-h::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 44%; width: 14%; border: 2px solid var(--linea-campo); }
 .campo-h::before { left: -2px; }
