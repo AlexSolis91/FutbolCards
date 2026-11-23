@@ -1,10 +1,11 @@
-// Arranque y navegación entre pantallas (#inicio, #alineacion, #partido).
+// Arranque y navegación entre pantallas (#inicio, #alineacion, #album, #partido).
 
 import { vaciar } from './dom.js';
 import { cargarClub, cambiarTema, temaActual } from './estado.js';
 import { pantallaInicio } from './inicio.js';
 import { pantallaAlineacion } from './alineacion.js';
 import { pantallaPartido } from './partido.js';
+import { pantallaAlbum } from './album.js';
 
 const app = document.getElementById('app');
 const nav = document.getElementById('nav');
@@ -12,7 +13,7 @@ const botonTema = document.getElementById('tema');
 const club = cargarClub();
 let limpiar = null;
 
-const PANTALLAS = { inicio: pantallaInicio, alineacion: pantallaAlineacion, partido: pantallaPartido };
+const PANTALLAS = { inicio: pantallaInicio, alineacion: pantallaAlineacion, album: pantallaAlbum, partido: pantallaPartido };
 
 function ir(ruta) {
   if (location.hash !== `#${ruta}`) location.hash = ruta;

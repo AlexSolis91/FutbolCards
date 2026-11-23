@@ -196,3 +196,17 @@ export const ENCAJE = {
   // Química: puntos de vínculo con compañeros conectados → ajuste.
   quimica: [-2, -1, 0, 1, 2, 3], // 0, 1, 2, 3, 4, 5+ puntos
 };
+
+// ---------------------------------------------------------------- Escuelas de juego
+// Estilo con el que se identifica cada jugador (química: misma escuela = +1).
+// Son estilos, no países, para no repetir la química por nación.
+export const ESCUELAS = {
+  tikiTaka: { nombre: 'Tiki-taka', descripcion: 'Toque, posesión y pase corto' },
+  jogoBonito: { nombre: 'Jogo bonito', descripcion: 'Regate, fantasía e improvisación' },
+  catenaccio: { nombre: 'Catenaccio', descripcion: 'Orden defensivo y contra' },
+  futbolTotal: { nombre: 'Fútbol total', descripcion: 'Versatilidad e intercambio de posiciones' },
+  gegenpressing: { nombre: 'Gegenpressing', descripcion: 'Presión e intensidad' },
+  garra: { nombre: 'Garra', descripcion: 'Lucha, carácter y duelo' },
+  vertigo: { nombre: 'Vértigo', descripcion: 'Velocidad, verticalidad y gol' },
+  potencia: { nombre: 'Potencia', descripcion: 'Físico, juego aéreo y juego directo' },
+};

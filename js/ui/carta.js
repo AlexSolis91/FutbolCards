@@ -40,6 +40,10 @@ export function crearCarta(o) {
   o.capitan ? h('div', { class: 'capitan', title: 'Capitán' }, 'C') : null,
   foto,
   h('div', { class: 'info' },
-    h('div', { class: 'nombre' }, o.mini ? apellido : o.ficha.nombre),
+    // Nombre completo; la letra se achica en nombres largos para no cortarlo.
+    h('div', {
+      class: 'nombre',
+      style: o.mini ? undefined : { fontSize: `${o.ficha.nombre.length <= 12 ? 15 : o.ficha.nombre.length <= 16 ? 13 : 11.5}px` },
+    }, o.mini ? apellido : o.ficha.nombre),
     h('div', { class: 'detalle' }, o.detalle ?? `${o.ficha.nacion} · ${RAREZAS[o.rareza].nombre}`)));
 }
