@@ -104,11 +104,11 @@ select {
 body.en-lobby {
   background:
     linear-gradient(180deg, var(--velo-1), var(--velo-2)),
-    url('../assets/fondos/lobby.webp') center / cover no-repeat fixed,
-    radial-gradient(ellipse at 50% 0%, #1f6b3a 0%, #0b2a17 45%, var(--fondo) 100%) fixed;
+    url('../assets/fondos/lobby.webp') 68% center / cover no-repeat fixed,
+    radial-gradient(ellipse at 50% 0%, #123a6b 0%, #071a33 45%, var(--fondo) 100%) fixed;
 }
-:root { --velo-1: rgba(5, 8, 12, 0.35); --velo-2: rgba(5, 8, 12, 0.8); }
-:root[data-tema='claro'] { --velo-1: rgba(244, 245, 247, 0.25); --velo-2: rgba(244, 245, 247, 0.75); }
+:root { --velo-1: rgba(5, 8, 12, 0.15); --velo-2: rgba(5, 8, 12, 0.7); }
+:root[data-tema='claro'] { --velo-1: rgba(244, 245, 247, 0.5); --velo-2: rgba(244, 245, 247, 0.75); }
 body.en-lobby .cabecera { background: transparent; border-bottom-color: transparent; backdrop-filter: none; }
 .lobby { display: grid; gap: 18px; max-width: 980px; margin: 0 auto; }
 .lobby-club {

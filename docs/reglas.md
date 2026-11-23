@@ -181,7 +181,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 ## 13. Interfaz (versión de prueba)
 
 - `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
-- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (lo aporta el usuario; sin él se ve un degradado) con un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
+- **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (estadio azul aportado por el usuario, encuadrado al 68 % para que en el celular se vea el campo; sin él se ve un degradado azul) con un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
   - **Mi Club**: formación, estrategias, roles, capitán y alineación.
   - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
   - **Mercado de Fichajes**: solo abre en ciertas fechas (por ahora, cerrado).
