@@ -230,7 +230,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
   - Sigue sonando al cambiar de pantalla.
   - Botón 🔊 en la cabecera: panel con la pista actual, silenciar/activar y volumen 0–100. Se guarda en el navegador (`fc-musica`).
   - Los navegadores no dejan sonar audio hasta que el usuario toca la página, así que si el arranque se bloquea empieza con el primer clic o tecla.
-  - Pistas (en orden): We Are One (Ole Ola) → Drive (moa moa) → vuelve a empezar.
+  - Pistas (en orden): We Are One (Ole Ola) → Drive (moa moa) → Made of Gold (Ibeyi & Pa Salieu) → vuelve a empezar.
 - **Fondos por pantalla**: `app.js` pone `data-pantalla` en el body. Mi Club usa `assets/fondos/club.webp` (estadio de día, con un velo más fuerte para leer el campo y los paneles). Temporadas usa `assets/fondos/temporadas.webp` (el estadio azul, antiguo fondo del inicio).
 - En cada pantalla, la flecha ← vuelve al lobby (desde el partido, a Temporadas). Los avisos y confirmaciones usan diálogos del juego (`js/ui/dialogo.js`), nunca los del navegador.
 - Club de prueba: además de los ficticios trae 6 copias Común de cada jugador real aprobado, para probar la subida de rango (se quitará con los sobres).

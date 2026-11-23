@@ -6,6 +6,7 @@
 export const PISTAS = [
   { titulo: 'We Are One (Ole Ola)', archivo: 'assets/audio/musica/we-are-one.mp3' },
   { titulo: 'Drive — moa moa', archivo: 'assets/audio/musica/drive-moa-moa.mp3' },
+  { titulo: 'Made of Gold — Ibeyi & Pa Salieu', archivo: 'assets/audio/musica/made-of-gold.mp3' },
 ];
 
 const CLAVE = 'fc-musica';
