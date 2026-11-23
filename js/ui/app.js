@@ -45,6 +45,7 @@ function mostrar() {
   limpiar = null;
   vaciar(app);
   document.body.classList.toggle('en-lobby', ruta === 'inicio');
+  document.body.dataset.pantalla = ruta; // permite fondos propios por pantalla (css)
   titulo.textContent = p.titulo;
   botonVolver.hidden = ruta === 'inicio';
   document.title = p.titulo ? `${p.titulo} · Futbol Cards` : 'Futbol Cards';
