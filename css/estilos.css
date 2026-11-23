@@ -326,7 +326,11 @@ body.en-lobby main { max-width: none; }
 .campo::after { top: -2px; width: 46%; height: 15%; }
 .campo .medio { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--linea-campo); }
 .campo .circulo { position: absolute; left: 50%; top: 50%; width: 26%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
-.hueco { position: absolute; transform: translate(-50%, -50%); }
+/* Las líneas del campo (áreas, medio campo, círculo) se dibujan por debajo de
+   las cartas y no reciben clics; antes el área de arriba tapaba las cartas. */
+.campo::before, .campo::after, .campo .medio, .campo .circulo,
+.campo-h::before, .campo-h::after, .campo-h .medio-v, .campo-h .circulo { pointer-events: none; z-index: 0; }
+.hueco { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
 /* Cartas del campo: el tamaño lo calcula ajustarCampo() (--carta-campo) para
    que sean lo más grandes posible sin empalmarse; el texto escala con ellas. */
 .campo { --carta-campo: 64px; }
