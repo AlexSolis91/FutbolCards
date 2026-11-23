@@ -38,6 +38,10 @@ export const RAREZAS = {
 };
 export const ORDEN_RAREZAS = ['comun', 'raro', 'epico', 'legendario'];
 export const COPIAS_PARA_MEJORAR = 5;
+// Techo de la media base (rol natural, Legendario). Cristiano Ronaldo, Messi,
+// Pelé y Maradona son la cúspide y comparten este techo; nadie lo supera.
+// El encaje y las bonificaciones sí pueden subir o bajar la media en el partido.
+export const MEDIA_MAXIMA_LEGENDARIO = 96;
 export const JUGADORES_POR_SOBRE = 3;
 
 // ---------------------------------------------------------------- Roles

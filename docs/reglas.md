@@ -29,7 +29,18 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 
 - Cada jugador se define con sus atributos en **Legendario**.
 - Las otras rarezas restan a cada atributo: Épico −6, Raro −12, Común −18.
-- Ejemplo: Messi Común 80, Raro 86, Épico 92, Legendario 98.
+- **Techo: 96 de media base en Legendario** (rol natural). Cristiano Ronaldo, Messi, Pelé y Maradona son la cúspide del juego y comparten ese techo; nadie lo supera (prueba automática). Así ninguno de los cuatro queda "por encima" de otro.
+- El techo es de la media base: en el partido el encaje y las bonificaciones la suben o la bajan. Un crack mal usado (−5) puede quedar por debajo de otro jugador bien aprovechado (+6).
+- Ejemplo: Cristiano Ronaldo Común 78, Raro 84, Épico 90, Legendario 96.
+
+### Fichas de jugadores reales
+
+- Un archivo por jugador en `js/datos/jugadores/`, listado en `index.js`.
+- `estado: 'propuesta'` hasta que el usuario la aprueba, luego `'aprobada'`.
+- Fotos: `python herramientas/optimizar_imagenes.py` convierte `assets/originales/jugadores/<Nombre> <Rareza>.<ext>` en `assets/jugadores/<nombre>-<rareza>.webp`. Solo reduce, **nunca recorta**.
+- La carta encuadra la foto anclada arriba: si sobra, se recorta de abajo o de los lados, nunca la cabeza.
+- Escuelas de juego (estilos, no países): Tiki-taka, Jogo bonito, Catenaccio, Fútbol total, Gegenpressing, Garra, Vértigo, Potencia.
+- Aprobados: Cristiano Ronaldo (2026-11-23).
 
 ### Mejora por copias
 

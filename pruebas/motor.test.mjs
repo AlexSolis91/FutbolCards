@@ -123,3 +123,21 @@ test('alineación: auto-alinear pone 11 distintos y un portero en la portería',
     assert.equal(portero.ficha.roles[0], 'portero', f);
   }
 });
+
+test('jugadores reales: ninguno supera la media base máxima en Legendario y sus fichas son válidas', async () => {
+  const { JUGADORES } = await import('../js/datos/jugadores/index.js');
+  const { MEDIA_MAXIMA_LEGENDARIO, LISTA_ATRIBUTOS, ESCUELAS } = await import('../js/motor/reglas.js');
+  const { mediaEnRol } = await import('../js/motor/encaje.js');
+  const ids = new Set();
+  const escuelas = Object.values(ESCUELAS).map((e) => e.nombre);
+  for (const j of JUGADORES) {
+    assert.ok(!ids.has(j.id), `id repetido: ${j.id}`);
+    ids.add(j.id);
+    for (const a of LISTA_ATRIBUTOS) assert.ok(j.atributos[a] >= 1 && j.atributos[a] <= 99, `${j.id}.${a}`);
+    for (const r of j.roles) assert.ok(ROLES[r], `${j.id}: rol ${r}`);
+    assert.ok(escuelas.includes(j.escuela), `${j.id}: escuela ${j.escuela}`);
+    for (const r of j.roles) {
+      assert.ok(Math.round(mediaEnRol(j.atributos, r)) <= MEDIA_MAXIMA_LEGENDARIO, `${j.id} supera ${MEDIA_MAXIMA_LEGENDARIO} como ${r}`);
+    }
+  }
+});

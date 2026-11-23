@@ -8,7 +8,7 @@ export default {
   roles: ['interior', 'delanteroArea', 'extremo'],
   pie: 'derecho',
   pieMalo: 4,
-  estado: 'propuesta', // 'propuesta' hasta que el usuario la apruebe
+  estado: 'aprobada', // aprobada por el usuario el 2026-11-23
   atributos: {
     definicion: 99, cabeza: 95, tiroLejano: 96,
     paseCorto: 82, paseLargo: 74, vision: 80, centros: 82,
