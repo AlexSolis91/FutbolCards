@@ -9,6 +9,7 @@ import { pantallaColeccion } from './coleccion.js';
 import { pantallaTemporadas, pantallaMercado, pantallaLigaMaster, pantallaTienda } from './secciones.js';
 import { pantallaPartido } from './partido.js';
 import { mostrarPortada } from './portada.js';
+import { registrarServiceWorker, prepararBotonInstalar } from './instalar.js';
 import { iniciarMusica, estadoMusica, cambiarVolumen, alternarSilencio, alCambiarMusica, iconoSonido } from './musica.js';
 
 const app = document.getElementById('app');
@@ -95,6 +96,8 @@ alCambiarMusica(pintarSonido);
 
 // La música intenta sonar ya en la portada; si el navegador lo bloquea, empieza
 // con el clic de "Iniciar". El menú se pinta al entrar.
+registrarServiceWorker();
+prepararBotonInstalar(document.getElementById('instalar'));
 iniciarMusica();
 pintarSonido();
 pintarBotonTema();

@@ -208,6 +208,11 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 ## 13. Interfaz (versión de prueba)
 
 - `python herramientas/servidor.py` → http://localhost:3300 (sin caché).
+- **App instalable (PWA)**:
+  - Archivos: `manifest.webmanifest`, `sw.js` e iconos en `assets/iconos/` (se generan con `python herramientas/generar_iconos.py`).
+  - Botón **⬇ Instalar** en la cabecera: aparece solo si el navegador permite instalar (Chrome/Edge en PC y Android) y abre la ventana oficial. En iPhone/iPad explica cómo hacerlo con «Compartir → Agregar a pantalla de inicio». Si el juego ya se abre como app, el botón no sale.
+  - Service worker: el código se pide primero a la red (siempre llega la última versión) y, sin conexión, usa la copia guardada. Imágenes y fuentes salen primero de la copia. La música, siempre de la red.
+  - Subir `VERSION` en `sw.js` si cambia la lista de archivos base.
 - **Portada** (`js/ui/portada.js`, lo primero al abrir el juego):
   - Fondo del inicio con las chispas, el logo **FUTBOL CARDS** en grande (FUTBOL blanco, CARDS verde) e **INICIAR** apareciendo y desapareciendo.
   - Un clic (o Enter/Espacio) entra al menú.

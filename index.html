@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#0a0c0f">
+  <!-- App instalable (PWA) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="assets/iconos/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/iconos/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Futbol Cards">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Futbol Cards</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +28,7 @@
     <button class="boton-icono" id="volver" aria-label="Volver al inicio" title="Volver al inicio">←</button>
     <button class="marca" id="marca" aria-label="Ir al inicio">Futbol <span>Cards</span></button>
     <span class="titulo-pantalla" id="titulo"></span>
+    <button class="boton-instalar" id="instalar" hidden title="Instalar Futbol Cards como app">⬇ Instalar</button>
     <div class="control-sonido">
       <button class="boton-icono" id="sonido" aria-label="Música: volumen y silencio" aria-haspopup="true" aria-expanded="false" title="Música">🔊</button>
       <div class="panel-sonido" id="panel-sonido" hidden>

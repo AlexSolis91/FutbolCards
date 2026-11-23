@@ -1,0 +1,20 @@
+{
+  "name": "Futbol Cards",
+  "short_name": "Futbol Cards",
+  "description": "Juego de estrategia de fútbol con cartas de jugadores.",
+  "lang": "es",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#0a0c0f",
+  "theme_color": "#0a0c0f",
+  "categories": ["games", "sports"],
+  "icons": [
+    { "src": "assets/iconos/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/iconos/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
