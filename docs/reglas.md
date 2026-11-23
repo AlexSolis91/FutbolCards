@@ -1,4 +1,4 @@
-﻿# Futbol Cards — Registro oficial de reglas
+# Futbol Cards — Registro oficial de reglas
 
 Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 Última actualización: 2026-11-22.
