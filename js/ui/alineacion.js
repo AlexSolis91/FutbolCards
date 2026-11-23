@@ -12,9 +12,51 @@ import {
 import { prepararEquipo } from '../motor/encaje.js';
 import { autoAlinear, cambiarFormacion, definicionEquipo, valorEnPuesto } from '../motor/alineacion.js';
 
-// Posición en pantalla de un hueco (campo vertical, portería propia abajo).
-export function posicionHueco(hueco) {
-  return { left: `${6 + hueco.x * 0.88}%`, bottom: `${5 + hueco.y * 0.82}%` };
+// Agrupa los huecos en filas (portero, defensa, medios…) por su altura:
+// dos huecos están en la misma fila si su y difiere 10 o menos.
+export function filasFormacion(huecos) {
+  const orden = huecos.map((h, i) => ({ i, y: h.y })).sort((a, b) => a.y - b.y);
+  const fila = new Array(huecos.length);
+  let f = 0;
+  let previa = null;
+  for (const o of orden) {
+    if (previa !== null && o.y - previa > 10) f++;
+    fila[o.i] = f;
+    previa = o.y;
+  }
+  return { fila, n: f + 1 };
+}
+
+// Coloca las cartas en el campo lo más grandes posible sin que se empalmen:
+// las filas se reparten a lo alto y el tamaño de carta sale del espacio entre filas.
+const PROPORCION_CARTA = 7.6 / 5;
+export function ajustarCampo(campo, huecos) {
+  const W = campo.clientWidth;
+  const H = campo.clientHeight;
+  if (!W || !H) return;
+  const { fila, n } = filasFormacion(huecos);
+  const margen = 8;
+  const separacion = 0.9; // la carta ocupa el 90 % del espacio entre filas
+  let alto = (separacion * (H - 2 * margen)) / (n - 1 + separacion);
+  // Límite horizontal: en la fila más apretada (p. ej. 5 medios) las cartas
+  // vecinas tampoco pueden tocarse. dx = separación mínima en % del ancho útil.
+  let dx = 1;
+  for (let f = 0; f < n; f++) {
+    const xs = huecos.filter((_, i) => fila[i] === f).map((h) => h.x / 100).sort((a, b) => a - b);
+    for (let k = 1; k < xs.length; k++) dx = Math.min(dx, xs[k] - xs[k - 1]);
+  }
+  const k = dx * 0.94;
+  const anchoMaxFila = (k * (W - 2 * margen)) / (1 + k);
+  let ancho = Math.min(alto / PROPORCION_CARTA, W * 0.17, anchoMaxFila);
+  alto = ancho * PROPORCION_CARTA;
+  const paso = n > 1 ? (H - 2 * margen - alto) / (n - 1) : 0;
+  campo.style.setProperty('--carta-campo', `${ancho}px`);
+  campo.querySelectorAll('.hueco').forEach((el, i) => {
+    const x = margen + ancho / 2 + (huecos[i].x / 100) * (W - 2 * margen - ancho);
+    const y = H - margen - alto / 2 - fila[i] * paso;
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+  });
 }
 
 export function pantallaAlineacion(app, { club }) {
@@ -63,7 +105,7 @@ export function pantallaAlineacion(app, { club }) {
     huecos.forEach((hueco, i) => {
       const j = equipo.jugadores[i];
       const carta = club.cartas.find((c) => c.uid === t.alineacion[i].uid);
-      campo.append(h('div', { class: 'hueco', style: posicionHueco(hueco) },
+      campo.append(h('div', { class: 'hueco' },
         crearCarta({
           ficha: carta.ficha, rareza: carta.rareza, media: j.media, etiqueta: hueco.puesto,
           mini: true, capitan: t.capitan === carta.uid, seleccionada: seleccion === i,
@@ -138,9 +180,20 @@ export function pantallaAlineacion(app, { club }) {
       })));
 
     raiz.append(
-      h('div', {}, campo),
-      h('div', { style: { display: 'grid', gap: '16px' } }, panelTactica, panelJugador, panelBanca));
+      h('div', { class: 'contenedor-campo' }, campo),
+      h('div', { style: { display: 'grid', gap: '16px', alignContent: 'start' } }, panelTactica, panelJugador, panelBanca));
+    campoActual = campo;
+    huecosActuales = huecos;
+    observador.disconnect();
+    observador.observe(campo);
+    ajustarCampo(campo, huecos);
   }
 
+  // Recoloca las cartas cuando cambia el tamaño del campo (ventana, giro del celular).
+  let campoActual = null;
+  let huecosActuales = null;
+  const observador = new ResizeObserver(() => { if (campoActual) ajustarCampo(campoActual, huecosActuales); });
+
   pintar();
+  return () => observador.disconnect();
 }

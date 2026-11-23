@@ -274,10 +274,21 @@ body.en-lobby main { max-width: none; }
 .campo::after { top: -2px; width: 46%; height: 15%; }
 .campo .medio { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--linea-campo); }
 .campo .circulo { position: absolute; left: 50%; top: 50%; width: 26%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
-.hueco { position: absolute; transform: translate(-50%, 50%); }
-.hueco .carta.mini { width: clamp(52px, 13vw, 68px); }
+.hueco { position: absolute; transform: translate(-50%, -50%); }
+/* Cartas del campo: el tamaño lo calcula ajustarCampo() (--carta-campo) para
+   que sean lo más grandes posible sin empalmarse; el texto escala con ellas. */
+.campo { --carta-campo: 64px; }
+.hueco .carta.mini { width: var(--carta-campo); padding: calc(var(--carta-campo) * 0.03); border-radius: calc(var(--carta-campo) * 0.12); }
+.hueco .carta.mini .iniciales { font-size: calc(var(--carta-campo) * 0.3); }
+.hueco .carta.mini .media { top: calc(var(--carta-campo) * 0.05); left: calc(var(--carta-campo) * 0.05); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
+.hueco .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.22); }
+.hueco .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.11); }
+.hueco .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); top: calc(var(--carta-campo) * 0.05); right: calc(var(--carta-campo) * 0.05); }
+.hueco .carta.mini .nombre { font-size: calc(var(--carta-campo) * 0.14); }
+.hueco .carta.mini .info { padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.04) calc(var(--carta-campo) * 0.05); }
 
-.banca { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: thin; }
+/* Banquillo completo: las cartas bajan en filas, sin barra de desplazamiento. */
+.banca { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 10px 8px; justify-items: center; padding: 4px 2px; }
 .detalle-jugador { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
 .atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; font-size: 13px; }
 .atributos div { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--borde); padding: 1px 0; }
@@ -348,7 +359,10 @@ body.en-lobby main { max-width: none; }
 }
 @media (min-width: 900px) {
   .inicio { grid-template-columns: 1.2fr 1fr; }
-  .alineacion { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  /* El campo ocupa todo el alto de la pantalla; el panel usa el resto del ancho. */
+  .alineacion { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  body:has(.alineacion) main { max-width: 1500px; }
+  .campo { height: max(560px, calc(100dvh - 54px - 32px)); width: auto; max-width: none; }
   .partido { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
   .partido .ancho { grid-column: 1 / -1; }
 }
