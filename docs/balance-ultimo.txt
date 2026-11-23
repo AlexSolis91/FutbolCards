@@ -1,46 +1,50 @@
 === 4000 partidos entre equipos de media 80 ===
-Goles por partido: 2.86   Empates:  22.9%   Tiros: 35.1   Posesión del dominante:  59.4%
+Goles por partido: 2.96   Empates:  23.1%   Tiros: 36.2   Posesión del dominante:  59.4%
 Estrategia ofensiva (puntos: victoria 1, empate 0.5)
   posesion        49.2%  (n=2045)
-  contraataque    51.1%  (n=2031)
-  directo         49.2%  (n=1958)
-  bandas          50.5%  (n=1966)
+  contraataque    51.7%  (n=2031)
+  directo         49.8%  (n=1958)
+  bandas          49.3%  (n=1966)
 Estrategia defensiva (puntos: victoria 1, empate 0.5)
-  presionAlta     49.9%  (n=2000)
-  bloqueMedio     50.2%  (n=1967)
-  bloqueBajo      49.5%  (n=2014)
-  marcajeHombre   50.4%  (n=2019)
+  presionAlta     50.1%  (n=2000)
+  bloqueMedio     49.2%  (n=1967)
+  bloqueBajo      50.4%  (n=2014)
+  marcajeHombre   50.3%  (n=2019)
 Formación (puntos: victoria 1, empate 0.5)
-  4-4-2           48.5%  (n=1590)
-  4-3-3           49.0%  (n=1590)
-  4-2-3-1         50.7%  (n=1571)
-  3-5-2           52.6%  (n=1586)
-  5-3-2           49.2%  (n=1663)
+  4-4-2           51.6%  (n=897)
+  4-3-3           49.4%  (n=860)
+  4-2-3-1         50.8%  (n=905)
+  3-5-2           50.1%  (n=874)
+  5-3-2           48.1%  (n=882)
+  4-1-2-1-2       48.3%  (n=850)
+  4-4-1-1         51.5%  (n=895)
+  4-1-4-1         48.0%  (n=897)
+  3-4-3           52.0%  (n=940)
 Ventaja neta de estrategias (−4…+4) (puntos: victoria 1, empate 0.5)
   0               50.0%  (n=1970)
-  1               56.7%  (n=976)
-  2               55.4%  (n=539)
-  3               60.0%  (n=957)
-  4               64.5%  (n=543)
-  -4              35.5%  (n=543)
-  -3              40.0%  (n=957)
-  -2              44.6%  (n=539)
-  -1              43.3%  (n=976)
+  1               53.5%  (n=976)
+  2               55.5%  (n=539)
+  3               61.3%  (n=957)
+  4               65.8%  (n=543)
+  -4              34.2%  (n=543)
+  -3              38.7%  (n=957)
+  -2              44.5%  (n=539)
+  -1              46.5%  (n=976)
 Ventaja de formación (−2…+2) (puntos: victoria 1, empate 0.5)
-  0               50.0%  (n=1574)
-  1               53.4%  (n=1625)
-  2               58.9%  (n=1588)
-  -2              41.1%  (n=1588)
-  -1              46.6%  (n=1625)
+  0               50.0%  (n=934)
+  1               53.1%  (n=1768)
+  2               58.2%  (n=1765)
+  -2              41.8%  (n=1765)
+  -1              46.9%  (n=1768)
 Goles del atacante por partido (fila = su ofensiva, columna = defensiva rival)
                    presionAlta   bloqueMedio    bloqueBajo marcajeHombre
-posesion               1.01 −−       1.45 ++        1.08 −        1.27 +
-contraataque           1.97 ++        1.77 +       1.29 −−        1.51 −
-directo                 1.71 +        1.43 −       1.90 ++       1.17 −−
-bandas                  1.24 −       1.12 −−        1.41 +       1.54 ++
+posesion               0.94 −−       1.53 ++        1.02 −        1.35 +
+contraataque           2.17 ++        1.85 +       1.41 −−        1.56 −
+directo                 1.83 +        1.55 −       1.90 ++       1.35 −−
+bandas                  1.23 −       1.11 −−        1.33 +       1.61 ++
 Calidad, roles y estrategia (equipo A contra B)
-  A media 85 vs B media 80                                   gana  60.9%  empata  19.0%  pierde  20.2%
-  A media 90 vs B media 80                                   gana  79.4%  empata  12.9%  pierde   7.7%
-  A fuera de rol vs B en su rol (misma media)                gana   3.4%  empata   9.9%  pierde  86.8%
-  A con química máxima vs B al azar                          gana  49.8%  empata  23.2%  pierde  27.0%
-  A media 75 con ++ en todo vs B media 80 con −− en todo     gana  44.8%  empata  18.8%  pierde  36.4%
+  A media 85 vs B media 80                                   gana  61.6%  empata  19.9%  pierde  18.6%
+  A media 90 vs B media 80                                   gana  81.3%  empata  11.8%  pierde   7.0%
+  A fuera de rol vs B en su rol (misma media)                gana   3.8%  empata  10.1%  pierde  86.1%
+  A con química máxima vs B al azar                          gana  49.8%  empata  21.9%  pierde  28.3%
+  A media 75 con ++ en todo vs B media 80 con −− en todo     gana  41.3%  empata  20.0%  pierde  38.8%

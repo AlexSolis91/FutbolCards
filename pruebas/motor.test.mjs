@@ -30,10 +30,12 @@ test('regla de oro: cada estrategia tiene ++, +, −, −− una vez (filas y co
   }
 });
 
-test('regla de oro: cada formación tiene ++, +, −, −− contra las demás y es antisimétrica', () => {
+test('regla de oro: cada formación tiene la misma cantidad de ++, +, −, −− contra las demás y es antisimétrica', () => {
+  const porValor = (ORDEN_FORMACIONES.length - 1) / 4;
+  assert.ok(Number.isInteger(porValor), 'el número de formaciones debe ser 4k + 1');
   for (const a of ORDEN_FORMACIONES) {
     const vals = ORDEN_FORMACIONES.filter((b) => b !== a).map((b) => ventajaFormacion(a, b));
-    assert.deepEqual(ordenar(vals), [-2, -1, 1, 2]);
+    for (const v of [-2, -1, 1, 2]) assert.equal(vals.filter((x) => x === v).length, porValor, `${a}: ${v}`);
     assert.equal(ventajaFormacion(a, a), 0);
     for (const b of ORDEN_FORMACIONES) assert.equal(ventajaFormacion(a, b) + ventajaFormacion(b, a), 0);
   }

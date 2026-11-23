@@ -58,6 +58,6 @@ export function mediaNatural(carta) {
 export function abreviatura(rol) {
   return {
     portero: 'POR', central: 'DFC', libero: 'LIB', lateral: 'LAT', carrilero: 'CAR', ancla: 'MCD', regista: 'REG',
-    boxToBox: 'B2B', mediapunta: 'MCO', extremo: 'EXT', interior: 'INT', falso9: 'F9', delanteroArea: 'DC',
+    boxToBox: 'B2B', mediapunta: 'MCO', extremo: 'EXT', interior: 'INT', segundoDelantero: 'SD', falso9: 'F9', delanteroArea: 'DC',
   }[rol] ?? rol;
 }

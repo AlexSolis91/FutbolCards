@@ -36,9 +36,9 @@ export const MOTOR = {
   // Calibración (logit) para que ninguna estrategia ni formación sea superior
   // por sí sola. La calcula herramientas/calibrar.mjs; no tocar a mano.
   calibracion: {
-    ofensiva: { posesion: -0.152, contraataque: -0.128, directo: 0.114, bandas: 0.164 },
-    defensiva: { presionAlta: 0.061, bloqueMedio: -0.066, bloqueBajo: -0.018, marcajeHombre: 0.023 },
-    formacion: { '4-4-2': -0.062, '4-3-3': 0.029, '4-2-3-1': -0.022, '3-5-2': 0.042, '5-3-2': 0.011 },
+    ofensiva: { posesion: -0.172, contraataque: -0.121, directo: 0.142, bandas: 0.148 },
+    defensiva: { presionAlta: 0.06, bloqueMedio: -0.069, bloqueBajo: -0.003, marcajeHombre: 0.011 },
+    formacion: { '4-4-2': -0.055, '4-3-3': 0.044, '4-2-3-1': 0.007, '3-5-2': 0.016, '5-3-2': 0.023, '4-1-2-1-2': -0.013, '4-4-1-1': -0.044, '4-1-4-1': -0.019, '3-4-3': 0.042 },
   },
 };
 

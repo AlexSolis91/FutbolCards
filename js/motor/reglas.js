@@ -59,6 +59,7 @@ export const ROLES = {
   mediapunta: { nombre: 'Mediapunta', linea: 'MED', pesos: { vision: 0.25, paseCorto: 0.2, regate: 0.2, control: 0.15, tiroLejano: 0.1, compostura: 0.1 } },
   extremo: { nombre: 'Extremo', linea: 'DEL', pesos: { velocidad: 0.25, regate: 0.25, centros: 0.2, control: 0.1, definicion: 0.1, resistencia: 0.1 } },
   interior: { nombre: 'Delantero interior', linea: 'DEL', pesos: { regate: 0.25, definicion: 0.25, velocidad: 0.2, control: 0.15, tiroLejano: 0.15 }, presencia: { ata: 0.1, med: -0.1 } },
+  segundoDelantero: { nombre: 'Segundo delantero', linea: 'DEL', pesos: { definicion: 0.2, regate: 0.2, vision: 0.15, paseCorto: 0.15, control: 0.15, velocidad: 0.15 }, presencia: { med: 0.15 } },
   falso9: { nombre: 'Falso 9', linea: 'DEL', pesos: { vision: 0.2, paseCorto: 0.2, regate: 0.2, control: 0.15, definicion: 0.15, compostura: 0.1 }, presencia: { med: 0.3, ata: -0.15 } },
   delanteroArea: { nombre: 'Delantero de área', linea: 'DEL', pesos: { definicion: 0.35, cabeza: 0.2, posicionamiento: 0.2, compostura: 0.15, fuerza: 0.1 } },
 };
@@ -71,13 +72,16 @@ export const PUESTOS = {
   DFC: { nombre: 'Defensa central', linea: 'DEF', roles: ['central', 'libero'], presencia: { def: 1 } },
   LI: { nombre: 'Lateral izquierdo', linea: 'DEF', roles: ['lateral', 'carrilero'], presencia: { def: 1, med: 0.4, ata: 0.1 } },
   LD: { nombre: 'Lateral derecho', linea: 'DEF', roles: ['lateral', 'carrilero'], presencia: { def: 1, med: 0.4, ata: 0.1 } },
-  MCD: { nombre: 'Mediocentro defensivo', linea: 'MED', roles: ['ancla', 'regista'], presencia: { def: 0.45, med: 0.8 } },
+  MCD: { nombre: 'Contención', linea: 'MED', roles: ['ancla', 'regista'], presencia: { def: 0.45, med: 0.8 } },
   MC: { nombre: 'Mediocentro', linea: 'MED', roles: ['boxToBox', 'regista', 'ancla', 'mediapunta'], presencia: { def: 0.2, med: 1, ata: 0.25 } },
+  II: { nombre: 'Interior izquierdo', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
+  ID: { nombre: 'Interior derecho', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
   MI: { nombre: 'Medio izquierdo', linea: 'MED', roles: ['extremo', 'carrilero', 'boxToBox'], presencia: { def: 0.2, med: 0.9, ata: 0.4 } },
   MD: { nombre: 'Medio derecho', linea: 'MED', roles: ['extremo', 'carrilero', 'boxToBox'], presencia: { def: 0.2, med: 0.9, ata: 0.4 } },
   MCO: { nombre: 'Mediapunta', linea: 'MED', roles: ['mediapunta', 'falso9'], presencia: { med: 0.6, ata: 0.65 } },
   EI: { nombre: 'Extremo izquierdo', linea: 'DEL', roles: ['extremo', 'interior'], presencia: { med: 0.3, ata: 1 } },
   ED: { nombre: 'Extremo derecho', linea: 'DEL', roles: ['extremo', 'interior'], presencia: { med: 0.3, ata: 1 } },
+  SD: { nombre: 'Segundo delantero', linea: 'DEL', roles: ['segundoDelantero', 'falso9', 'interior'], presencia: { med: 0.45, ata: 0.85 } },
   DC: { nombre: 'Delantero centro', linea: 'DEL', roles: ['delanteroArea', 'falso9', 'interior'], presencia: { med: 0.15, ata: 1 } },
 };
 
@@ -92,21 +96,33 @@ const DEF4 = [p('LI', 12, 25), p('DFC', 37, 20), p('DFC', 63, 20), p('LD', 88, 2
 export const FORMACIONES = {
   '4-4-2': { huecos: [POR, ...DEF4, p('MI', 12, 55), p('MC', 37, 50), p('MC', 63, 50), p('MD', 88, 55), p('DC', 37, 82), p('DC', 63, 82)],
     vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 7], [7, 8], [6, 9], [7, 10], [9, 10], [5, 9], [8, 10]] },
-  '4-3-3': { huecos: [POR, ...DEF4, p('MC', 25, 50), p('MCD', 50, 42), p('MC', 75, 50), p('EI', 15, 80), p('DC', 50, 85), p('ED', 85, 80)],
+  '4-3-3': { huecos: [POR, ...DEF4, p('II', 25, 50), p('MCD', 50, 42), p('ID', 75, 50), p('EI', 15, 80), p('DC', 50, 85), p('ED', 85, 80)],
     vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 6], [4, 7], [5, 6], [6, 7], [5, 8], [7, 10], [8, 9], [9, 10], [1, 8], [4, 10]] },
   '4-2-3-1': { huecos: [POR, ...DEF4, p('MCD', 37, 40), p('MCD', 63, 40), p('MI', 15, 65), p('MCO', 50, 65), p('MD', 85, 65), p('DC', 50, 87)],
     vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [2, 5], [3, 6], [5, 6], [1, 7], [4, 9], [5, 7], [6, 9], [7, 8], [8, 9], [8, 10], [7, 10], [9, 10]] },
-  '3-5-2': { huecos: [POR, p('DFC', 25, 20), p('DFC', 50, 18), p('DFC', 75, 20), p('MI', 10, 55), p('MC', 30, 50), p('MCD', 50, 42), p('MC', 70, 50), p('MD', 90, 55), p('DC', 37, 82), p('DC', 63, 82)],
+  '3-5-2': { huecos: [POR, p('DFC', 25, 20), p('DFC', 50, 18), p('DFC', 75, 20), p('MI', 10, 55), p('II', 30, 50), p('MCD', 50, 42), p('ID', 70, 50), p('MD', 90, 55), p('DC', 37, 82), p('DC', 63, 82)],
     vinculos: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [1, 4], [3, 8], [1, 5], [2, 6], [3, 7], [4, 5], [5, 6], [6, 7], [7, 8], [5, 9], [7, 10], [9, 10]] },
-  '5-3-2': { huecos: [POR, p('LI', 8, 30), p('DFC', 28, 20), p('DFC', 50, 18), p('DFC', 72, 20), p('LD', 92, 30), p('MC', 25, 50), p('MC', 50, 48), p('MC', 75, 50), p('DC', 37, 82), p('DC', 63, 82)],
+  '5-3-2': { huecos: [POR, p('LI', 8, 30), p('DFC', 28, 20), p('DFC', 50, 18), p('DFC', 72, 20), p('LD', 92, 30), p('II', 25, 50), p('MC', 50, 48), p('ID', 75, 50), p('DC', 37, 82), p('DC', 63, 82)],
     vinculos: [[0, 2], [0, 3], [0, 4], [1, 2], [2, 3], [3, 4], [4, 5], [1, 6], [2, 6], [3, 7], [4, 8], [5, 8], [6, 7], [7, 8], [6, 9], [8, 10], [9, 10]] },
+  // 4-4-2 en rombo: contención, dos interiores y mediapunta.
+  '4-1-2-1-2': { huecos: [POR, ...DEF4, p('MCD', 50, 40), p('II', 25, 52), p('ID', 75, 52), p('MCO', 50, 65), p('DC', 37, 85), p('DC', 63, 85)],
+    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 6], [4, 7], [2, 5], [3, 5], [5, 6], [5, 7], [6, 8], [7, 8], [8, 9], [8, 10], [9, 10], [5, 8]] },
+  // Segundo delantero por detrás del 9.
+  '4-4-1-1': { huecos: [POR, ...DEF4, p('MI', 12, 50), p('MC', 37, 45), p('MC', 63, 45), p('MD', 88, 50), p('SD', 50, 68), p('DC', 50, 87)],
+    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 7], [7, 8], [6, 9], [7, 9], [9, 10], [5, 10], [8, 10]] },
+  '4-1-4-1': { huecos: [POR, ...DEF4, p('MCD', 50, 38), p('MI', 12, 58), p('II', 37, 55), p('ID', 63, 55), p('MD', 88, 58), p('DC', 50, 86)],
+    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [2, 5], [3, 5], [1, 6], [4, 9], [5, 7], [5, 8], [6, 7], [7, 8], [8, 9], [6, 10], [9, 10], [7, 10]] },
+  '3-4-3': { huecos: [POR, p('DFC', 25, 20), p('DFC', 50, 18), p('DFC', 75, 20), p('MI', 12, 50), p('MC', 37, 46), p('MC', 63, 46), p('MD', 88, 50), p('EI', 18, 80), p('DC', 50, 86), p('ED', 82, 80)],
+    vinculos: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [1, 4], [3, 7], [1, 5], [3, 6], [4, 5], [5, 6], [6, 7], [4, 8], [7, 10], [8, 9], [9, 10], [5, 9]] },
 };
-export const ORDEN_FORMACIONES = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '5-3-2'];
+export const ORDEN_FORMACIONES = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '5-3-2', '4-1-2-1-2', '4-4-1-1', '4-1-4-1', '3-4-3'];
 
-// Regla de oro: contra las otras formaciones, cada una tiene exactamente una
-// ++ (+2), una + (+1), una − (−1) y una −− (−2). Contra sí misma, neutral.
-// Tabla cíclica antisimétrica: valor según la distancia en ORDEN_FORMACIONES.
-const CICLO_FORMACION = [0, 2, -1, 1, -2];
+// Regla de oro: contra las otras formaciones, cada una tiene la MISMA cantidad
+// de ++ (+2), + (+1), − (−1) y −− (−2): con 9 formaciones, dos de cada.
+// Contra sí misma, neutral. Tabla cíclica antisimétrica (si A tiene ++ contra
+// B, B tiene −− contra A): valor según la distancia en ORDEN_FORMACIONES.
+// El número de formaciones debe ser impar y la tabla seguir el patrón.
+const CICLO_FORMACION = [0, 2, -1, 1, -2, 2, -1, 1, -2];
 export function ventajaFormacion(propia, rival) {
   const n = ORDEN_FORMACIONES.length;
   const i = ORDEN_FORMACIONES.indexOf(propia);

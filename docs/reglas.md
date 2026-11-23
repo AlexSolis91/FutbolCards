@@ -71,7 +71,7 @@ Además: rol natural + hasta 2 secundarios, pie bueno / pie malo (1–5), nacion
   - **Afinidad con las estrategias** (−4…+4): lo que destacan sus atributos clave para la estrategia elegida respecto a las demás. Pesa más la ofensiva en delanteros (80 %), mitad y mitad en medios, más la defensiva en defensas (80 %). Porteros: sin afinidad.
   - **Química** (−2…+3), ver §5.
 - La media de cada rol es un promedio ponderado de atributos (`ROLES` en js/motor/reglas.js).
-- Roles: Portero, Central, Líbero, Lateral, Carrilero, Ancla, Regista, Box-to-box, Mediapunta, Extremo, Delantero interior, Falso 9, Delantero de área.
+- Roles: Portero, Central, Líbero, Lateral, Carrilero, Ancla, Regista, Box-to-box, Mediapunta, Extremo, Delantero interior, **Segundo delantero**, Falso 9, Delantero de área.
 
 ## 5. Química
 
@@ -117,13 +117,40 @@ Cada estrategia cambia también **qué atributos pesan** en cada fase, por qué 
 
 ### Formaciones
 
-| Formación \ Rival | 4-4-2 | 4-3-3 | 4-2-3-1 | 3-5-2 | 5-3-2 |
-|---|---|---|---|---|---|
-| 4-4-2 | = | ++ | − | + | −− |
-| 4-3-3 | −− | = | ++ | − | + |
-| 4-2-3-1 | + | −− | = | ++ | − |
-| 3-5-2 | − | + | −− | = | ++ |
-| 5-3-2 | ++ | − | + | −− | = |
+| Formación \ Rival | 4-4-2 | 4-3-3 | 4-2-3-1 | 3-5-2 | 5-3-2 | 4-1-2-1-2 | 4-4-1-1 | 4-1-4-1 | 3-4-3 |
+|---|---|---|---|---|---|---|---|---|---|
+| 4-4-2 | = | ++ | − | + | −− | ++ | − | + | −− |
+| 4-3-3 | −− | = | ++ | − | + | −− | ++ | − | + |
+| 4-2-3-1 | + | −− | = | ++ | − | + | −− | ++ | − |
+| 3-5-2 | − | + | −− | = | ++ | − | + | −− | ++ |
+| 5-3-2 | ++ | − | + | −− | = | ++ | − | + | −− |
+| 4-1-2-1-2 | −− | ++ | − | + | −− | = | ++ | − | + |
+| 4-4-1-1 | + | −− | ++ | − | + | −− | = | ++ | − |
+| 4-1-4-1 | − | + | −− | ++ | − | + | −− | = | ++ |
+| 3-4-3 | ++ | − | + | −− | ++ | − | + | −− | = |
+
+9 formaciones. Contra las demás, cada una tiene **dos ++, dos +, dos − y dos −−** (misma cantidad de cada, regla de oro), y la tabla es simétrica: si A tiene ++ contra B, B tiene −− contra A. Para añadir más, el total debe seguir siendo 4k + 1 (13, 17…) y respetar el patrón (prueba automática).
+
+**Puestos**:
+- POR, DFC, LI, LD.
+- MCD = **Contención**, MC = Mediocentro.
+- **II / ID = Interior izquierdo / derecho**.
+- MI / MD = Medio izquierdo / derecho.
+- MCO = **Mediapunta**.
+- EI / ED = Extremos.
+- **SD = Segundo delantero**.
+- DC = Delantero centro.
+
+**Formaciones**:
+- 4-4-2 (doble pivote).
+- 4-3-3 (contención + 2 interiores).
+- 4-2-3-1.
+- 3-5-2 (contención + 2 interiores).
+- 5-3-2 (2 interiores).
+- **4-1-2-1-2** (rombo).
+- **4-4-1-1** (segundo delantero).
+- **4-1-4-1**.
+- **3-4-3**.
 
 Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carriles (izquierda, centro, derecha), lo que crea superioridades numéricas en cada zona.
 
@@ -213,6 +240,6 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 
 ## Pendiente de decidir
 
-- Más formaciones (si se añaden, la tabla debe seguir dando a cada una ++, +, −, −−).
+- Más formaciones: el total debe ser 4k + 1 (la próxima tanda sería de 4, hasta 13).
 - Rasgos de jugador (Partidos grandes, Pulmón…): aún no implementados.
 - Jugadores reales: se crean a partir de las fotos del usuario.
