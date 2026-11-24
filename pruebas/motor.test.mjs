@@ -178,3 +178,19 @@ test('colección: 6 copias suben a la siguiente rareza y consumen 5; la alineada
   const epicos = raros.map((c) => ({ ...c, rareza: 'epico' }));
   assert.ok(!puedeMejorar(epicos, 'f', 'epico'));
 });
+
+test('alineación: un jugador no se repite en el campo y el banquillo muestra una carta por jugador', async () => {
+  const { autoAlinear, banquillo } = await import('../js/motor/alineacion.js');
+  const { crearPlantillaPrueba, copiasDemo } = await import('../js/datos/club-prueba.js');
+  const { JUGADORES } = await import('../js/datos/jugadores/index.js');
+  const cartas = [...crearPlantillaPrueba(7, 'p'), ...copiasDemo(JUGADORES)];
+  for (const f of ORDEN_FORMACIONES) {
+    const xi = autoAlinear(cartas, f);
+    const fichas = xi.map((a) => cartas.find((c) => c.uid === a.uid).ficha.id);
+    assert.equal(new Set(fichas).size, 11, f);
+    const banca = banquillo(cartas, xi, ORDEN_RAREZAS);
+    const ids = banca.map((b) => b.carta.ficha.id);
+    assert.equal(new Set(ids).size, ids.length, f);
+    assert.ok(ids.every((id) => !fichas.includes(id)), f);
+  }
+});

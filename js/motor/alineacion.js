@@ -16,6 +16,7 @@ export function valorEnPuesto(carta, puesto) {
 }
 
 // Elige los 11 mejores para la formación (emparejamiento voraz global).
+// Un jugador solo puede estar una vez en el campo (aunque tengas copias).
 // cartas: [{ uid, ficha, rareza }]. Devuelve [{ uid, rol }] × 11.
 export function autoAlinear(cartas, formacion) {
   const huecos = FORMACIONES[formacion].huecos;
@@ -29,12 +30,32 @@ export function autoAlinear(cartas, formacion) {
   pares.sort((a, b) => b.valor - a.valor);
   const res = new Array(huecos.length).fill(null);
   const usados = new Set();
+  const fichaDe = new Map(cartas.map((c) => [c.uid, c.ficha.id]));
   for (const p of pares) {
-    if (res[p.i] || usados.has(p.uid)) continue;
+    if (res[p.i] || usados.has(p.uid) || usados.has(fichaDe.get(p.uid))) continue;
     res[p.i] = { uid: p.uid, rol: p.rol };
-    usados.add(p.uid);
+    usados.add(p.uid).add(fichaDe.get(p.uid));
   }
   return res;
+}
+
+// Banquillo: una carta por jugador (la de mayor rareza y, si hay varias, la
+// primera), sin los jugadores que ya están en el campo. Las copias se ven y
+// se usan en Colección. Devuelve [{ carta, copias }].
+export function banquillo(cartas, alineacion, ordenRarezas) {
+  const enCampo = new Set(alineacion.map((a) => a.uid));
+  const fichasEnCampo = new Set(cartas.filter((c) => enCampo.has(c.uid)).map((c) => c.ficha.id));
+  const porJugador = new Map();
+  for (const c of cartas) {
+    if (fichasEnCampo.has(c.ficha.id)) continue;
+    const previo = porJugador.get(c.ficha.id);
+    if (!previo) porJugador.set(c.ficha.id, { carta: c, copias: 1 });
+    else {
+      previo.copias++;
+      if (ordenRarezas.indexOf(c.rareza) > ordenRarezas.indexOf(previo.carta.rareza)) previo.carta = c;
+    }
+  }
+  return [...porJugador.values()];
 }
 
 // tactica: { formacion, ofensiva, defensiva, capitan (uid), alineacion: [{ uid, rol }] }

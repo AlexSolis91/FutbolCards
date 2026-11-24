@@ -2,6 +2,7 @@
 // recuadro abre su pantalla y la flecha ← vuelve al lobby.
 
 import { vaciar } from './dom.js';
+import { avisar } from './dialogo.js';
 import { cargarClub, cambiarTema, temaActual } from './estado.js';
 import { pantallaLobby } from './lobby.js';
 import { pantallaAlineacion } from './alineacion.js';
@@ -102,6 +103,18 @@ iniciarMusica();
 pintarSonido();
 pintarBotonTema();
 mostrarPortada().then(mostrar);
+
+// Si algo falla, avisarlo en pantalla (con el texto del error para poder
+// corregirlo) en lugar de dejar la pantalla a medias sin explicación.
+let avisandoError = false;
+function informarError(error) {
+  if (avisandoError) return;
+  avisandoError = true;
+  avisar('Algo falló', `Recarga con Ctrl+Shift+R. Si se repite, manda una captura de este mensaje. Detalle: ${error?.message ?? error}`)
+    .finally(() => { avisandoError = false; });
+}
+window.addEventListener('error', (ev) => informarError(ev.error ?? ev.message));
+window.addEventListener('unhandledrejection', (ev) => informarError(ev.reason));
 
 // Depuración desde la consola.
 window.__fc = { club };

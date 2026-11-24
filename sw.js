@@ -1,12 +1,13 @@
 // Service worker de Futbol Cards: permite instalar el juego como app y abrirlo
 // aunque falle la conexión.
 // - Código (html, css, js): primero la red (así siempre llega la última
-//   versión publicada) y, si no hay conexión, la copia guardada.
+//   versión publicada) y, si no hay conexión, la copia guardada. Se salta la
+//   caché HTTP (GitHub Pages guarda 10 min) para no mezclar archivos viejos y nuevos.
 // - Imágenes y fuentes: primero la copia guardada (cargan al instante).
 // - Música: siempre de la red (los mp3 se piden por partes y no conviene guardarlos).
 // Subir VERSION cuando cambie la lista de archivos base.
 
-const VERSION = 'fc-v1';
+const VERSION = 'fc-v2';
 const BASE = [
   './',
   './index.html',
@@ -32,7 +33,7 @@ self.addEventListener('activate', (e) => {
 async function primeroRed(peticion) {
   const cache = await caches.open(VERSION);
   try {
-    const resp = await fetch(peticion);
+    const resp = await fetch(peticion, { cache: 'no-cache' });
     if (resp.ok) cache.put(peticion, resp.clone());
     return resp;
   } catch (err) {

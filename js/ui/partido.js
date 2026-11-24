@@ -5,9 +5,9 @@ import { h, vaciar, opcion } from './dom.js';
 import { iniciales } from './carta.js';
 import { crearPartido, MOTOR } from '../motor/partido.js';
 import {
-  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ESPEJO_FRANJA,
+  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ESPEJO_FRANJA, ORDEN_RAREZAS,
 } from '../motor/reglas.js';
-import { definicionEquipo, cambiarFormacion, valorEnPuesto } from '../motor/alineacion.js';
+import { definicionEquipo, cambiarFormacion, valorEnPuesto, banquillo } from '../motor/alineacion.js';
 import { crearRivalPrueba } from '../datos/club-prueba.js';
 import { narrar } from './narracion.js';
 
@@ -223,12 +223,14 @@ export function pantallaPartido(app, { club, ir }) {
       return;
     }
     const enCampo = partido.estado.eq[0].jugadores;
-    const usados = new Set(tp.alineacion.map((a) => a.uid));
     // Por defecto sale el jugador de campo más cansado.
     const masCansado = enCampo.reduce((m, j, i) => (j.linea !== 'POR' && (m === -1 || j.energia < enCampo[m].energia) ? i : m), -1);
     const sale = h('select', { onchange: () => llenarEntra() }, enCampo.map((j, i) =>
       opcion(String(i), `${j.puesto} · ${j.nombre} · energía ${Math.round(j.energia)}%`, i === masCansado)));
-    const banca = club.cartas.filter((c) => !usados.has(c.uid) && !partido.estado.eventos.some((e) => e.tipo === 'cambio' && e.lado === 0 && e.sale === c.uid));
+    // Una carta por jugador; ni los que están en el campo ni los que ya salieron.
+    const salieron = new Set(partido.estado.eventos.filter((e) => e.tipo === 'cambio' && e.lado === 0)
+      .map((e) => club.cartas.find((c) => c.uid === e.sale)?.ficha.id));
+    const banca = banquillo(club.cartas, tp.alineacion, ORDEN_RAREZAS).map((b) => b.carta).filter((c) => !salieron.has(c.ficha.id));
     const entra = h('select', {});
     // El banquillo se ordena por lo bien que encaja cada uno en el puesto que queda libre.
     function llenarEntra() {

@@ -232,6 +232,10 @@ body.en-lobby main { max-width: none; }
   position: absolute; bottom: -8px; right: -8px; z-index: 2; min-width: 32px; padding: 3px 7px; border-radius: 999px;
   background: var(--texto); color: var(--fondo); font-family: var(--fuente-num); font-weight: 800; font-size: 15px; text-align: center;
 }
+.copias-banca {
+  position: absolute; bottom: -6px; right: -6px; z-index: 2; padding: 1px 6px; border-radius: 999px;
+  background: var(--texto); color: var(--fondo); font-family: var(--fuente-num); font-weight: 800; font-size: 12px;
+}
 .lista-album { display: grid; gap: 16px; }
 .album-nombre { margin: 0 0 4px !important; font-size: 20px !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--texto) !important; }
 .etiqueta-propuesta { margin-left: 10px; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; vertical-align: middle; background: rgba(234, 179, 8, 0.18); color: #eab308; }

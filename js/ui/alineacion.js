@@ -7,10 +7,10 @@ import { crearCarta, abreviatura, mediaNatural } from './carta.js';
 import { guardarClub } from './estado.js';
 import {
   FORMACIONES, ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS,
-  PUESTOS, ROLES, ATRIBUTOS, ATRIBUTOS_PORTERO, LISTA_ATRIBUTOS,
+  PUESTOS, ROLES, ATRIBUTOS, ATRIBUTOS_PORTERO, LISTA_ATRIBUTOS, ORDEN_RAREZAS,
 } from '../motor/reglas.js';
 import { prepararEquipo } from '../motor/encaje.js';
-import { autoAlinear, cambiarFormacion, definicionEquipo, valorEnPuesto } from '../motor/alineacion.js';
+import { autoAlinear, cambiarFormacion, definicionEquipo, valorEnPuesto, banquillo } from '../motor/alineacion.js';
 
 // Agrupa los huecos en filas (portero, defensa, medios…) por su altura:
 // dos huecos están en la misma fila si su y difiere 10 o menos.
@@ -95,8 +95,7 @@ export function pantallaAlineacion(app, { club }) {
     const t = club.tactica;
     const equipo = prepararEquipo(definicionEquipo(club.nombre, club.cartas, t));
     const huecos = FORMACIONES[t.formacion].huecos;
-    const enCampo = new Set(t.alineacion.map((a) => a.uid));
-    const banca = club.cartas.filter((c) => !enCampo.has(c.uid));
+    const banca = banquillo(club.cartas, t.alineacion, ORDEN_RAREZAS);
     vaciar(raiz);
 
     // ---------------------------------------------------------- Campo
@@ -168,15 +167,17 @@ export function pantallaAlineacion(app, { club }) {
     // ---------------------------------------------------------- Banquillo
     const panelBanca = h('div', { class: 'panel' },
       h('h2', {}, seleccion === null ? 'Banquillo' : `Banquillo — elige quién entra como ${huecos[seleccion].puesto}`),
-      h('div', { class: 'banca' }, banca.map((c) => {
+      h('div', { class: 'banca' }, banca.map(({ carta: c, copias }) => {
         const v = seleccion !== null ? valorEnPuesto(c, huecos[seleccion].puesto) : null;
         const nat = mediaNatural(c);
-        return crearCarta({
+        const tarjeta = crearCarta({
           ficha: c.ficha, rareza: c.rareza, mini: true,
           media: v ? Math.round(v.valor) : nat.media,
           etiqueta: v ? huecos[seleccion].puesto : abreviatura(nat.rol),
           onclick: seleccion === null ? undefined : () => colocar(seleccion, c.uid),
         });
+        if (copias > 1) tarjeta.append(h('span', { class: 'copias-banca', title: `${copias} cartas de este jugador` }, `×${copias}`));
+        return tarjeta;
       })));
 
     raiz.append(
