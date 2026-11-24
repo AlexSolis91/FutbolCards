@@ -1,0 +1,19 @@
+Plantillas (todos contra todos, 500 partidos por cruce):
+  4-4-2      50.6%
+  4-3-3      50.3%
+  4-2-3-1    49.3%
+  3-5-2      50.1%
+  5-3-2      48.9%
+  4-1-2-1-2  51.1%
+  4-4-1-1    48.5%
+  4-1-4-1    50.5%
+  3-4-3      50.5%
+  Cruce más desigual: 3-5-2 vs 4-3-3 → 44.3% para 3-5-2
+Formas extremas contra una plantilla al azar (misma media):
+  Sin banda izquierda            14.0%
+  Todos por el centro            49.1%
+  Rombo cerrado sin laterales    47.6%
+  3 defensas, sin contención     53.6%
+  2 defensas y 8 atacantes       33.7%
+  6 defensas (autobús)           47.9%
+Con +5 de media: plantilla normal 71.9% · 8 atacantes 66.5%

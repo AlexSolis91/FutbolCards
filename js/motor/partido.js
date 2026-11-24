@@ -39,6 +39,10 @@ export const MOTOR = {
   // Superioridad en la zona del remate: más atacantes que defensores en esa
   // zona = mejor ocasión (xG × (atacantes / defensores) ^ exponente, con tope).
   remateSuperioridad: 0.25,
+  // Huecos en tu área: si defiendes una zona de tu tercio con menos presencia
+  // que el umbral (las plantillas normales tienen ≥ 1), el atacante gana
+  // valor × ln(umbral / presencia) extra en el duelo de la ocasión.
+  hueco: { umbral: 1, valor: 1 },
   remateTope: 2,
   presenciaMinima: 0.15,
   segundos: { salida: 12, creacion: 15, ocasion: 10 },
@@ -53,9 +57,9 @@ export const MOTOR = {
   // Calibración (logit) para que ninguna estrategia ni casilla sea superior
   // por sí sola. La calcula herramientas/calibrar.mjs; no tocar a mano.
   calibracion: {
-    ofensiva: { posesion: -0.155, contraataque: -0.17, directo: 0.176, bandas: 0.143 },
-    defensiva: { presionAlta: 0.094, bloqueMedio: -0.047, bloqueBajo: -0.046, marcajeHombre: 0.005 },
-    casilla: { CAD: 0.026, CAI: 0.024, DC: -0.002, DD: -0.007, DFC: -0.013, DFCD: -0.01, DFCI: -0.01, DI: -0.007, ED: -0.005, EI: -0.006, ID: 0.002, II: 0.001, LD: 0.002, LI: -0.002, MC: 0.007, MCD: -0.002, MCDD: 0.01, MCDI: 0.008, MCO: -0.001, MCOD: 0.023, MCOI: 0.008, MD: 0.014, MI: 0.016 },
+    ofensiva: { posesion: -0.147, contraataque: -0.177, directo: 0.173, bandas: 0.142 },
+    defensiva: { presionAlta: 0.112, bloqueMedio: -0.049, bloqueBajo: -0.059, marcajeHombre: 0.008 },
+    casilla: { LI: 0.0171, DFCI: -0.043, DFC: -0.0216, DFCD: -0.0415, LD: -0.0032, CAI: 0.0263, MCDI: 0.0096, MCD: 0.0001, MCDD: 0.0139, CAD: 0.0235, MI: 0.0169, II: 0.0008, MC: 0.0054, ID: 0.0083, MD: 0.0332, EI: 0.0044, MCOI: 0.0143, MCO: -0.0162, MCOD: 0.0191, ED: -0.0031, DI: -0.0139, DC: -0.0275, DD: -0.0226 },
   },
 };
 
@@ -154,6 +158,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
       MOTOR.base[fase] +
       (A.rating - D.rating) / MOTOR.escala +
       MOTOR.superioridad * Math.log(A.n / D.n) +
+      (fr === 'def' ? MOTOR.hueco.valor * Math.max(0, Math.log(MOTOR.hueco.umbral / D.n)) : 0) +
       MOTOR.valorEstrategia[TABLA_ESTRATEGIAS[atq.ofensiva][def.defensiva]] +
       moral(lado) - moral(1 - lado) +
       MOTOR.calibracion.ofensiva[atq.ofensiva] - MOTOR.calibracion.defensiva[def.defensiva] +

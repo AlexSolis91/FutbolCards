@@ -149,7 +149,8 @@ El usuario coloca a sus 11 jugadores en cualquiera de estas 24 casillas (arrastr
 
 - Cada jugador de campo aporta la **misma presencia total** (1.35); su casilla y su rol solo deciden dónde: en qué franja (defensa, medio, ataque) y en qué carril (izquierda, centro, derecha, según su x).
 - Los carriles se cubren de forma gradual: un lateral cubre casi solo su banda, un central puro casi solo el centro y las columnas intermedias (DFCI, II, MCOI…) se reparten entre banda y centro.
-- **Huecos**: el atacante elige carril mirando su gente y los huecos del rival en esa banda; en cada duelo cuenta la superioridad numérica de la zona. Dejar una banda o una franja sin gente se paga.
+- **Huecos**: el atacante elige carril mirando su gente y los huecos del rival en esa banda; en cada duelo cuenta la superioridad numérica de la zona, y en la zona del remate la superioridad mejora la ocasión.
+- **Huecos en tu área**: las plantillas normales defienden cada zona de su tercio con al menos 1 de presencia. Si una zona de tu área queda por debajo, el rival gana ventaja extra al definir ahí (1 × ln(1 / presencia)). Dejar una banda sin nadie o atacar con 8 y defender con 2 se paga caro.
 - **Amontonar** rinde cada vez menos (la superioridad es logarítmica).
 - Así no gana solo la mayor media: también importa la coherencia de la formación.
 
@@ -172,11 +173,12 @@ El usuario coloca a sus 11 jugadores en cualquiera de estas 24 casillas (arrastr
 
 ### Calibración y equilibrio
 
-- `node herramientas/calibrar.mjs` ajusta pequeños valores ocultos para que cada estrategia ronde el 50 % de puntos contra rivales al azar. Hay que volver a ejecutarlo cuando cambien las reglas o el conjunto de jugadores. Las formaciones no se calibran (pueden ser personalizadas).
+- `node herramientas/calibrar.mjs [iteraciones] [partidos] [procesos]` ajusta pequeños valores ocultos: uno por estrategia (para que cada una ronde el 50 %) y uno por casilla del campo (regresión sobre qué casillas usa cada equipo, con plantillas y plantillas con un jugador movido; nunca formas al azar, que borrarían el castigo por huecos). Reparte el trabajo en varios procesos. Volver a ejecutarlo cuando cambien las reglas o el conjunto de jugadores.
+- `node herramientas/formaciones-paralelo.mjs [partidos por cruce] [procesos]` mide todos contra todos entre plantillas y formas extremas; el último resultado está en docs/formaciones-ultimo.txt.
 - `node herramientas/balance.mjs` genera el informe. El último está en docs/balance-ultimo.txt.
 - Objetivos:
-  - Cada estrategia entre 48 y 52 %; cada plantilla de formación cerca del 50 %.
-  - Dejar una banda sin nadie o descuidar la defensa se paga (el informe incluye esos casos).
+  - Cada estrategia entre 48 y 52 %; cada plantilla de formación entre 48 y 52 % y ningún cruce entre plantillas por encima de ~56 %.
+  - Dejar una banda sin nadie o descuidar la defensa se paga, y con más calidad no conviene ir con 8 atacantes (docs/formaciones-ultimo.txt).
   - ~2.8 goles por partido y ~23 % de empates.
   - Un equipo con +5 de media gana ~60 %.
   - Un equipo con −5 de media pero con ++ en todo gana ~45 % y pierde ~36 %.
