@@ -8,6 +8,7 @@ import zinedineZidane from './zinedine-zidane.js';
 import paoloMaldini from './paolo-maldini.js';
 import gianluigiBuffon from './gianluigi-buffon.js';
 import ronaldinho from './ronaldinho.js';
+import thierryHenry from './thierry-henry.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
