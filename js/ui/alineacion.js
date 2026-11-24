@@ -80,6 +80,10 @@ export function pantallaAlineacion(app, { club }) {
     const huecos = FORMACIONES[t.formacion].huecos;
     const carta = club.cartas.find((c) => c.uid === uid);
     const otro = t.alineacion.findIndex((a) => a.uid === uid);
+    // Nunca dos cartas del mismo jugador en el campo.
+    const repetido = t.alineacion.some((a, k) => k !== i && a.uid !== uid
+      && club.cartas.find((c) => c.uid === a.uid)?.ficha.id === carta.ficha.id);
+    if (repetido) { seleccion = null; pintar(); return; }
     if (otro !== -1) {
       // Intercambio entre dos huecos del campo.
       const a = t.alineacion[i];

@@ -3,12 +3,13 @@
 import { crearClubPrueba, copiasDemo } from '../datos/club-prueba.js';
 import { JUGADORES, APROBADOS } from '../datos/jugadores/index.js';
 import { ORDEN_RAREZAS, rarezasDe } from '../motor/reglas.js';
+import { repararAlineacion } from '../motor/alineacion.js';
 
 const CLAVE = 'fc-club';
 
 // Pone al día un club guardado: fichas reales actualizadas desde el catálogo,
 // cada carta en una rareza que su jugador tenga (regla de 2 rarezas) y copias
-// de prueba de los jugadores aprobados que aún no tenga.
+// de prueba de los jugadores aprobados que aún no tenga, y alineación válida.
 function actualizarClub(club) {
   const catalogo = new Map(JUGADORES.map((j) => [j.id, j]));
   const ajustar = (c) => {
@@ -23,6 +24,8 @@ function actualizarClub(club) {
   club.cartas = club.cartas.map(ajustar);
   const tiene = new Set(club.cartas.map((c) => c.ficha.id));
   club.cartas.push(...copiasDemo(APROBADOS.filter((j) => !tiene.has(j.id))));
+  // Alineaciones dañadas (p. ej. dos copias del mismo jugador en el campo).
+  club.tactica = repararAlineacion(club.cartas, club.tactica).tactica;
   return club;
 }
 

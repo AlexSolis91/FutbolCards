@@ -39,6 +39,45 @@ export function autoAlinear(cartas, formacion) {
   return res;
 }
 
+// Deja una táctica guardada en estado válido: formación conocida, 11 cartas
+// existentes, sin jugador repetido, roles válidos para cada puesto y capitán
+// en el campo. Los huecos inválidos se rellenan con el mejor del banquillo.
+// Devuelve { tactica, cambiada }.
+export function repararAlineacion(cartas, tactica) {
+  const formacion = FORMACIONES[tactica.formacion] ? tactica.formacion : '4-3-3';
+  const huecos = FORMACIONES[formacion].huecos;
+  const porUid = new Map(cartas.map((c) => [c.uid, c]));
+  const usados = new Set();
+  const fichas = new Set();
+  let cambiada = formacion !== tactica.formacion;
+  const alineacion = huecos.map((h, i) => {
+    const a = tactica.alineacion?.[i];
+    const c = a && porUid.get(a.uid);
+    if (!c || usados.has(c.uid) || fichas.has(c.ficha.id)) { cambiada = true; return null; }
+    usados.add(c.uid);
+    fichas.add(c.ficha.id);
+    if (PUESTOS[h.puesto].roles.includes(a.rol)) return a;
+    cambiada = true;
+    return { uid: c.uid, rol: valorEnPuesto(c, h.puesto).rol };
+  });
+  alineacion.forEach((a, i) => {
+    if (a) return;
+    let mejor = null;
+    for (const c of cartas) {
+      if (usados.has(c.uid) || fichas.has(c.ficha.id)) continue;
+      const v = valorEnPuesto(c, huecos[i].puesto);
+      if (!mejor || v.valor > mejor.v.valor) mejor = { c, v };
+    }
+    if (!mejor) return;
+    usados.add(mejor.c.uid);
+    fichas.add(mejor.c.ficha.id);
+    alineacion[i] = { uid: mejor.c.uid, rol: mejor.v.rol };
+  });
+  let capitan = tactica.capitan;
+  if (!alineacion.some((a) => a?.uid === capitan)) { capitan = alineacion[0]?.uid; cambiada = true; }
+  return { tactica: { ...tactica, formacion, alineacion, capitan }, cambiada };
+}
+
 // Banquillo: una carta por jugador (la de mayor rareza y, si hay varias, la
 // primera), sin los jugadores que ya están en el campo. Las copias se ven y
 // se usan en Colección. Devuelve [{ carta, copias }].

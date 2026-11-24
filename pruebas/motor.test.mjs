@@ -194,3 +194,24 @@ test('alineación: un jugador no se repite en el campo y el banquillo muestra un
     assert.ok(ids.every((id) => !fichas.includes(id)), f);
   }
 });
+
+test('alineación: repararAlineacion arregla un once con el mismo jugador dos veces', async () => {
+  const { autoAlinear, repararAlineacion } = await import('../js/motor/alineacion.js');
+  const { crearPlantillaPrueba, copiasDemo } = await import('../js/datos/club-prueba.js');
+  const { JUGADORES } = await import('../js/datos/jugadores/index.js');
+  const cartas = [...crearPlantillaPrueba(7, 'p'), ...copiasDemo(JUGADORES)];
+  const alineacion = autoAlinear(cartas, '4-4-2');
+  // Dos copias de Messi y una carta que ya no existe.
+  alineacion[9] = { uid: 'lionel-messi-demo-1', rol: 'falso9' };
+  alineacion[10] = { uid: 'lionel-messi-demo-2', rol: 'falso9' };
+  alineacion[3] = { uid: 'no-existe', rol: 'central' };
+  const { tactica, cambiada } = repararAlineacion(cartas, { formacion: '4-4-2', ofensiva: 'posesion', defensiva: 'bloqueMedio', capitan: 'no-existe', alineacion });
+  assert.ok(cambiada);
+  const fichas = tactica.alineacion.map((a) => cartas.find((c) => c.uid === a.uid).ficha.id);
+  assert.equal(new Set(fichas).size, 11);
+  assert.ok(tactica.alineacion.some((a) => a.uid === tactica.capitan));
+  const { definicionEquipo } = await import('../js/motor/alineacion.js');
+  prepararEquipo(definicionEquipo('X', cartas, tactica)); // no lanza
+  const limpia = autoAlinear(cartas, '4-3-3');
+  assert.equal(repararAlineacion(cartas, { formacion: '4-3-3', capitan: limpia[0].uid, alineacion: limpia }).cambiada, false);
+});
