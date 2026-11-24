@@ -1,5 +1,5 @@
-// Música del juego: las pistas suenan una tras otra y al terminar la última
-// vuelve a empezar la primera. Volumen y silencio se guardan en el navegador.
+// Música del juego: arranca con una pista al azar; luego suenan una tras otra
+// en orden (tras la última, la primera). Volumen y silencio se guardan en el navegador.
 // Los navegadores no dejan sonar audio hasta que el usuario toca la página,
 // así que si el arranque se bloquea, empieza con el primer clic o tecla.
 
@@ -50,7 +50,7 @@ export function iniciarMusica() {
     // Si una pista no carga, pasa a la siguiente (sin bucle infinito si fallan todas).
     if (++fallosSeguidos < PISTAS.length) siguiente();
   });
-  cargar(0);
+  cargar(Math.floor(Math.random() * PISTAS.length));
   reproducir().then((ok) => {
     if (ok) return;
     const arrancar = () => {
