@@ -49,7 +49,7 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 - Fotos: `python herramientas/optimizar_imagenes.py` convierte `assets/originales/jugadores/<Nombre> <Rareza>.<ext>` en `assets/jugadores/<nombre>-<rareza>.webp`. Solo reduce, **nunca recorta**.
 - La carta encuadra la foto anclada arriba: si sobra, se recorta de abajo o de los lados, nunca la cabeza.
 - Escuelas de juego (estilos, no países): Tiki-taka, Jogo bonito, Catenaccio, Fútbol total, Gegenpressing, Garra, Vértigo, Potencia.
-- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24).
+- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24), Gianluigi Buffon (2026-11-24).
 - Desde 2026-11-24 el usuario no revisa las fichas: cada jugador nuevo se publica directamente como `'aprobada'`.
 
 ### Mejora por copias
