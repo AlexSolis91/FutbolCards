@@ -3,6 +3,7 @@
 import cristianoRonaldo from './cristiano-ronaldo.js';
 import lionelMessi from './lionel-messi.js';
 import pele from './pele.js';
+import diegoMaradona from './diego-maradona.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
