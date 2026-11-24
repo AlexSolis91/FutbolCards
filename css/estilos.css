@@ -284,16 +284,16 @@ body.en-lobby main { max-width: none; }
 .carta .iniciales { font-size: 40px; font-weight: 800; color: rgba(255, 255, 255, 0.85); text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
 .carta.comun .iniciales { color: rgba(0, 0, 0, 0.35); text-shadow: none; }
 .carta .media {
-  position: absolute; top: 6px; left: 7px; z-index: 1;
+  position: absolute; bottom: 5px; left: 5px; z-index: 1;
   display: flex; flex-direction: column; align-items: center; line-height: 0.9;
   color: var(--panel-texto);
-  background: var(--panel); border-radius: 8px; padding: 4px 5px 3px;
+  background: var(--panel); border-radius: 7px; padding: 3px 4px 2px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
-.carta .media b { font-size: 24px; font-weight: 800; }
-.carta .media small { font-size: 11px; font-weight: 700; letter-spacing: 0.4px; }
+.carta .media b { font-size: 20px; font-weight: 800; }
+.carta .media small { font-size: 9.5px; font-weight: 700; letter-spacing: 0.4px; }
 .carta .capitan {
-  position: absolute; top: 6px; right: 7px; z-index: 1;
+  position: absolute; bottom: 5px; right: 5px; z-index: 1;
   width: 20px; height: 20px; border-radius: 50%;
   background: #111; color: #ffd84d; font-size: 12px; font-weight: 800;
   display: grid; place-items: center; border: 1.5px solid #ffd84d;
@@ -307,10 +307,10 @@ body.en-lobby main { max-width: none; }
 .carta.mini { width: 64px; border-radius: 9px; padding: 2px; }
 .carta.mini .foto { border-radius: 7px 7px 0 0; }
 .carta.mini .iniciales { font-size: 18px; }
-.carta.mini .media { top: 3px; left: 3px; padding: 2px 3px 1px; border-radius: 5px; }
-.carta.mini .media b { font-size: 15px; }
-.carta.mini .media small { font-size: 8px; }
-.carta.mini .capitan { top: 3px; right: 3px; width: 14px; height: 14px; font-size: 9px; border-width: 1px; }
+.carta.mini .media { bottom: 2px; left: 2px; padding: 2px 3px 1px; border-radius: 5px; }
+.carta.mini .media b { font-size: 13px; }
+.carta.mini .media small { font-size: 7px; }
+.carta.mini .capitan { bottom: 2px; right: 2px; width: 14px; height: 14px; font-size: 9px; border-width: 1px; }
 .carta.mini .info { padding: 2px 3px 3px; border-radius: 0 0 7px 7px; }
 .carta.mini .nombre { font-size: 10px; }
 .carta.mini .detalle { display: none; }
@@ -350,10 +350,10 @@ body.en-lobby main { max-width: none; }
 .campo { --carta-campo: 64px; }
 :is(.hueco, .fantasma-arrastre) .carta.mini { width: var(--carta-campo); padding: calc(var(--carta-campo) * 0.03); border-radius: calc(var(--carta-campo) * 0.12); }
 :is(.hueco, .fantasma-arrastre) .carta.mini .iniciales { font-size: calc(var(--carta-campo) * 0.3); }
-:is(.hueco, .fantasma-arrastre) .carta.mini .media { top: calc(var(--carta-campo) * 0.05); left: calc(var(--carta-campo) * 0.05); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
-:is(.hueco, .fantasma-arrastre) .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.22); }
-:is(.hueco, .fantasma-arrastre) .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.11); }
-:is(.hueco, .fantasma-arrastre) .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); top: calc(var(--carta-campo) * 0.05); right: calc(var(--carta-campo) * 0.05); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media { bottom: calc(var(--carta-campo) * 0.03); left: calc(var(--carta-campo) * 0.03); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.19); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.095); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); bottom: calc(var(--carta-campo) * 0.03); right: calc(var(--carta-campo) * 0.03); }
 :is(.hueco, .fantasma-arrastre) .carta.mini .nombre { font-size: calc(var(--carta-campo) * 0.14); }
 :is(.hueco, .fantasma-arrastre) .carta.mini .info { padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.04) calc(var(--carta-campo) * 0.05); }
 

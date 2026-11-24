@@ -29,6 +29,11 @@ export function crearCarta(o) {
     img.addEventListener('error', () => img.remove());
     foto.append(img);
   }
+  // Media y capitán van abajo de la foto: arriba tapaban la cara del jugador.
+  foto.append(
+    h('div', { class: 'media' }, h('b', {}, o.media ?? '—'), o.etiqueta ? h('small', {}, o.etiqueta) : null),
+    o.capitan ? h('div', { class: 'capitan', title: 'Capitán' }, 'C') : '',
+  );
   const apellido = o.ficha.nombre.split(' ').slice(-1)[0];
   return h('div', {
     class: ['carta', o.rareza, o.mini && 'mini', o.seleccionada && 'seleccionada', o.onclick && 'clic'].filter(Boolean).join(' '),
@@ -37,8 +42,6 @@ export function crearCarta(o) {
     tabindex: o.onclick ? 0 : undefined,
     title: `${o.ficha.nombre} · ${RAREZAS[o.rareza].nombre}`,
   },
-  h('div', { class: 'media' }, h('b', {}, o.media ?? '—'), o.etiqueta ? h('small', {}, o.etiqueta) : null),
-  o.capitan ? h('div', { class: 'capitan', title: 'Capitán' }, 'C') : null,
   foto,
   h('div', { class: 'info' },
     // Nombre completo; la letra se achica en nombres largos para no cortarlo.
