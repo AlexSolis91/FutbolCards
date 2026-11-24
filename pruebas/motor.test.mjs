@@ -29,6 +29,13 @@ test('rarezas: probabilidades suman 1; cada categoría son 2 rarezas seguidas y 
   assert.equal(atributosDeRareza(base, 'raro').definicion, 80);
   assert.equal(atributosDeRareza(base, 'comun').definicion, 74);
   assert.throws(() => atributosDeRareza(base, 'epico'));
+  // Jugador con 3 rarezas: atributos en la alta, −6 por cada rareza por debajo.
+  const tres = { categoria: 'figura', rarezas: ['comun', 'raro', 'epico'], atributos: { definicion: 88 } };
+  assert.deepEqual(rarezasDe(tres), ['comun', 'raro', 'epico']);
+  assert.equal(atributosDeRareza(tres, 'epico').definicion, 88);
+  assert.equal(atributosDeRareza(tres, 'raro').definicion, 82);
+  assert.equal(atributosDeRareza(tres, 'comun').definicion, 76);
+  assert.throws(() => atributosDeRareza(tres, 'legendario'));
   // Ficticios de prueba (sin categoría): 4 rarezas, base en Legendario.
   assert.equal(atributosDeRareza({ atributos: { definicion: 98 } }, 'comun').definicion, 80);
 });
@@ -195,6 +202,13 @@ test('jugadores reales: ninguno supera la media base máxima en Legendario y sus
     for (const r of j.roles) assert.ok(ROLES[r], `${j.id}: rol ${r}`);
     assert.ok(escuelas.includes(j.escuela), `${j.id}: escuela ${j.escuela}`);
     assert.ok(CATEGORIAS[j.categoria], `${j.id}: categoría ${j.categoria}`);
+    if (j.rarezas) {
+      // Rarezas propias: 3 seguidas que incluyen las de su categoría.
+      const idx = j.rarezas.map((r) => ORDEN_RAREZAS.indexOf(r));
+      assert.equal(j.rarezas.length, 3, `${j.id}: rarezas`);
+      assert.ok(idx.every((x, i) => x >= 0 && (i === 0 || x === idx[i - 1] + 1)), `${j.id}: rarezas seguidas`);
+      for (const r of CATEGORIAS[j.categoria].rarezas) assert.ok(j.rarezas.includes(r), `${j.id}: ${r}`);
+    }
     for (const r of j.roles) {
       assert.ok(Math.round(mediaEnRol(j.atributos, r)) <= MEDIA_MAXIMA_LEGENDARIO, `${j.id} supera ${MEDIA_MAXIMA_LEGENDARIO} como ${r}`);
     }

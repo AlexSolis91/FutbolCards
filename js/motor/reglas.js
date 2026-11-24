@@ -45,10 +45,12 @@ export const CATEGORIAS = {
   base: { nombre: 'Base', rarezas: ['comun', 'raro'] },
 };
 export const PASO_RAREZA = 6;
+// Algunos jugadores tienen 3 rarezas seguidas (2026-11-24): su ficha lo indica
+// con `rarezas` (ej. ['comun', 'raro', 'epico']) y manda sobre la categoría.
 // Rarezas en las que existe un jugador (los ficticios de prueba, sin
 // categoría, existen en las 4).
 export function rarezasDe(ficha) {
-  return CATEGORIAS[ficha?.categoria]?.rarezas ?? ORDEN_RAREZAS;
+  return ficha?.rarezas ?? CATEGORIAS[ficha?.categoria]?.rarezas ?? ORDEN_RAREZAS;
 }
 export const COPIAS_PARA_MEJORAR = 5;
 // Techo de la media base (rol natural, Legendario). Cristiano Ronaldo, Messi,

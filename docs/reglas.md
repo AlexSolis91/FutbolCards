@@ -29,7 +29,8 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 | Figura | Raro y Épico | Shevchenko |
 | Base | Común y Raro | Rogelio Funes Mori |
 
-- El usuario manda 2 fotos por jugador, en orden (rareza baja, rareza alta).
+- **Excepción, 3 rarezas** (2026-11-24): algunos jugadores existen en 3 rarezas seguidas. Su ficha lo indica con `rarezas` (ej. Rafael Márquez: `['comun', 'raro', 'epico']`), que manda sobre la categoría. Atributos en la rareza alta; cada rareza por debajo resta 6 (Común = Épico − 12).
+- El usuario manda 2 fotos por jugador (3 si tiene 3 rarezas), en orden de rareza baja a alta.
 - Sobres (cuando existan): la rareza de cada carta sale con las probabilidades de la tabla y luego se elige un jugador que exista en esa rareza. Por eso un Legendario solo puede ser una Estrella.
 - Imágenes: el usuario pasa solo la foto. El juego dibuja el marco, el color, el nombre, la media y los datos.
 - Nombre de archivo = nombre del jugador + rareza (ej. `Messi Legendario.png`).
@@ -49,13 +50,13 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 - Fotos: `python herramientas/optimizar_imagenes.py` convierte `assets/originales/jugadores/<Nombre> <Rareza>.<ext>` en `assets/jugadores/<nombre>-<rareza>.webp`. Solo reduce, **nunca recorta**.
 - La carta encuadra la foto anclada arriba: si sobra, se recorta de abajo o de los lados, nunca la cabeza.
 - Escuelas de juego (estilos, no países): Tiki-taka, Jogo bonito, Catenaccio, Fútbol total, Gegenpressing, Garra, Vértigo, Potencia.
-- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24), Gianluigi Buffon (2026-11-24), Ronaldinho (2026-11-24), Thierry Henry (2026-11-24), Kaká (2026-11-24, Figura), Edgar Davids (2026-11-24, Figura), Lothar Matthäus (2026-11-24).
+- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24), Gianluigi Buffon (2026-11-24), Ronaldinho (2026-11-24), Thierry Henry (2026-11-24), Kaká (2026-11-24, Figura), Edgar Davids (2026-11-24, Figura), Lothar Matthäus (2026-11-24), Rafael Márquez (2026-11-24, Figura con 3 rarezas: Común, Raro y Épico).
 - Desde 2026-11-24 el usuario no revisa las fichas: cada jugador nuevo se publica directamente como `'aprobada'`.
 
 ### Mejora por copias
 
 - Carta + 5 copias de la misma rareza = la carta sube a la siguiente rareza (se consumen las 5 copias).
-- Solo dentro de sus 2 rarezas: una Estrella sube de Épico a Legendario, una Figura de Raro a Épico, una Base de Común a Raro. En la rareza alta ya no sube más.
+- Solo dentro de sus rarezas (2, o 3 si su ficha lo indica): una Estrella sube de Épico a Legendario, una Figura de Raro a Épico, una Base de Común a Raro. En la rareza alta ya no sube más.
 
 ## 3. Atributos (1–99)
 
