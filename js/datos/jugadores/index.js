@@ -9,6 +9,7 @@ import paoloMaldini from './paolo-maldini.js';
 import gianluigiBuffon from './gianluigi-buffon.js';
 import ronaldinho from './ronaldinho.js';
 import thierryHenry from './thierry-henry.js';
+import kaka from './kaka.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
