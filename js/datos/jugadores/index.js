@@ -2,6 +2,7 @@
 // Añadir aquí cada ficha nueva. estado: 'propuesta' (pendiente) | 'aprobada'.
 import cristianoRonaldo from './cristiano-ronaldo.js';
 import lionelMessi from './lionel-messi.js';
+import pele from './pele.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
