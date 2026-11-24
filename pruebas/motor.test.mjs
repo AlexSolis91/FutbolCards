@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import { crearRng } from '../js/motor/rng.js';
 import {
   RAREZAS, ORDEN_RAREZAS, CATEGORIAS, rarezasDe, FORMACIONES, ORDEN_FORMACIONES, PUESTOS, ROLES,
-  TABLA_ESTRATEGIAS, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS, ventajaFormacion,
+  TABLA_ESTRATEGIAS, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS, CASILLAS, ORDEN_CASILLAS, PLANTILLAS,
+  formacionDeCasillas, PERSONALIZADA, pesosCarril,
 } from '../js/motor/reglas.js';
 import { atributosDeRareza, prepararEquipo, vecinosFormacion } from '../js/motor/encaje.js';
 import { crearPartido, simularPartido } from '../js/motor/partido.js';
@@ -41,26 +42,68 @@ test('regla de oro: cada estrategia tiene ++, +, −, −− una vez (filas y co
   }
 });
 
-test('regla de oro: cada formación tiene la misma cantidad de ++, +, −, −− contra las demás y es antisimétrica', () => {
-  const porValor = (ORDEN_FORMACIONES.length - 1) / 4;
-  assert.ok(Number.isInteger(porValor), 'el número de formaciones debe ser 4k + 1');
-  for (const a of ORDEN_FORMACIONES) {
-    const vals = ORDEN_FORMACIONES.filter((b) => b !== a).map((b) => ventajaFormacion(a, b));
-    for (const v of [-2, -1, 1, 2]) assert.equal(vals.filter((x) => x === v).length, porValor, `${a}: ${v}`);
-    assert.equal(ventajaFormacion(a, a), 0);
-    for (const b of ORDEN_FORMACIONES) assert.equal(ventajaFormacion(a, b) + ventajaFormacion(b, a), 0);
+test('casillas: 24, nombres y puestos válidos; cobertura de carriles suma 1', () => {
+  assert.equal(ORDEN_CASILLAS.length, 24);
+  for (const id of ORDEN_CASILLAS) {
+    const c = CASILLAS[id];
+    assert.ok(PUESTOS[c.puesto], `${id}: puesto ${c.puesto}`);
+    for (const r of PUESTOS[c.puesto].roles) assert.ok(ROLES[r], r);
+    const w = pesosCarril(c.x);
+    assert.ok(Math.abs(w.izq + w.cen + w.der - 1) < 1e-9, id);
   }
+  // Un lateral cubre sobre todo su banda; un central puro, el centro.
+  assert.ok(pesosCarril(CASILLAS.LI.x).izq > 0.85);
+  assert.ok(pesosCarril(CASILLAS.DFC.x).cen > 0.7);
 });
 
-test('formaciones: 11 huecos, 1 portero, roles válidos y química con vecinos', () => {
+test('plantillas: 11 casillas distintas con portero; se reconocen y lo demás es personalizada', () => {
   for (const f of ORDEN_FORMACIONES) {
-    const huecos = FORMACIONES[f].huecos;
-    assert.equal(huecos.length, 11, f);
-    assert.equal(huecos.filter((h) => h.puesto === 'POR').length, 1, f);
-    for (const h of huecos) for (const r of PUESTOS[h.puesto].roles) assert.ok(ROLES[r], r);
-    assert.equal(FORMACIONES[f].vinculos.length, 17, `${f}: debe tener 17 vínculos`);
-    for (const v of vecinosFormacion(f)) assert.ok(v.length >= 2, `${f}: hueco con menos de 2 vínculos`);
+    const ids = PLANTILLAS[f];
+    assert.equal(ids.length, 11, f);
+    assert.equal(new Set(ids).size, 11, f);
+    assert.equal(ids[0], 'POR', f);
+    assert.equal(formacionDeCasillas([...ids].reverse()), f);
+    for (const v of vecinosFormacion(f)) assert.ok(v.length >= 1, `${f}: jugador sin vínculos`);
   }
+  assert.equal(formacionDeCasillas(['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MI', 'II', 'ID', 'MD', 'DI', 'EI']), PERSONALIZADA);
+});
+
+test('química por cercanía: un jugador aislado no tiene vínculos', async () => {
+  const { vecinosPorCercania } = await import('../js/motor/encaje.js');
+  const pos = [{ x: 50, y: 5 }, { x: 30, y: 20 }, { x: 70, y: 20 }, { x: 50, y: 38 }, { x: 10, y: 95 }];
+  const v = vecinosPorCercania(pos);
+  assert.equal(v[4].length, 0);
+  assert.ok(v[0].includes(1) && v[1].includes(0), 'los vínculos son mutuos');
+});
+
+test('formación personalizada: el motor acepta cualquier casilla y exige portero y casillas distintas', () => {
+  const rng = crearRng(21);
+  const casillas = ['POR', 'LI', 'DFC', 'LD', 'CAI', 'MCD', 'CAD', 'MCOI', 'MCOD', 'DC', 'DD'];
+  const eq = equipoAleatorio(rng, { casillas });
+  const prep = prepararEquipo(eq);
+  assert.equal(prep.formacion, PERSONALIZADA);
+  assert.deepEqual(prep.jugadores.map((j) => j.casilla), casillas);
+  const sinPortero = structuredClone(eq);
+  sinPortero.alineacion[0].casilla = 'MC';
+  assert.throws(() => prepararEquipo(sinPortero), /portero/);
+  const repetida = structuredClone(eq);
+  repetida.alineacion[2].casilla = 'LI';
+  assert.throws(() => prepararEquipo(repetida), /casilla/);
+});
+
+test('huecos: atacar una banda sin defensores se aprovecha', () => {
+  // Equipo sin nadie en la banda izquierda contra el mismo equipo completo.
+  const rng = crearRng(31);
+  const sinIzq = ['POR', 'DFC', 'DFCD', 'LD', 'MCD', 'MC', 'ID', 'MD', 'MCO', 'DC', 'DD'];
+  let puntos = 0;
+  const n = 300;
+  for (let i = 0; i < n; i++) {
+    const a = equipoAleatorio(rng, { media: 80, casillas: sinIzq });
+    const b = equipoAleatorio(rng, { media: 80, formacion: '4-3-3' });
+    const r = simularPartido({ local: a, visitante: b, semilla: 7000 + i });
+    puntos += r.ganador === null ? 0.5 : r.ganador === 0 ? 1 : 0;
+  }
+  assert.ok(puntos / n < 0.4, `el equipo con el hueco saca ${(100 * puntos / n).toFixed(1)} %`);
 });
 
 test('encaje: jugar fuera de rol baja la media visible', () => {
@@ -77,6 +120,7 @@ test('bonificaciones: condición de rol + efecto a una línea, y capitán solo c
   const rng = crearRng(3);
   const eq = equipoAleatorio(rng, { formacion: '4-2-3-1' });
   const mcoIndex = FORMACIONES['4-2-3-1'].huecos.findIndex((h) => h.puesto === 'MCO');
+  const casillaMco = eq.alineacion[mcoIndex].casilla;
   const ficha = generarFicha(rng, 'mediapunta', 90);
   ficha.bonificaciones = [{
     nombre: 'Diez clásico',
@@ -84,7 +128,7 @@ test('bonificaciones: condición de rol + efecto a una línea, y capitán solo c
     efecto: { tipo: 'atributos', objetivo: { tipo: 'filtro', filtro: { linea: 'MED' } }, atributos: { paseCorto: 3 } },
   }];
   ficha.capitan = { nombre: 'Líder', efecto: { tipo: 'atributos', objetivo: { tipo: 'equipo' }, atributos: { compostura: 2 } } };
-  eq.alineacion[mcoIndex] = { ficha, rareza: 'legendario', rol: 'mediapunta' };
+  eq.alineacion[mcoIndex] = { ficha, rareza: 'legendario', rol: 'mediapunta', casilla: casillaMco };
   eq.capitan = 0;
   const sin = prepararEquipo(eq);
   const mcd = sin.jugadores.find((j) => j.puesto === 'MCD');
@@ -132,8 +176,9 @@ test('alineación: auto-alinear pone 11 distintos y un portero en la portería',
   for (const f of ORDEN_FORMACIONES) {
     const xi = autoAlinear(cartas, f);
     assert.equal(new Set(xi.map((a) => a.uid)).size, 11, f);
-    const portero = cartas.find((c) => c.uid === xi[0].uid);
+    const portero = cartas.find((c) => c.uid === xi.find((a) => a.casilla === 'POR').uid);
     assert.equal(portero.ficha.roles[0], 'portero', f);
+    assert.deepEqual(xi.map((a) => a.casilla), PLANTILLAS[f], f);
   }
 });
 
@@ -214,4 +259,40 @@ test('alineación: repararAlineacion arregla un once con el mismo jugador dos ve
   prepararEquipo(definicionEquipo('X', cartas, tactica)); // no lanza
   const limpia = autoAlinear(cartas, '4-3-3');
   assert.equal(repararAlineacion(cartas, { formacion: '4-3-3', capitan: limpia[0].uid, alineacion: limpia }).cambiada, false);
+});
+
+test('mover jugadores: casilla vacía, intercambio, banquillo y portería', async () => {
+  const { autoAlinear, moverJugador, repararAlineacion } = await import('../js/motor/alineacion.js');
+  const { crearPlantillaPrueba } = await import('../js/datos/club-prueba.js');
+  const cartas = crearPlantillaPrueba(5, 'p');
+  const al = autoAlinear(cartas, '4-4-2');
+  const t = { formacion: '4-4-2', ofensiva: 'posesion', defensiva: 'bloqueMedio', capitan: al[9].uid, alineacion: al };
+  // A una casilla vacía: la formación pasa a personalizada.
+  const dc = al.find((a) => a.casilla === 'DI');
+  let r = moverJugador(cartas, t, dc.uid, { casilla: 'MCO' });
+  assert.ok(r.ok);
+  assert.equal(r.tactica.alineacion.find((a) => a.uid === dc.uid).casilla, 'MCO');
+  assert.ok(ORDEN_FORMACIONES.includes(r.tactica.formacion) || r.tactica.formacion === PERSONALIZADA);
+  // Intercambio entre titulares.
+  const li = al.find((a) => a.casilla === 'LI');
+  r = moverJugador(cartas, t, li.uid, { uid: dc.uid });
+  assert.equal(r.tactica.alineacion.find((a) => a.uid === li.uid).casilla, 'DI');
+  assert.equal(r.tactica.alineacion.find((a) => a.uid === dc.uid).casilla, 'LI');
+  assert.equal(r.tactica.formacion, '4-4-2');
+  // Del banquillo sobre un titular: entra en su casilla y hereda el brazalete.
+  const suplente = cartas.find((c) => !al.some((a) => a.uid === c.uid));
+  const capitan = al.find((a) => a.uid === t.capitan);
+  r = moverJugador(cartas, t, suplente.uid, { uid: capitan.uid });
+  assert.ok(r.ok);
+  assert.equal(r.tactica.alineacion.find((a) => a.uid === suplente.uid).casilla, capitan.casilla);
+  assert.equal(r.tactica.capitan, suplente.uid);
+  // Del banquillo a una casilla vacía: no (siempre 11).
+  assert.equal(moverJugador(cartas, t, suplente.uid, { casilla: 'MCO' }).ok, false);
+  // El portero no puede dejar la portería vacía.
+  const por = al.find((a) => a.casilla === 'POR');
+  assert.equal(moverJugador(cartas, t, por.uid, { casilla: 'MCO' }).ok, false);
+  // Una táctica antigua (sin casillas) se repara con su plantilla.
+  const vieja = { ...t, alineacion: al.map(({ uid, rol }) => ({ uid, rol })) };
+  const rep = repararAlineacion(cartas, vieja);
+  assert.deepEqual(rep.tactica.alineacion.map((a) => a.casilla), PLANTILLAS['4-4-2']);
 });

@@ -348,14 +348,14 @@ body.en-lobby main { max-width: none; }
 /* Cartas del campo: el tamaño lo calcula ajustarCampo() (--carta-campo) para
    que sean lo más grandes posible sin empalmarse; el texto escala con ellas. */
 .campo { --carta-campo: 64px; }
-.hueco .carta.mini { width: var(--carta-campo); padding: calc(var(--carta-campo) * 0.03); border-radius: calc(var(--carta-campo) * 0.12); }
-.hueco .carta.mini .iniciales { font-size: calc(var(--carta-campo) * 0.3); }
-.hueco .carta.mini .media { top: calc(var(--carta-campo) * 0.05); left: calc(var(--carta-campo) * 0.05); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
-.hueco .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.22); }
-.hueco .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.11); }
-.hueco .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); top: calc(var(--carta-campo) * 0.05); right: calc(var(--carta-campo) * 0.05); }
-.hueco .carta.mini .nombre { font-size: calc(var(--carta-campo) * 0.14); }
-.hueco .carta.mini .info { padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.04) calc(var(--carta-campo) * 0.05); }
+:is(.hueco, .fantasma-arrastre) .carta.mini { width: var(--carta-campo); padding: calc(var(--carta-campo) * 0.03); border-radius: calc(var(--carta-campo) * 0.12); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .iniciales { font-size: calc(var(--carta-campo) * 0.3); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media { top: calc(var(--carta-campo) * 0.05); left: calc(var(--carta-campo) * 0.05); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.22); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.11); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); top: calc(var(--carta-campo) * 0.05); right: calc(var(--carta-campo) * 0.05); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .nombre { font-size: calc(var(--carta-campo) * 0.14); }
+:is(.hueco, .fantasma-arrastre) .carta.mini .info { padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.04) calc(var(--carta-campo) * 0.05); }
 
 /* Banquillo completo: las cartas bajan en filas, sin barra de desplazamiento. */
 .banca { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 10px 8px; justify-items: center; padding: 4px 2px; }
@@ -453,3 +453,20 @@ body.en-lobby main { max-width: none; }
 @supports (padding: env(safe-area-inset-top)) {
   .cabecera { padding-top: max(10px, env(safe-area-inset-top)); }
 }
+
+/* Casillas del campo (24): las vacías se ven como un hueco punteado. */
+.casilla-vacia {
+  width: var(--carta-campo); aspect-ratio: 5 / 7.6; display: grid; place-items: center; cursor: pointer;
+  border: 2px dashed rgba(255, 255, 255, 0.26); border-radius: calc(var(--carta-campo) * 0.12); background: rgba(0, 0, 0, 0.08);
+  color: rgba(255, 255, 255, 0.5); font-family: var(--fuente-num); font-weight: 800; font-size: calc(var(--carta-campo) * 0.17);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.casilla-vacia.disponible, .modo-arrastre .casilla-vacia { border-color: rgba(255, 255, 255, 0.6); color: rgba(255, 255, 255, 0.85); }
+.casilla-vacia.destino-arrastre { border-color: var(--acento); border-style: solid; background: rgba(34, 197, 94, 0.25); color: #fff; }
+.carta.destino-arrastre { outline: 3px solid var(--acento); outline-offset: 2px; }
+.arrastrable { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: grab; }
+.arrastrable img { -webkit-user-drag: none; pointer-events: none; }
+.carta.arrastrando { opacity: 0.35; }
+.fantasma-arrastre { position: fixed; left: 0; top: 0; z-index: 1000; pointer-events: none; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.55)); }
+.fantasma-arrastre .carta.mini { cursor: grabbing; }
+.aviso-alineacion { margin: 8px 0 0; padding: 8px 10px; border-radius: 8px; background: rgba(234, 179, 8, 0.15); color: #eab308; font-size: 13px; }

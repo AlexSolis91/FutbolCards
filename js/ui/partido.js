@@ -5,7 +5,7 @@ import { h, vaciar, opcion } from './dom.js';
 import { iniciales } from './carta.js';
 import { crearPartido, MOTOR } from '../motor/partido.js';
 import {
-  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ESPEJO_FRANJA, ORDEN_RAREZAS,
+  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ESPEJO_FRANJA, ORDEN_RAREZAS, PERSONALIZADA,
 } from '../motor/reglas.js';
 import { definicionEquipo, cambiarFormacion, valorEnPuesto, banquillo } from '../motor/alineacion.js';
 import { crearRivalPrueba } from '../datos/club-prueba.js';
@@ -201,14 +201,15 @@ export function pantallaPartido(app, { club, ir }) {
 
   function abrirTactica() {
     const sel = (orden, valor, nombreDe) => h('select', {}, orden.map((k) => opcion(k, nombreDe(k), k === valor)));
-    const f = sel(ORDEN_FORMACIONES, tp.formacion, (k) => k);
+    const formaciones = tp.formacion === PERSONALIZADA ? [PERSONALIZADA, ...ORDEN_FORMACIONES] : ORDEN_FORMACIONES;
+    const f = sel(formaciones, tp.formacion, (k) => (k === PERSONALIZADA ? 'Personalizada' : k));
     const o = sel(ORDEN_OFENSIVAS, tp.ofensiva, (k) => OFENSIVAS[k].nombre);
     const d = sel(ORDEN_DEFENSIVAS, tp.defensiva, (k) => DEFENSIVAS[k].nombre);
     modal('Cambiar táctica', h('div', { class: 'fila' },
       h('label', {}, h('span', { class: 'etiqueta' }, 'Formación'), f),
       h('label', {}, h('span', { class: 'etiqueta' }, 'Ataque'), o),
       h('label', {}, h('span', { class: 'etiqueta' }, 'Defensa'), d)), () => {
-      if (f.value !== tp.formacion) Object.assign(tp, cambiarFormacion(club.cartas, tp, f.value));
+      if (f.value !== tp.formacion && f.value !== PERSONALIZADA) Object.assign(tp, cambiarFormacion(club.cartas, tp, f.value));
       tp.ofensiva = o.value;
       tp.defensiva = d.value;
       aplicarTacticaPartido();
@@ -226,10 +227,9 @@ export function pantallaPartido(app, { club, ir }) {
     // Por defecto sale el jugador de campo más cansado.
     const masCansado = enCampo.reduce((m, j, i) => (j.linea !== 'POR' && (m === -1 || j.energia < enCampo[m].energia) ? i : m), -1);
     const sale = h('select', { onchange: () => llenarEntra() }, enCampo.map((j, i) =>
-      opcion(String(i), `${j.puesto} · ${j.nombre} · energía ${Math.round(j.energia)}%`, i === masCansado)));
+      opcion(String(i), `${j.casilla} · ${j.nombre} · energía ${Math.round(j.energia)}%`, i === masCansado)));
     // Una carta por jugador; ni los que están en el campo ni los que ya salieron.
-    const salieron = new Set(partido.estado.eventos.filter((e) => e.tipo === 'cambio' && e.lado === 0)
-      .map((e) => club.cartas.find((c) => c.uid === e.sale)?.ficha.id));
+    const salieron = new Set(partido.estado.eventos.filter((e) => e.tipo === 'cambio' && e.lado === 0).map((e) => e.sale));
     const banca = banquillo(club.cartas, tp.alineacion, ORDEN_RAREZAS).map((b) => b.carta).filter((c) => !salieron.has(c.ficha.id));
     const entra = h('select', {});
     // El banquillo se ordena por lo bien que encaja cada uno en el puesto que queda libre.
@@ -246,8 +246,9 @@ export function pantallaPartido(app, { club, ir }) {
       const carta = club.cartas.find((c) => c.uid === entra.value);
       if (!carta) return false;
       const puesto = enCampo[i].puesto;
-      partido.sustituir(0, i, { ficha: carta.ficha, rareza: carta.rareza, rol: valorEnPuesto(carta, puesto).rol, uid: carta.uid });
-      tp.alineacion[i] = { uid: carta.uid, rol: partido.estado.eq[0].jugadores[i].rol };
+      const casilla = enCampo[i].casilla;
+      partido.sustituir(0, i, { ficha: carta.ficha, rareza: carta.rareza, rol: valorEnPuesto(carta, puesto).rol, uid: carta.uid, casilla });
+      tp.alineacion[i] = { uid: carta.uid, rol: partido.estado.eq[0].jugadores[i].rol, casilla };
       mostrarEvento(partido.estado.eventos.at(-1));
     }, 'Hacer cambio');
   }

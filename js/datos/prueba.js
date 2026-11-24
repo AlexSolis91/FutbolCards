@@ -2,7 +2,7 @@
 // También alimentan el modo de prueba de la interfaz hasta que lleguen los jugadores reales.
 
 import {
-  ROLES, PUESTOS, FORMACIONES, ORDEN_FORMACIONES, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS,
+  ROLES, PUESTOS, FORMACIONES, ORDEN_FORMACIONES, CASILLAS, ORDEN_CASILLAS, PLANTILLAS, formacionDeCasillas, ORDEN_OFENSIVAS, ORDEN_DEFENSIVAS,
   LISTA_ATRIBUTOS, ATRIBUTOS_PORTERO,
 } from '../motor/reglas.js';
 
@@ -44,11 +44,27 @@ export function generarFicha(rng, rol, media) {
   };
 }
 
-// Equipo aleatorio. opciones: { media, formacion, ofensiva, defensiva, fueraDeRol, nacion }
+// Casillas al azar: una plantilla con 0–3 jugadores de campo movidos a otras
+// casillas libres (para calibrar y probar formaciones personalizadas).
+export function casillasAleatorias(rng) {
+  const casillas = [...PLANTILLAS[rng.elegir(ORDEN_FORMACIONES)]];
+  const movidos = rng.entero(0, 3);
+  for (let k = 0; k < movidos; k++) {
+    const libres = ORDEN_CASILLAS.filter((id) => !casillas.includes(id));
+    casillas[rng.entero(1, 10)] = rng.elegir(libres);
+  }
+  return casillas;
+}
+
+// Equipo aleatorio. opciones: { media, formacion, casillas (11 ids, formación
+// personalizada), ofensiva, defensiva, fueraDeRol, nacion }
 export function equipoAleatorio(rng, opciones = {}) {
   const media = opciones.media ?? 80;
   const formacion = opciones.formacion ?? rng.elegir(ORDEN_FORMACIONES);
-  const alineacion = FORMACIONES[formacion].huecos.map((h) => {
+  const huecos = opciones.casillas
+    ? opciones.casillas.map((id) => ({ ...CASILLAS[id], casilla: id }))
+    : FORMACIONES[formacion].huecos;
+  const alineacion = huecos.map((h) => {
     const rol = rng.elegir(PUESTOS[h.puesto].roles);
     let natural = rol;
     if (opciones.fueraDeRol && h.puesto !== 'POR') {
@@ -59,11 +75,11 @@ export function equipoAleatorio(rng, opciones = {}) {
     const ficha = generarFicha(rng, natural, media + rng.entero(-3, 3));
     if (opciones.nacion) ficha.nacion = opciones.nacion;
     if (opciones.fueraDeRol) ficha.roles = [natural];
-    return { ficha, rareza: 'legendario', rol };
+    return { ficha, rareza: 'legendario', rol, casilla: h.casilla };
   });
   return {
     nombre: opciones.nombre ?? 'Equipo de prueba',
-    formacion,
+    formacion: opciones.casillas ? formacionDeCasillas(opciones.casillas) : formacion,
     ofensiva: opciones.ofensiva ?? rng.elegir(ORDEN_OFENSIVAS),
     defensiva: opciones.defensiva ?? rng.elegir(ORDEN_DEFENSIVAS),
     capitan: rng.entero(0, 10),

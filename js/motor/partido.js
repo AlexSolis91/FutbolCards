@@ -5,14 +5,25 @@
 // jugadores del atacante y del defensor presentes en esa zona del campo.
 // Probabilidad del duelo = logística de:
 //   base de la fase + (rating atacante − rating defensor) / escala
-//   + superioridad numérica + tabla de estrategias + tabla de formaciones + moral.
+//   + superioridad numérica en la zona + tabla de estrategias + moral.
+// Formaciones: no hay tabla fija. Cada jugador cubre zonas según su casilla
+// (franja por su puesto, carril por su x). El atacante elige carril mirando
+// su presencia y los huecos del rival, y en cada duelo cuenta quién tiene más
+// gente en esa zona (rendimiento decreciente: logaritmo).
 
 import { crearRng } from './rng.js';
 import {
-  OFENSIVAS, DEFENSIVAS, TABLA_ESTRATEGIAS, ventajaFormacion, CARRILES,
+  OFENSIVAS, DEFENSIVAS, TABLA_ESTRATEGIAS, CARRILES,
   ESPEJO_CARRIL, ESPEJO_FRANJA,
 } from './reglas.js';
 import { prepararEquipo, promedioPonderado } from './encaje.js';
+
+// Equipo listo para el motor + su ajuste oculto por casillas (calibración).
+function prepararParaMotor(definicion) {
+  const eq = prepararEquipo(definicion);
+  eq.ajusteCasillas = eq.jugadores.reduce((s, j) => s + (MOTOR.calibracion.casilla[j.casilla] ?? 0), 0);
+  return eq;
+}
 
 export const MOTOR = {
   duracion: 5400, // segundos
@@ -22,23 +33,29 @@ export const MOTOR = {
   pesoMedia: 0.5,
   superioridad: 0.6,
   valorEstrategia: { 2: 0.17, 1: 0.06, 0: 0, '-1': -0.06, '-2': -0.17 },
-  valorFormacion: { 2: 0.09, 1: 0.04, 0: 0, '-1': -0.04, '-2': -0.09 },
-  carrilAdyacente: 0.3,
+  // Cuánto mira el atacante los huecos del rival al elegir carril
+  // (exponente de presencia propia / presencia rival en esa banda).
+  buscarHuecos: 1,
+  // Superioridad en la zona del remate: más atacantes que defensores en esa
+  // zona = mejor ocasión (xG × (atacantes / defensores) ^ exponente, con tope).
+  remateSuperioridad: 0.25,
+  remateTope: 2,
+  presenciaMinima: 0.15,
   segundos: { salida: 12, creacion: 15, ocasion: 10 },
   disparoLejano: 0.1,
-  xg: { pieCentro: 0.16, pieBanda: 0.11, cabeza: 0.1, lejano: 0.04 },
+  xg: { pieCentro: 0.16, pieBanda: 0.15, cabeza: 0.1, lejano: 0.04 },
   escalaRemate: 30,
   probGol: { min: 0.01, max: 0.7 },
   aPuerta: 0.45,
   moral: { valor: 0.1, duracion: 600 },
   fatiga: { porMinuto: 0.33, efecto: 0.25, descanso: 8 },
   maxCambios: 5,
-  // Calibración (logit) para que ninguna estrategia ni formación sea superior
+  // Calibración (logit) para que ninguna estrategia ni casilla sea superior
   // por sí sola. La calcula herramientas/calibrar.mjs; no tocar a mano.
   calibracion: {
-    ofensiva: { posesion: -0.172, contraataque: -0.121, directo: 0.142, bandas: 0.148 },
-    defensiva: { presionAlta: 0.06, bloqueMedio: -0.069, bloqueBajo: -0.003, marcajeHombre: 0.011 },
-    formacion: { '4-4-2': -0.055, '4-3-3': 0.044, '4-2-3-1': 0.007, '3-5-2': 0.016, '5-3-2': 0.023, '4-1-2-1-2': -0.013, '4-4-1-1': -0.044, '4-1-4-1': -0.019, '3-4-3': 0.042 },
+    ofensiva: { posesion: -0.155, contraataque: -0.17, directo: 0.176, bandas: 0.143 },
+    defensiva: { presionAlta: 0.094, bloqueMedio: -0.047, bloqueBajo: -0.046, marcajeHombre: 0.005 },
+    casilla: { CAD: 0.026, CAI: 0.024, DC: -0.002, DD: -0.007, DFC: -0.013, DFCD: -0.01, DFCI: -0.01, DI: -0.007, ED: -0.005, EI: -0.006, ID: 0.002, II: 0.001, LD: 0.002, LI: -0.002, MC: 0.007, MCD: -0.002, MCDD: 0.01, MCDI: 0.008, MCO: -0.001, MCOD: 0.023, MCOI: 0.008, MD: 0.014, MI: 0.016 },
   },
 };
 
@@ -59,11 +76,6 @@ function factorFatiga(j) {
   return 1 - MOTOR.fatiga.efecto * (1 - j.energia / 100);
 }
 
-function presenciaEnCarril(j, carril) {
-  if (j.carril === carril) return 1;
-  if (j.carril === 'cen' || carril === 'cen') return MOTOR.carrilAdyacente;
-  return 0;
-}
 
 // Fuerza de un equipo en una zona (franja + carril) con ciertos atributos.
 function zona(eq, franja, carril, pesos, multiplicador = 1) {
@@ -72,7 +84,7 @@ function zona(eq, franja, carril, pesos, multiplicador = 1) {
   const participantes = [];
   for (const j of eq.jugadores) {
     if (j.linea === 'POR') continue;
-    const w = (j.presencia[franja] ?? 0) * presenciaEnCarril(j, carril);
+    const w = (j.presencia[franja] ?? 0) * j.carriles[carril];
     if (w <= 0) continue;
     // Mitad calidad general en su rol, mitad atributos que pide la estrategia.
     const r = (MOTOR.pesoMedia * j.mediaExacta + (1 - MOTOR.pesoMedia) * promedioPonderado(j.attrs, pesos)) * factorFatiga(j);
@@ -80,7 +92,7 @@ function zona(eq, franja, carril, pesos, multiplicador = 1) {
     n += w;
     participantes.push({ j, peso: w * r });
   }
-  return { rating: n > 0 ? suma / n : 30, n: Math.max(0.2, n * multiplicador), participantes };
+  return { rating: n > 0 ? suma / n : 30, n: Math.max(MOTOR.presenciaMinima, n * multiplicador), participantes };
 }
 
 function elegirParticipante(rng, z) {
@@ -94,7 +106,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
     semilla,
     t: 0,
     definiciones: [local, visitante],
-    eq: [prepararEquipo(local), prepararEquipo(visitante)],
+    eq: [prepararParaMotor(local), prepararParaMotor(visitante)],
     marcador: [0, 0],
     lado: rng() < 0.5 ? 0 : 1,
     franja: 'def',
@@ -143,21 +155,26 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
       (A.rating - D.rating) / MOTOR.escala +
       MOTOR.superioridad * Math.log(A.n / D.n) +
       MOTOR.valorEstrategia[TABLA_ESTRATEGIAS[atq.ofensiva][def.defensiva]] +
-      MOTOR.valorFormacion[ventajaFormacion(atq.formacion, def.formacion)] +
       moral(lado) - moral(1 - lado) +
       MOTOR.calibracion.ofensiva[atq.ofensiva] - MOTOR.calibracion.defensiva[def.defensiva] +
-      MOTOR.calibracion.formacion[atq.formacion] - MOTOR.calibracion.formacion[def.formacion];
+      atq.ajusteCasillas - def.ajusteCasillas;
     const p = sigmoide(logit);
     const exito = rng() < p;
     st.stats[lado][exito ? 'duelosGanados' : 'duelosPerdidos']++;
     return { exito, p, A, D, atacante: elegirParticipante(rng, A), defensor: elegirParticipante(rng, D) };
   }
 
-  function elegirCarril(eq) {
+  // El atacante busca los carriles donde tiene gente y donde el rival dejó
+  // huecos en su defensa (su franja propia, carril espejo).
+  function elegirCarril(lado) {
+    const eq = st.eq[lado];
+    const rival = st.eq[1 - lado];
     const of = OFENSIVAS[eq.ofensiva];
+    const dr = DEFENSIVAS[rival.defensiva];
     return rng.ponderado(CARRILES, (c) => {
-      const z = zona(eq, 'ata', c, { velocidad: 1 });
-      return of.carriles[c] * Math.sqrt(z.n);
+      const propio = zona(eq, 'ata', c, { velocidad: 1 }).n;
+      const ajeno = zona(rival, 'def', ESPEJO_CARRIL[c], { velocidad: 1 }, dr.presencia.def).n;
+      return of.carriles[c] * Math.sqrt(propio) * (propio / ajeno) ** (MOTOR.buscarHuecos / 2);
     });
   }
 
@@ -174,7 +191,10 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
     const xgBase = tipo === 'lejano' ? MOTOR.xg.lejano
       : tipo === 'cabeza' ? MOTOR.xg.cabeza
       : carril === 'cen' ? MOTOR.xg.pieCentro : MOTOR.xg.pieBanda;
-    const p = Math.min(MOTOR.probGol.max, Math.max(MOTOR.probGol.min, xgBase * Math.exp((S - G) / MOTOR.escalaRemate)));
+    const dr = DEFENSIVAS[def.defensiva];
+    const marcadores = zona(def, 'def', ESPEJO_CARRIL[carril], dr.atributos, dr.presencia.def).n;
+    const ventaja = Math.min(MOTOR.remateTope, Math.max(1 / MOTOR.remateTope, (z.n / marcadores) ** MOTOR.remateSuperioridad));
+    const p = Math.min(MOTOR.probGol.max, Math.max(MOTOR.probGol.min, xgBase * ventaja * Math.exp((S - G) / MOTOR.escalaRemate)));
     const s = st.stats[lado];
     s.tiros++;
     s.xg += p;
@@ -220,7 +240,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
     const atq = st.eq[lado];
     const of = OFENSIVAS[atq.ofensiva];
     let franja = st.franja;
-    let carril = elegirCarril(atq);
+    let carril = elegirCarril(lado);
     emitir({ tipo: 'posesion', lado, franja, carril });
     for (let pasos = 0; ; pasos++) {
       if (st.t >= MOTOR.duracion) break;
@@ -246,7 +266,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
         }
       } else if (fase !== 'salida' && rng() < of.reciclaje) {
         franja = fase === 'ocasion' ? 'med' : 'def';
-        carril = elegirCarril(atq);
+        carril = elegirCarril(lado);
         emitir({ tipo: 'recicla', lado, jugador: r.atacante?.id ?? null, franja, carril });
       } else {
         perdida(lado, franja, r);
@@ -265,7 +285,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
   function rehacer(lado, definicion) {
     const energia = new Map(st.eq[lado].jugadores.map((j) => [j.id, j.energia]));
     st.definiciones[lado] = definicion;
-    st.eq[lado] = prepararEquipo(definicion);
+    st.eq[lado] = prepararParaMotor(definicion);
     for (const j of st.eq[lado].jugadores) j.energia = energia.get(j.id) ?? 100;
   }
 
@@ -288,7 +308,7 @@ export function crearPartido({ local, visitante, semilla = 1 }) {
       if (st.cambios[lado] >= MOTOR.maxCambios) throw new Error('No quedan cambios');
       const def = st.definiciones[lado];
       const sale = def.alineacion[hueco];
-      const alineacion = def.alineacion.map((c, i) => (i === hueco ? carta : c));
+      const alineacion = def.alineacion.map((c, i) => (i === hueco ? { casilla: sale.casilla, ...carta } : c));
       rehacer(lado, { ...def, alineacion });
       st.cambios[lado]++;
       emitir({ tipo: 'cambio', lado, sale: sale.ficha.id, entra: carta.ficha.id });

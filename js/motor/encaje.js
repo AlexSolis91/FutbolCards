@@ -3,8 +3,8 @@
 // El desglose (familiaridad, afinidad, química) es oculto para el usuario.
 
 import {
-  ORDEN_RAREZAS, PASO_RAREZA, rarezasDe, ROLES, PUESTOS, FORMACIONES, OFENSIVAS, DEFENSIVAS, ENCAJE,
-  LISTA_ATRIBUTOS, carrilDeX,
+  ORDEN_RAREZAS, PASO_RAREZA, rarezasDe, ROLES, PUESTOS, FORMACIONES, CASILLAS, OFENSIVAS, DEFENSIVAS, ENCAJE,
+  LISTA_ATRIBUTOS, carrilDeX, pesosCarril, formacionDeCasillas,
 } from './reglas.js';
 import { aplicarBonificaciones } from './bonificaciones.js';
 
@@ -70,15 +70,35 @@ export function familiaridad(ficha, rol) {
   return ENCAJE.familiaridad[Math.min(i, ENCAJE.familiaridad.length - 1)];
 }
 
-// Vecinos de cada hueco de la formación (para la química).
+// Vínculos de química por cercanía: cada jugador se une a sus compañeros más
+// cercanos (hasta ENCAJE.vecinosCercanos) que estén a ENCAJE.distanciaVinculo
+// o menos. Los vínculos son mutuos. posiciones: [{ x, y }].
+export function vecinosPorCercania(posiciones) {
+  const vecinos = posiciones.map(() => new Set());
+  posiciones.forEach((a, i) => {
+    posiciones
+      .map((b, j) => ({ j, d: Math.hypot(a.x - b.x, a.y - b.y) }))
+      .filter((o) => o.j !== i && o.d <= ENCAJE.distanciaVinculo)
+      .sort((u, v) => u.d - v.d)
+      .slice(0, ENCAJE.vecinosCercanos)
+      .forEach((o) => { vecinos[i].add(o.j); vecinos[o.j].add(i); });
+  });
+  return vecinos.map((v) => [...v]);
+}
+
+// Vecinos de una plantilla de formación (para pruebas y la interfaz).
 export function vecinosFormacion(formacion) {
-  const { huecos, vinculos } = FORMACIONES[formacion];
-  const vecinos = huecos.map(() => []);
-  for (const [a, b] of vinculos) {
-    vecinos[a].push(b);
-    vecinos[b].push(a);
-  }
-  return vecinos;
+  return vecinosPorCercania(FORMACIONES[formacion].huecos);
+}
+
+// Casillas de una alineación: cada carta trae su casilla; si no (definiciones
+// antiguas), se toman de la plantilla de la formación en orden.
+export function casillasDeAlineacion(equipo) {
+  return equipo.alineacion.map((carta, i) => {
+    const id = carta.casilla ?? FORMACIONES[equipo.formacion]?.huecos[i]?.casilla;
+    if (!CASILLAS[id]) throw new Error(`Casilla desconocida en la posición ${i + 1}: ${id}`);
+    return id;
+  });
 }
 
 export function puntosQuimica(jugadores, vecinos, i) {
@@ -99,19 +119,21 @@ function rolPorDefecto(ficha, puesto) {
   return ficha.roles.find((r) => PUESTOS[puesto].roles.includes(r)) ?? PUESTOS[puesto].roles[0];
 }
 
-// equipo: { nombre, formacion, ofensiva, defensiva, capitan (índice del hueco),
-//           alineacion: [{ ficha, rareza, rol? }] × 11 en el orden de los huecos }
+// equipo: { nombre, formacion?, ofensiva, defensiva, capitan (índice),
+//           alineacion: [{ ficha, rareza, rol?, casilla? }] × 11 }
 export function prepararEquipo(equipo) {
-  const formacion = FORMACIONES[equipo.formacion];
-  if (!formacion) throw new Error(`Formación desconocida: ${equipo.formacion}`);
   if (!OFENSIVAS[equipo.ofensiva]) throw new Error(`Estrategia ofensiva desconocida: ${equipo.ofensiva}`);
   if (!DEFENSIVAS[equipo.defensiva]) throw new Error(`Estrategia defensiva desconocida: ${equipo.defensiva}`);
-  if (equipo.alineacion.length !== formacion.huecos.length) throw new Error('La alineación debe tener 11 jugadores');
+  if (equipo.alineacion.length !== 11) throw new Error('La alineación debe tener 11 jugadores');
   const ids = new Set(equipo.alineacion.map((c) => c.ficha.id));
   if (ids.size !== equipo.alineacion.length) throw new Error('Un jugador no puede estar dos veces en la alineación');
+  const casillas = casillasDeAlineacion(equipo);
+  if (new Set(casillas).size !== casillas.length) throw new Error('Dos jugadores no pueden ocupar la misma casilla');
+  if (!casillas.includes('POR')) throw new Error('Falta el portero');
+  const nombreFormacion = formacionDeCasillas(casillas);
 
   const jugadores = equipo.alineacion.map((carta, i) => {
-    const hueco = formacion.huecos[i];
+    const hueco = { ...CASILLAS[casillas[i]], casilla: casillas[i] };
     const puesto = PUESTOS[hueco.puesto];
     const rol = carta.rol ?? rolPorDefecto(carta.ficha, hueco.puesto);
     if (!puesto.roles.includes(rol)) throw new Error(`El rol ${rol} no existe para el puesto ${hueco.puesto}`);
@@ -119,6 +141,11 @@ export function prepararEquipo(equipo) {
     for (const f of Object.keys(presencia)) {
       presencia[f] = Math.max(0, (puesto.presencia[f] ?? 0) + (ROLES[rol].presencia?.[f] ?? 0));
     }
+    // Todos los jugadores de campo pesan lo mismo en total: la casilla y el
+    // rol solo deciden en qué franjas está (si no, unas formaciones tendrían
+    // "más gente" que otras).
+    const total = presencia.def + presencia.med + presencia.ata;
+    if (total > 0) for (const f of Object.keys(presencia)) presencia[f] *= ENCAJE.presenciaTotal / total;
     return {
       id: carta.ficha.id,
       nombre: carta.ficha.nombre,
@@ -128,8 +155,10 @@ export function prepararEquipo(equipo) {
       rareza: carta.rareza,
       rol,
       puesto: hueco.puesto,
+      casilla: hueco.casilla,
       linea: puesto.linea,
       carril: carrilDeX(hueco.x),
+      carriles: pesosCarril(hueco.x),
       x: hueco.x,
       y: hueco.y,
       presencia,
@@ -140,7 +169,7 @@ export function prepararEquipo(equipo) {
     };
   });
 
-  const vecinos = vecinosFormacion(equipo.formacion);
+  const vecinos = vecinosPorCercania(jugadores);
   jugadores.forEach((j, i) => {
     const fam = familiaridad(j.ficha, j.rol);
     let afi = 0;
@@ -166,7 +195,7 @@ export function prepararEquipo(equipo) {
 
   return {
     nombre: equipo.nombre,
-    formacion: equipo.formacion,
+    formacion: nombreFormacion,
     ofensiva: equipo.ofensiva,
     defensiva: equipo.defensiva,
     jugadores,

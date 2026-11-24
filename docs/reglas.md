@@ -85,7 +85,7 @@ Además: rol natural + hasta 2 secundarios, pie bueno / pie malo (1–5), nacion
 
 ## 5. Química
 
-- Solo entre compañeros **vinculados** en la formación. Cada formación tiene exactamente 17 vínculos (ninguna tiene más química posible que otra).
+- Solo entre compañeros **vinculados por cercanía** en el campo: cada jugador se une a sus 3 compañeros más cercanos que estén a 42 unidades o menos (el campo mide 100 × 100). Los vínculos son mutuos. Un equipo disperso tiene menos vínculos y menos química.
 - Cada vínculo da 1 punto por misma nación y 1 por misma escuela de juego.
 - Puntos → ajuste: 0 → −2, 1 → −1, 2 → 0, 3 → +1, 4 → +2, 5 o más → +3.
 - **No hay bonus por duplas históricas**: el juego premia inventar combinaciones nuevas (ej. Matthäus + Iniesta), no copiar equipos reales.
@@ -100,8 +100,9 @@ Además: rol natural + hasta 2 secundarios, pie bueno / pie malo (1–5), nacion
 
 ## 7. Equilibrio (regla de oro)
 
-Ningún elemento es superior a los demás. En cada familia (estrategias ofensivas, defensivas, formaciones…), cada opción tiene contra las opciones rivales exactamente:
+Ningún elemento es superior a los demás. En cada familia de estrategias (ofensivas y defensivas), cada opción tiene contra las opciones rivales exactamente:
 **una Mucha ventaja, una Neutral +, una Neutral − y una Mucha desventaja**.
+Las formaciones ya no tienen tabla fija (regla del 2026-11-24): su equilibrio sale del enfrentamiento de zonas y se comprueba con miles de partidos simulados (ver §8).
 
 ### Estrategias ofensivas vs defensivas
 
@@ -125,55 +126,42 @@ Cada estrategia cambia también **qué atributos pesan** en cada fase, por qué 
 - **Bloque bajo**: marcaje, posicionamiento, fuerza, salto. Más gente atrás; cansa ×0.85.
 - **Marcaje al hombre**: marcaje, velocidad, fuerza. Cansa ×1.2.
 
-### Formaciones
+### Campo de 24 casillas y formaciones (2026-11-24)
 
-| Formación \ Rival | 4-4-2 | 4-3-3 | 4-2-3-1 | 3-5-2 | 5-3-2 | 4-1-2-1-2 | 4-4-1-1 | 4-1-4-1 | 3-4-3 |
-|---|---|---|---|---|---|---|---|---|---|
-| 4-4-2 | = | ++ | − | + | −− | ++ | − | + | −− |
-| 4-3-3 | −− | = | ++ | − | + | −− | ++ | − | + |
-| 4-2-3-1 | + | −− | = | ++ | − | + | −− | ++ | − |
-| 3-5-2 | − | + | −− | = | ++ | − | + | −− | ++ |
-| 5-3-2 | ++ | − | + | −− | = | ++ | − | + | −− |
-| 4-1-2-1-2 | −− | ++ | − | + | −− | = | ++ | − | + |
-| 4-4-1-1 | + | −− | ++ | − | + | −− | = | ++ | − |
-| 4-1-4-1 | − | + | −− | ++ | − | + | −− | = | ++ |
-| 3-4-3 | ++ | − | + | −− | ++ | − | + | −− | = |
+El usuario coloca a sus 11 jugadores en cualquiera de estas 24 casillas (arrastrando la carta, o tocando la carta y luego el destino):
 
-9 formaciones. Contra las demás, cada una tiene **dos ++, dos +, dos − y dos −−** (misma cantidad de cada, regla de oro), y la tabla es simétrica: si A tiene ++ contra B, B tiene −− contra A. Para añadir más, el total debe seguir siendo 4k + 1 (13, 17…) y respetar el patrón (prueba automática).
+| Fila | Casillas |
+|---|---|
+| Delantera | DI · DC · DD |
+| Mediapunta | EI · MCOI · MCO · MCOD · ED |
+| Medio | MI · II · MC · ID · MD |
+| Contención | CAI · MCDI · MCD · MCDD · CAD |
+| Defensa | LI · DFCI · DFC · DFCD · LD |
+| Portería | POR |
 
-**Puestos**:
-- POR, DFC, LI, LD.
-- MCD = **Contención**, MC = Mediocentro.
-- **II / ID = Interior izquierdo / derecho**.
-- MI / MD = Medio izquierdo / derecho.
-- MCO = **Mediapunta**.
-- EI / ED = Extremos.
-- **SD = Segundo delantero**.
-- DC = Delantero centro.
+- Reglas: 11 jugadores, cada uno en una casilla distinta, el portero siempre en POR (la portería nunca queda vacía) y nunca dos cartas del mismo jugador.
+- Cada casilla tiene un tipo de puesto (roles posibles, línea y presencia por franja): DFCI/DFC/DFCD = Defensa central; CAI/CAD = Carrilero (Carrilero o Lateral); MCDI/MCD/MCDD = Contención; MCOI/MCO/MCOD = Mediapunta (Mediapunta, Falso 9 o Segundo delantero); DI/DC/DD = Delantero centro; II/ID admiten también Ancla.
+- **Atributos según la casilla**: el rol que juega en esa casilla le da su familiaridad (natural 0, secundario −3/−5, fuera de rol −12), su afinidad y su química.
+- **Plantillas rápidas** (el selector Formación): 4-4-2, 4-3-3, 4-2-3-1, 3-5-2, 5-3-2, 4-1-2-1-2 (rombo), 4-4-1-1, 4-1-4-1, 3-4-3. Colocan a tus 11 donde mejor rinden. Si mueves a alguien a otra casilla, la formación pasa a ser **Personalizada**.
+- **Auto-alinear** elige a los mejores para las casillas que tienes ahora (no cambia tu forma).
 
-**Formaciones**:
-- 4-4-2 (doble pivote).
-- 4-3-3 (contención + 2 interiores).
-- 4-2-3-1.
-- 3-5-2 (contención + 2 interiores).
-- 5-3-2 (2 interiores).
-- **4-1-2-1-2** (rombo).
-- **4-4-1-1** (segundo delantero).
-- **4-1-4-1**.
-- **3-4-3**.
+### Enfrentamiento de zonas (sustituye a la tabla de formaciones)
 
-Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carriles (izquierda, centro, derecha), lo que crea superioridades numéricas en cada zona.
+- Cada jugador de campo aporta la **misma presencia total** (1.35); su casilla y su rol solo deciden dónde: en qué franja (defensa, medio, ataque) y en qué carril (izquierda, centro, derecha, según su x).
+- Los carriles se cubren de forma gradual: un lateral cubre casi solo su banda, un central puro casi solo el centro y las columnas intermedias (DFCI, II, MCOI…) se reparten entre banda y centro.
+- **Huecos**: el atacante elige carril mirando su gente y los huecos del rival en esa banda; en cada duelo cuenta la superioridad numérica de la zona. Dejar una banda o una franja sin gente se paga.
+- **Amontonar** rinde cada vez menos (la superioridad es logarítmica).
+- Así no gana solo la mayor media: también importa la coherencia de la formación.
 
 ## 8. Motor de partidos (js/motor/partido.js)
 
-- Campo en 9 zonas (3 franjas × 3 carriles). La formación y el rol reparten la presencia de cada jugador por zona.
+- Campo en 9 zonas (3 franjas × 3 carriles). La casilla y el rol reparten la presencia de cada jugador por zona (ver §7, enfrentamiento de zonas).
 - El partido es una sucesión de posesiones (~150). Cada posesión avanza por fases: **salida → creación → ocasión → remate**.
 - Cada fase es un **duelo** entre los jugadores del atacante y del defensor presentes en esa zona. Probabilidad = logística de:
   - base de la fase
   - + (rating atacante − rating defensor) / 34. El rating es 50 % media en su rol + 50 % atributos que pide la estrategia, multiplicado por el cansancio.
   - + 0.6 × ln(presencia atacante / presencia defensora) (superioridad numérica)
   - + tabla de estrategias (++ 0.17, + 0.06, − −0.06, −− −0.17)
-  - + tabla de formaciones (++ 0.09, + 0.04, − −0.04, −− −0.09)
   - + moral (+0.1 durante 10 minutos tras marcar)
   - + calibración automática
 - Si pierde el duelo, el equipo puede **reciclar** (volver atrás conservando el balón) o **pierde** la posesión. El rival recupera en la zona espejo, así que perder el balón en la salida es peligroso.
@@ -184,10 +172,11 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 
 ### Calibración y equilibrio
 
-- `node herramientas/calibrar.mjs` ajusta pequeños valores ocultos para que cada estrategia y formación ronde el 50 % de puntos contra rivales al azar. Hay que volver a ejecutarlo cuando cambien las reglas o el conjunto de jugadores.
+- `node herramientas/calibrar.mjs` ajusta pequeños valores ocultos para que cada estrategia ronde el 50 % de puntos contra rivales al azar. Hay que volver a ejecutarlo cuando cambien las reglas o el conjunto de jugadores. Las formaciones no se calibran (pueden ser personalizadas).
 - `node herramientas/balance.mjs` genera el informe. El último está en docs/balance-ultimo.txt.
 - Objetivos:
-  - Cada estrategia y formación entre 48 y 52 %.
+  - Cada estrategia entre 48 y 52 %; cada plantilla de formación cerca del 50 %.
+  - Dejar una banda sin nadie o descuidar la defensa se paga (el informe incluye esos casos).
   - ~2.8 goles por partido y ~23 % de empates.
   - Un equipo con +5 de media gana ~60 %.
   - Un equipo con −5 de media pero con ++ en todo gana ~45 % y pierde ~36 %.
@@ -229,7 +218,7 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
   - La música intenta sonar ya en la portada; los navegadores suelen bloquear el sonido hasta el primer clic, así que en ese caso arranca con el clic de Iniciar.
   - Sale en cada carga de la página.
 - **Lobby** (pantalla de inicio): fondo `assets/fondos/lobby.webp` (balón dorado sobre roca, aportado por el usuario) con **chispas de fuego animadas** (`js/ui/brasas.js`: canvas detrás del menú; trazos alargados en diagonal hacia arriba, núcleo amarillo con halo naranja y profundidad (las cercanas más grandes, rápidas y difusas); parpadean y se apagan; se detienen al salir del inicio y se reducen si el sistema pide menos movimiento). Encima del fondo, un velo para leer el menú. Arriba, el club (escudo, nombre, media del once). Debajo, 6 recuadros medianos:
-  - **Mi Club**: formación, estrategias, roles, capitán y alineación.
+  - **Mi Club**: campo de 24 casillas (arrastrar y soltar), plantillas de formación, estrategias, roles, capitán y alineación.
   - **Colección**: tus cartas agrupadas con sus copias (×N), filtros por rareza y botón **Subir a …** (6 copias = carta + 5). Pestaña **Álbum de jugadores** con todos los jugadores reales aprobados.
   - **Mercado de Fichajes**: solo abre en ciertas fechas (por ahora, cerrado).
   - **Temporadas**: Liga, Copa y Torneo de Campeones contra la IA (próximamente); de momento, amistoso contra la IA.
@@ -260,6 +249,6 @@ Cada formación reparte su presencia por franjas (defensa, medio, ataque) y carr
 
 ## Pendiente de decidir
 
-- Más formaciones: el total debe ser 4k + 1 (la próxima tanda sería de 4, hasta 13).
+- Más plantillas de formación: basta con añadirlas a PLANTILLAS (reglas.js) y revisar el informe de balance.
 - Rasgos de jugador (Partidos grandes, Pulmón…): aún no implementados.
 - Jugadores reales: se crean a partir de las fotos del usuario.

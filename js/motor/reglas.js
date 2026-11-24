@@ -85,62 +85,80 @@ export const PUESTOS = {
   DFC: { nombre: 'Defensa central', linea: 'DEF', roles: ['central', 'libero'], presencia: { def: 1 } },
   LI: { nombre: 'Lateral izquierdo', linea: 'DEF', roles: ['lateral', 'carrilero'], presencia: { def: 1, med: 0.4, ata: 0.1 } },
   LD: { nombre: 'Lateral derecho', linea: 'DEF', roles: ['lateral', 'carrilero'], presencia: { def: 1, med: 0.4, ata: 0.1 } },
+  CA: { nombre: 'Carrilero', linea: 'DEF', roles: ['carrilero', 'lateral'], presencia: { def: 0.75, med: 0.8, ata: 0.35 } },
   MCD: { nombre: 'Contención', linea: 'MED', roles: ['ancla', 'regista'], presencia: { def: 0.45, med: 0.8 } },
   MC: { nombre: 'Mediocentro', linea: 'MED', roles: ['boxToBox', 'regista', 'ancla', 'mediapunta'], presencia: { def: 0.2, med: 1, ata: 0.25 } },
-  II: { nombre: 'Interior izquierdo', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
-  ID: { nombre: 'Interior derecho', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
+  II: { nombre: 'Interior izquierdo', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista', 'ancla'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
+  ID: { nombre: 'Interior derecho', linea: 'MED', roles: ['boxToBox', 'mediapunta', 'regista', 'ancla'], presencia: { def: 0.2, med: 1, ata: 0.35 } },
   MI: { nombre: 'Medio izquierdo', linea: 'MED', roles: ['extremo', 'carrilero', 'boxToBox'], presencia: { def: 0.2, med: 0.9, ata: 0.4 } },
   MD: { nombre: 'Medio derecho', linea: 'MED', roles: ['extremo', 'carrilero', 'boxToBox'], presencia: { def: 0.2, med: 0.9, ata: 0.4 } },
-  MCO: { nombre: 'Mediapunta', linea: 'MED', roles: ['mediapunta', 'falso9'], presencia: { med: 0.6, ata: 0.65 } },
+  MCO: { nombre: 'Mediapunta', linea: 'MED', roles: ['mediapunta', 'falso9', 'segundoDelantero'], presencia: { med: 0.6, ata: 0.65 } },
   EI: { nombre: 'Extremo izquierdo', linea: 'DEL', roles: ['extremo', 'interior'], presencia: { med: 0.3, ata: 1 } },
   ED: { nombre: 'Extremo derecho', linea: 'DEL', roles: ['extremo', 'interior'], presencia: { med: 0.3, ata: 1 } },
-  SD: { nombre: 'Segundo delantero', linea: 'DEL', roles: ['segundoDelantero', 'falso9', 'interior'], presencia: { med: 0.45, ata: 0.85 } },
   DC: { nombre: 'Delantero centro', linea: 'DEL', roles: ['delanteroArea', 'falso9', 'interior'], presencia: { med: 0.15, ata: 1 } },
 };
 
-// ---------------------------------------------------------------- Formaciones
-// x: 0 = banda izquierda, 100 = banda derecha. y: 0 = portería propia.
-// vinculos: pares de huecos conectados (química). Todas tienen 17 para que
-// ninguna formación tenga más química posible que otra.
-const p = (puesto, x, y) => ({ puesto, x, y });
-const POR = p('POR', 50, 5);
-const DEF4 = [p('LI', 12, 25), p('DFC', 37, 20), p('DFC', 63, 20), p('LD', 88, 25)];
-
-export const FORMACIONES = {
-  '4-4-2': { huecos: [POR, ...DEF4, p('MI', 12, 55), p('MC', 37, 50), p('MC', 63, 50), p('MD', 88, 55), p('DC', 37, 82), p('DC', 63, 82)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 7], [7, 8], [6, 9], [7, 10], [9, 10], [5, 9], [8, 10]] },
-  '4-3-3': { huecos: [POR, ...DEF4, p('II', 25, 50), p('MCD', 50, 42), p('ID', 75, 50), p('EI', 15, 80), p('DC', 50, 85), p('ED', 85, 80)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 6], [4, 7], [5, 6], [6, 7], [5, 8], [7, 10], [8, 9], [9, 10], [1, 8], [4, 10]] },
-  '4-2-3-1': { huecos: [POR, ...DEF4, p('MCD', 37, 40), p('MCD', 63, 40), p('MI', 15, 65), p('MCO', 50, 65), p('MD', 85, 65), p('DC', 50, 87)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [2, 5], [3, 6], [5, 6], [1, 7], [4, 9], [5, 7], [6, 9], [7, 8], [8, 9], [8, 10], [7, 10], [9, 10]] },
-  '3-5-2': { huecos: [POR, p('DFC', 25, 20), p('DFC', 50, 18), p('DFC', 75, 20), p('MI', 10, 55), p('II', 30, 50), p('MCD', 50, 42), p('ID', 70, 50), p('MD', 90, 55), p('DC', 37, 82), p('DC', 63, 82)],
-    vinculos: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [1, 4], [3, 8], [1, 5], [2, 6], [3, 7], [4, 5], [5, 6], [6, 7], [7, 8], [5, 9], [7, 10], [9, 10]] },
-  '5-3-2': { huecos: [POR, p('LI', 8, 30), p('DFC', 28, 20), p('DFC', 50, 18), p('DFC', 72, 20), p('LD', 92, 30), p('II', 25, 50), p('MC', 50, 48), p('ID', 75, 50), p('DC', 37, 82), p('DC', 63, 82)],
-    vinculos: [[0, 2], [0, 3], [0, 4], [1, 2], [2, 3], [3, 4], [4, 5], [1, 6], [2, 6], [3, 7], [4, 8], [5, 8], [6, 7], [7, 8], [6, 9], [8, 10], [9, 10]] },
-  // 4-4-2 en rombo: contención, dos interiores y mediapunta.
-  '4-1-2-1-2': { huecos: [POR, ...DEF4, p('MCD', 50, 40), p('II', 25, 52), p('ID', 75, 52), p('MCO', 50, 65), p('DC', 37, 85), p('DC', 63, 85)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 6], [4, 7], [2, 5], [3, 5], [5, 6], [5, 7], [6, 8], [7, 8], [8, 9], [8, 10], [9, 10], [5, 8]] },
-  // Segundo delantero por detrás del 9.
-  '4-4-1-1': { huecos: [POR, ...DEF4, p('MI', 12, 50), p('MC', 37, 45), p('MC', 63, 45), p('MD', 88, 50), p('SD', 50, 68), p('DC', 50, 87)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [1, 5], [2, 6], [3, 7], [4, 8], [5, 6], [6, 7], [7, 8], [6, 9], [7, 9], [9, 10], [5, 10], [8, 10]] },
-  '4-1-4-1': { huecos: [POR, ...DEF4, p('MCD', 50, 38), p('MI', 12, 58), p('II', 37, 55), p('ID', 63, 55), p('MD', 88, 58), p('DC', 50, 86)],
-    vinculos: [[0, 2], [0, 3], [1, 2], [2, 3], [3, 4], [2, 5], [3, 5], [1, 6], [4, 9], [5, 7], [5, 8], [6, 7], [7, 8], [8, 9], [6, 10], [9, 10], [7, 10]] },
-  '3-4-3': { huecos: [POR, p('DFC', 25, 20), p('DFC', 50, 18), p('DFC', 75, 20), p('MI', 12, 50), p('MC', 37, 46), p('MC', 63, 46), p('MD', 88, 50), p('EI', 18, 80), p('DC', 50, 86), p('ED', 82, 80)],
-    vinculos: [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [1, 4], [3, 7], [1, 5], [3, 6], [4, 5], [5, 6], [6, 7], [4, 8], [7, 10], [8, 9], [9, 10], [5, 9]] },
+// ---------------------------------------------------------------- Casillas del campo
+// 24 casillas fijas en 6 filas. El usuario arrastra a sus 11 jugadores a las
+// casillas que quiera; el portero siempre va en POR. puesto = tipo de puesto
+// (roles, línea y presencia por franja). x: 0 = banda izquierda, 100 = banda
+// derecha. y: 0 = portería propia.
+const c = (nombre, puesto, x, y) => ({ nombre, puesto, x, y });
+export const CASILLAS = {
+  POR: c('Portero', 'POR', 50, 5),
+  LI: c('Lateral izquierdo', 'LI', 10, 25),
+  DFCI: c('Central izquierdo', 'DFC', 30, 20),
+  DFC: c('Defensa central', 'DFC', 50, 18),
+  DFCD: c('Central derecho', 'DFC', 70, 20),
+  LD: c('Lateral derecho', 'LD', 90, 25),
+  CAI: c('Carrilero izquierdo', 'CA', 10, 42),
+  MCDI: c('Contención izquierda', 'MCD', 30, 38),
+  MCD: c('Contención', 'MCD', 50, 38),
+  MCDD: c('Contención derecha', 'MCD', 70, 38),
+  CAD: c('Carrilero derecho', 'CA', 90, 42),
+  MI: c('Medio izquierdo', 'MI', 10, 56),
+  II: c('Interior izquierdo', 'II', 30, 54),
+  MC: c('Mediocentro', 'MC', 50, 54),
+  ID: c('Interior derecho', 'ID', 70, 54),
+  MD: c('Medio derecho', 'MD', 90, 56),
+  EI: c('Extremo izquierdo', 'EI', 12, 74),
+  MCOI: c('Mediapunta izquierdo', 'MCO', 30, 70),
+  MCO: c('Mediapunta', 'MCO', 50, 70),
+  MCOD: c('Mediapunta derecho', 'MCO', 70, 70),
+  ED: c('Extremo derecho', 'ED', 88, 74),
+  DI: c('Delantero izquierdo', 'DC', 32, 88),
+  DC: c('Delantero centro', 'DC', 50, 88),
+  DD: c('Delantero derecho', 'DC', 68, 88),
 };
-export const ORDEN_FORMACIONES = ['4-4-2', '4-3-3', '4-2-3-1', '3-5-2', '5-3-2', '4-1-2-1-2', '4-4-1-1', '4-1-4-1', '3-4-3'];
+for (const [id, k] of Object.entries(CASILLAS)) k.id = id;
+export const ORDEN_CASILLAS = Object.keys(CASILLAS);
 
-// Regla de oro: contra las otras formaciones, cada una tiene la MISMA cantidad
-// de ++ (+2), + (+1), − (−1) y −− (−2): con 9 formaciones, dos de cada.
-// Contra sí misma, neutral. Tabla cíclica antisimétrica (si A tiene ++ contra
-// B, B tiene −− contra A): valor según la distancia en ORDEN_FORMACIONES.
-// El número de formaciones debe ser impar y la tabla seguir el patrón.
-const CICLO_FORMACION = [0, 2, -1, 1, -2, 2, -1, 1, -2];
-export function ventajaFormacion(propia, rival) {
-  const n = ORDEN_FORMACIONES.length;
-  const i = ORDEN_FORMACIONES.indexOf(propia);
-  const j = ORDEN_FORMACIONES.indexOf(rival);
-  return CICLO_FORMACION[(j - i + n) % n];
+// ---------------------------------------------------------------- Formaciones (plantillas)
+// Plantillas rápidas de 11 casillas (la primera, el portero). Si el usuario
+// mueve a alguien, su formación pasa a ser "Personalizada".
+// No hay tabla fija de ventajas entre formaciones: el motor enfrenta la
+// cobertura de cada zona contra por dónde ataca el rival (ver partido.js).
+export const PLANTILLAS = {
+  '4-4-2': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MI', 'II', 'ID', 'MD', 'DI', 'DD'],
+  '4-3-3': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'II', 'MCD', 'ID', 'EI', 'DC', 'ED'],
+  '4-2-3-1': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MCDI', 'MCDD', 'EI', 'MCO', 'ED', 'DC'],
+  '3-5-2': ['POR', 'DFCI', 'DFC', 'DFCD', 'MI', 'II', 'MCD', 'ID', 'MD', 'DI', 'DD'],
+  '5-3-2': ['POR', 'LI', 'DFCI', 'DFC', 'DFCD', 'LD', 'II', 'MC', 'ID', 'DI', 'DD'],
+  '4-1-2-1-2': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MCD', 'II', 'ID', 'MCO', 'DI', 'DD'],
+  '4-4-1-1': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MI', 'II', 'ID', 'MD', 'MCO', 'DC'],
+  '4-1-4-1': ['POR', 'LI', 'DFCI', 'DFCD', 'LD', 'MCD', 'MI', 'II', 'ID', 'MD', 'DC'],
+  '3-4-3': ['POR', 'DFCI', 'DFC', 'DFCD', 'MI', 'II', 'ID', 'MD', 'EI', 'DC', 'ED'],
+};
+export const ORDEN_FORMACIONES = Object.keys(PLANTILLAS);
+export const PERSONALIZADA = 'personalizada';
+export const FORMACIONES = Object.fromEntries(ORDEN_FORMACIONES.map((f) => [f, {
+  huecos: PLANTILLAS[f].map((id) => ({ ...CASILLAS[id], casilla: id })),
+}]));
+
+// Nombre de la formación que forman unas casillas (o "personalizada").
+export function formacionDeCasillas(casillas) {
+  const clave = [...casillas].sort().join(',');
+  return ORDEN_FORMACIONES.find((f) => [...PLANTILLAS[f]].sort().join(',') === clave) ?? PERSONALIZADA;
 }
 
 export const CARRILES = ['izq', 'cen', 'der'];
@@ -148,6 +166,22 @@ export function carrilDeX(x) {
   if (x < 35) return 'izq';
   if (x > 65) return 'der';
   return 'cen';
+}
+// Cuánto cubre un jugador cada carril según su x (suma 1): un central
+// escorado cubre sobre todo su lado y algo del centro; un lateral, su banda.
+export const CENTRO_CARRIL = { izq: 12, cen: 50, der: 88 };
+// ancho: cuánto se reparte un jugador hacia los carriles vecinos (más
+// estrecho = las bandas dependen más de quien juega en ellas).
+export const COBERTURA = { ancho: 45 };
+export function pesosCarril(x) {
+  const out = {};
+  let total = 0;
+  for (const [k, m] of Object.entries(CENTRO_CARRIL)) {
+    out[k] = Math.max(0, 1 - Math.abs(x - m) / COBERTURA.ancho);
+    total += out[k];
+  }
+  for (const k of Object.keys(out)) out[k] /= total;
+  return out;
 }
 export const ESPEJO_CARRIL = { izq: 'der', cen: 'cen', der: 'izq' };
 export const ESPEJO_FRANJA = { def: 'ata', med: 'med', ata: 'def' };
@@ -228,6 +262,13 @@ export const ENCAJE = {
   pesoOfensivo: { POR: 0, DEF: 0.2, MED: 0.5, DEL: 0.8 },
   // Química: puntos de vínculo con compañeros conectados → ajuste.
   quimica: [-2, -1, 0, 1, 2, 3], // 0, 1, 2, 3, 4, 5+ puntos
+  // Vínculos por cercanía: cada jugador se une a sus 3 compañeros más
+  // cercanos que estén a 42 o menos (unidades del campo). Un equipo disperso
+  // tiene menos vínculos y menos química.
+  // Presencia total de cada jugador de campo, repartida entre franjas.
+  presenciaTotal: 1.35,
+  vecinosCercanos: 3,
+  distanciaVinculo: 42,
 };
 
 // ---------------------------------------------------------------- Escuelas de juego
