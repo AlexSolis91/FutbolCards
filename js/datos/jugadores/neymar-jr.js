@@ -1,23 +1,23 @@
-// Neymar Jr. Categoría Figura: solo Raro y Épico (sin Balón de Oro).
-// Atributos en Épico (Raro resta 6). Mejor extremo de las Figuras, por
-// debajo de los extremos Estrella (Henry 91.5, Ronaldinho 92, Cristiano 92).
+// Neymar Jr. Categoría Estrella: solo Épico y Legendario (decisión del
+// usuario, 2026-11-25). Atributos en Legendario (Épico resta 6). Como
+// extremo, a la par de Henry (91) y por debajo de Ronaldinho y Cristiano (92).
 export default {
   id: 'neymar-jr',
   nombre: 'Neymar Jr',
   nacion: 'Brasil',
   escuela: 'Jogo bonito',
-  categoria: 'figura',
+  categoria: 'estrella',
   roles: ['extremo', 'interior', 'mediapunta'],
   pie: 'derecho',
   pieMalo: 4,
   estado: 'aprobada', // publicada directamente por indicación del usuario (2026-11-25)
   atributos: {
-    definicion: 84, cabeza: 62, tiroLejano: 82,
-    paseCorto: 86, paseLargo: 78, vision: 86, centros: 84,
-    regate: 95, control: 92,
-    entrada: 32, marcaje: 25, anticipacion: 64,
-    velocidad: 92, resistencia: 80, fuerza: 64, salto: 62,
-    posicionamiento: 84, compostura: 86,
+    definicion: 86, cabeza: 64, tiroLejano: 84,
+    paseCorto: 88, paseLargo: 80, vision: 88, centros: 86,
+    regate: 97, control: 94,
+    entrada: 34, marcaje: 27, anticipacion: 66,
+    velocidad: 94, resistencia: 82, fuerza: 66, salto: 64,
+    posicionamiento: 86, compostura: 88,
     reflejos: 10, colocacion: 10, juegoAereo: 10, juegoPie: 20,
   },
   bonificaciones: [
