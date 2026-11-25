@@ -13,6 +13,7 @@ import kaka from './kaka.js';
 import edgarDavids from './edgar-davids.js';
 import lotharMatthaus from './lothar-matthaus.js';
 import rafaelMarquez from './rafael-marquez.js';
+import manuelNeuer from './manuel-neuer.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez, manuelNeuer];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
