@@ -9,6 +9,7 @@ export const PISTAS = [
   { titulo: 'Made of Gold — Ibeyi & Pa Salieu', archivo: 'assets/audio/musica/made-of-gold.mp3' },
   { titulo: 'On Our Way — The Royal Concept', archivo: 'assets/audio/musica/on-our-way.mp3' },
   { titulo: 'Get Down — Amplify Dot', archivo: 'assets/audio/musica/get-down.mp3' },
+  { titulo: 'Runnin’ — David Dallas', archivo: 'assets/audio/musica/runnin.mp3' },
 ];
 
 const CLAVE = 'fc-musica';
