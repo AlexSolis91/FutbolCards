@@ -342,8 +342,8 @@ body.en-lobby main { max-width: none; }
 .campo .circulo { position: absolute; left: 50%; top: 50%; width: 26%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
 /* Las líneas del campo (áreas, medio campo, círculo) se dibujan por debajo de
    las cartas y no reciben clics; antes el área de arriba tapaba las cartas. */
-.campo::before, .campo::after, .campo .medio, .campo .circulo,
-.campo-h::before, .campo-h::after, .campo-h .medio-v, .campo-h .circulo { pointer-events: none; z-index: 0; }
+.campo::before, .campo::after, .campo .medio, .campo .circulo { pointer-events: none; z-index: 0; }
+
 .hueco { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
 /* Cartas del campo: el tamaño lo calcula ajustarCampo() (--carta-campo) para
    que sean lo más grandes posible sin empalmarse; el texto escala con ellas. */
@@ -378,28 +378,66 @@ body.en-lobby main { max-width: none; }
 .marcador .escudo.rival { background: linear-gradient(145deg, #64748b, #334155); }
 .marcador .goles { font-family: var(--fuente-num); font-size: 44px; font-weight: 800; text-align: center; line-height: 1; }
 .marcador .minuto { display: block; font-size: 15px; color: var(--acento); font-weight: 700; }
-.campo-h {
-  position: relative; width: 100%; aspect-ratio: 105 / 52; border-radius: var(--radio); overflow: hidden;
-  background: repeating-linear-gradient(90deg, var(--cesped-1) 0 10%, var(--cesped-2) 10% 20%);
+/* Campo del partido en vivo (js/ui/campo-partido.js). Horizontal en pantallas
+   anchas; de pie en un celular vertical. Las posiciones van en %. */
+.zona-campo { display: grid; gap: 12px; }
+.campo-partido {
+  --carta-campo: 44px; --vel: 1;
+  position: relative; width: min(100%, calc((100dvh - 250px) * 105 / 68)); min-width: min(100%, 560px); margin: 0 auto;
+  aspect-ratio: 105 / 68; border-radius: var(--radio); overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--cesped-1) 0 9.09%, var(--cesped-2) 9.09% 18.18%);
   border: clamp(4px, 0.5vw, 7px) solid rgba(255, 255, 255, 0.92);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 12px 40px rgba(0, 0, 0, 0.45);
 }
-.campo-h::before, .campo-h::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 44%; width: 14%; border: 2px solid var(--linea-campo); }
-.campo-h::before { left: -2px; }
-.campo-h::after { right: -2px; }
-.campo-h .medio-v { position: absolute; top: 0; bottom: 0; left: 50%; border-left: 2px solid var(--linea-campo); }
-.campo-h .circulo { position: absolute; left: 50%; top: 50%; width: 17%; aspect-ratio: 1; transform: translate(-50%, -50%); border: 2px solid var(--linea-campo); border-radius: 50%; }
-.balon {
-  position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25), 0 0 18px rgba(255, 255, 255, 0.7);
-  transform: translate(-50%, -50%); transition: left 0.45s ease, top 0.45s ease; z-index: 2;
+.campo-partido.vertical {
+  aspect-ratio: 68 / 105; width: 100%; min-width: 0;
+  background: repeating-linear-gradient(0deg, var(--cesped-1) 0 9.09%, var(--cesped-2) 9.09% 18.18%);
 }
-.zona-activa {
-  position: absolute; width: 33.4%; height: 33.4%; transition: all 0.45s ease;
-  background: rgba(255, 255, 255, 0.07);
+.campo-partido .lineas-campo, .campo-partido .lineas-campo svg, .campo-partido .estela { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.campo-partido .lineas-campo svg { fill: none; stroke: var(--linea-campo); stroke-width: 2px; }
+.campo-partido .lineas-campo svg * { vector-effect: non-scaling-stroke; }
+.campo-partido .lineas-campo .porteria { stroke: rgba(255, 255, 255, 0.9); stroke-width: 3px; }
+.campo-partido .estela { z-index: 3; overflow: visible; }
+.campo-partido .estela line { stroke-width: 2.5px; stroke-linecap: round; animation: estela calc(1.3s / var(--vel)) ease-out forwards; }
+.campo-partido .estela .pase { stroke: rgba(255, 255, 255, 0.85); stroke-dasharray: 6 5; }
+.campo-partido .estela .tiro { stroke: #facc15; stroke-width: 3.5px; }
+.campo-partido .estela .robo { stroke: #f87171; stroke-dasharray: 3 4; }
+@keyframes estela { 0% { opacity: 1; } 70% { opacity: 0.8; } 100% { opacity: 0; } }
+.campo-partido .capa-cartas { position: absolute; inset: 0; z-index: 1; }
+.ficha-campo {
+  position: absolute; transform: translate(-50%, -50%); z-index: 1;
+  transition: left calc(0.55s / var(--vel)) ease, top calc(0.55s / var(--vel)) ease, transform 0.2s ease;
 }
-.zona-activa.local { box-shadow: inset 0 0 0 2px rgba(34, 197, 94, 0.55); }
-.zona-activa.visitante { box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.7); }
+.ficha-campo .carta.mini {
+  width: var(--carta-campo); padding: calc(var(--carta-campo) * 0.03); border-radius: calc(var(--carta-campo) * 0.12);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+}
+.ficha-campo.local .carta.mini { outline: 2px solid var(--acento); outline-offset: 1px; }
+.ficha-campo.visitante .carta.mini { outline: 2px solid #f1f5f9; outline-offset: 1px; }
+.ficha-campo .carta.mini .iniciales { font-size: calc(var(--carta-campo) * 0.3); }
+.ficha-campo .carta.mini .media { bottom: calc(var(--carta-campo) * 0.03); left: calc(var(--carta-campo) * 0.03); padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.05); border-radius: calc(var(--carta-campo) * 0.07); }
+.ficha-campo .carta.mini .media b { font-size: calc(var(--carta-campo) * 0.19); }
+.ficha-campo .carta.mini .media small { font-size: calc(var(--carta-campo) * 0.095); }
+.ficha-campo .carta.mini .capitan { width: calc(var(--carta-campo) * 0.2); height: calc(var(--carta-campo) * 0.2); font-size: calc(var(--carta-campo) * 0.13); bottom: calc(var(--carta-campo) * 0.03); right: calc(var(--carta-campo) * 0.03); }
+.ficha-campo .carta.mini .nombre { font-size: calc(var(--carta-campo) * 0.14); }
+.ficha-campo .carta.mini .info { padding: calc(var(--carta-campo) * 0.03) calc(var(--carta-campo) * 0.04) calc(var(--carta-campo) * 0.05); }
+.ficha-campo.activo { z-index: 2; transform: translate(-50%, -50%) scale(1.18); }
+.campo-partido .balon {
+  position: absolute; width: clamp(10px, calc(var(--carta-campo) * 0.32), 16px); aspect-ratio: 1; border-radius: 50%; background: #fff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35), 0 0 14px rgba(255, 255, 255, 0.8);
+  transform: translate(-50%, -50%); transition: left calc(0.4s / var(--vel)) ease-out, top calc(0.4s / var(--vel)) ease-out; z-index: 4;
+}
+.campo-partido .rotulo {
+  position: absolute; z-index: 5; transform: translate(-50%, calc(-100% - var(--carta-campo) * 0.9));
+  padding: 3px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none;
+  font-size: clamp(10px, calc(var(--carta-campo) * 0.26), 14px); font-weight: 800;
+  background: rgba(15, 23, 42, 0.88); color: #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  animation: rotulo calc(1.3s / var(--vel)) ease forwards;
+}
+.campo-partido .rotulo.tiro { background: #facc15; color: #1b1300; }
+.campo-partido .rotulo.robo { background: #dc2626; }
+@keyframes rotulo { 0% { opacity: 0; } 12% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ficha-campo, .campo-partido .balon { transition-duration: 0.01s; } }
 .flash-gol {
   position: absolute; inset: 0; display: grid; place-items: center; z-index: 3;
   font-family: var(--fuente-num); font-size: clamp(40px, 10vw, 84px); font-weight: 800; color: #fff;
@@ -434,7 +472,8 @@ body.en-lobby main { max-width: none; }
   .alineacion { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
   body:has(.alineacion) main { max-width: 1500px; }
   .campo { height: max(560px, calc(100dvh - 54px - 32px)); width: auto; max-width: none; }
-  .partido { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+  body:has(.partido) main { max-width: 1500px; }
+  .partido { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: start; }
   .partido .ancho { grid-column: 1 / -1; }
 }
 @media (max-width: 560px) {

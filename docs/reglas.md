@@ -170,6 +170,7 @@ El usuario coloca a sus 11 jugadores en cualquiera de estas 24 casillas (arrastr
 - **Remate**: con el pie, de cabeza o desde lejos. Probabilidad de gol = xG de la jugada × e^((rematador − portero)/30), entre 1 % y 70 %.
 - **Cansancio**: baja con los minutos según la estrategia defensiva y la Resistencia; en el descanso se recupera un poco.
 - **En vivo**: cambios tácticos y hasta 5 sustituciones; la energía de los que siguen se conserva.
+- **Vista en vivo** (js/ui/campo-partido.js, 2026-11-24): campo grande con las cartas de los dos equipos (tu alineación guardada contra el rival). Cada equipo se adelanta o recula según dónde está el balón; el protagonista de cada jugada se acerca al balón. Se dibujan pases (línea blanca), robos (roja) y remates (amarilla) con rótulos: Pase, Pase filtrado, Desborde, Centro, Pase atrás, ¡Robo!, ¡Contragolpe!, Remate, Cabezazo, Disparo lejano, ¡Parada!, Fuera. Horizontal en pantalla ancha; de pie en un celular vertical. Es solo visual: no cambia el resultado.
 - **Semilla**: el mismo partido con la misma semilla se repite idéntico (repeticiones, anti-trampas).
 
 ### Calibración y equilibrio

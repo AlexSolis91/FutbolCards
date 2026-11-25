@@ -1,25 +1,22 @@
-// Pantalla de partido: simulación en vivo con crónica, balón en el campo,
-// velocidad, cambios tácticos y sustituciones; o simular directo al final.
+// Pantalla de partido: simulación en vivo con crónica, las cartas de los dos
+// equipos moviéndose en el campo con el balón, velocidad, cambios tácticos y
+// sustituciones; o simular directo al final.
 
 import { h, vaciar, opcion } from './dom.js';
 import { iniciales } from './carta.js';
+import { crearCampoPartido } from './campo-partido.js';
 import { crearPartido, MOTOR } from '../motor/partido.js';
 import {
-  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ESPEJO_FRANJA, ORDEN_RAREZAS, PERSONALIZADA,
+  ORDEN_FORMACIONES, OFENSIVAS, ORDEN_OFENSIVAS, DEFENSIVAS, ORDEN_DEFENSIVAS, ORDEN_RAREZAS, PERSONALIZADA,
 } from '../motor/reglas.js';
 import { definicionEquipo, cambiarFormacion, valorEnPuesto, banquillo } from '../motor/alineacion.js';
 import { crearRivalPrueba } from '../datos/club-prueba.js';
 import { narrar } from './narracion.js';
 
-const ESPERA = { gol: 1900, parada: 900, fuera: 900, perdida: 650, avance: 650, contragolpe: 750, descanso: 1500, tactica: 600, cambio: 800, final: 0 };
-const ESPERA_SILENCIOSA = 220;
-
-// Coordenadas (%) del balón: el local ataca hacia la derecha.
-function posicionBalon(lado, franja, carril) {
-  const fx = { def: 17, med: 50, ata: 83 }[franja] ?? 50;
-  const cy = { izq: 17, cen: 50, der: 83 }[carril] ?? 50;
-  return lado === 0 ? { x: fx, y: cy } : { x: 100 - fx, y: 100 - cy };
-}
+// Espera tras cada evento (ms, a velocidad x1). Los remates necesitan más
+// tiempo: pase, remate y balón a la red o al portero.
+const ESPERA = { gol: 2900, parada: 1900, fuera: 1800, perdida: 900, avance: 900, contragolpe: 1000, recicla: 800, posesion: 700, descanso: 1800, tactica: 600, cambio: 800, final: 0 };
+const ESPERA_SILENCIOSA = 600;
 
 export function pantallaPartido(app, { club, ir }) {
   const rival = crearRivalPrueba(Date.now() % 1e9);
@@ -29,28 +26,27 @@ export function pantallaPartido(app, { club, ir }) {
   const visitante = definicionEquipo(rival.nombre, rival.cartas, rival.tactica);
   const partido = crearPartido({ local, visitante, semilla: Date.now() % 1e9 });
   const equipos = [club.nombre, rival.nombre];
-  const nombres = [new Map(club.cartas.map((c) => [c.uid, c.ficha.nombre])), new Map(rival.cartas.map((c) => [c.uid, c.ficha.nombre]))];
-  const nombre = (lado, id) => nombres[lado].get(id) ?? '—';
+  // Los eventos nombran a cada jugador por el id de su ficha.
+  const nombres = [club.cartas, rival.cartas].map((cartas) => new Map(cartas.map((c) => [c.ficha.id, c.ficha.nombre])));
+  const nombre = (lado, id) => partido.estado.eq[lado].jugadores.find((j) => j.id === id)?.nombre ?? nombres[lado].get(id) ?? '—';
 
   let cola = [];
   let temporizador = null;
   let enPausa = true;
   let velocidad = 1;
   let ultimoMinuto = 0;
-  let pelota = { lado: partido.estado.lado, franja: 'def', carril: 'cen' };
 
   // ---------------------------------------------------------- Estructura
   const golesEl = h('div', { class: 'goles' }, '0 – 0');
   const minutoEl = h('span', { class: 'minuto' }, "0'");
-  const balon = h('div', { class: 'balon', style: { left: '50%', top: '50%' } });
-  const zonaEl = h('div', { class: 'zona-activa' });
-  const campo = h('div', { class: 'campo-h' }, h('div', { class: 'medio-v' }), h('div', { class: 'circulo' }), zonaEl, balon);
+  const vista = crearCampoPartido();
+  const campo = vista.el;
   const cronica = h('ol', { class: 'cronica', 'aria-live': 'polite' });
   const statsEl = h('div', { class: 'estadisticas' });
   const botonPlay = h('button', { class: 'boton primario', onclick: () => (enPausa ? reanudar() : pausar()) }, '▶ Empezar');
   const botonesVel = [1, 2, 4].map((v) => h('button', {
     'aria-pressed': String(v === velocidad),
-    onclick: () => { velocidad = v; botonesVel.forEach((b, i) => b.setAttribute('aria-pressed', String([1, 2, 4][i] === v))); },
+    onclick: () => { velocidad = v; vista.velocidad(v); botonesVel.forEach((b, i) => b.setAttribute('aria-pressed', String([1, 2, 4][i] === v))); },
   }, `x${v}`));
   const botonSimular = h('button', { class: 'boton', onclick: simularFinal }, '⏩ Simular resultado');
   const botonTactica = h('button', { class: 'boton', onclick: abrirTactica }, '📋 Táctica');
@@ -64,54 +60,34 @@ export function pantallaPartido(app, { club, ir }) {
       h('div', { class: 'equipo' }, h('div', { class: 'escudo' }, iniciales(equipos[0])), h('span', {}, equipos[0])),
       h('div', {}, golesEl, minutoEl),
       h('div', { class: 'equipo visitante' }, h('div', { class: 'escudo rival' }, iniciales(equipos[1])), h('span', {}, equipos[1]))),
-    h('div', { style: { display: 'grid', gap: '12px' } },
+    h('div', { class: 'ancho zona-campo' },
       campo,
       h('div', { class: 'controles' }, botonPlay, h('div', { class: 'velocidad', role: 'group', 'aria-label': 'Velocidad' }, botonesVel),
         botonSimular, botonTactica, botonCambio),
-      pie,
-      h('div', { class: 'panel' }, h('h2', {}, 'Estadísticas'), statsEl)),
+      pie),
+    h('div', { class: 'panel' }, h('h2', {}, 'Estadísticas'), statsEl),
     h('div', { class: 'panel' }, h('h2', {}, 'Crónica'), cronica)));
 
+  vista.sincronizar(partido.estado.eq);
+  vista.saque(partido.estado.lado);
+  requestAnimationFrame(() => vista.ajustar());
   pintarStats();
 
   // ---------------------------------------------------------- Reproducción
-  function mover(lado, franja, carril) {
-    pelota = { lado, franja, carril };
-    const p = posicionBalon(lado, franja, carril);
-    balon.style.left = `${p.x}%`;
-    balon.style.top = `${p.y}%`;
-    zonaEl.style.left = `${Math.min(66.6, Math.max(0, p.x - 16.7))}%`;
-    zonaEl.style.top = `${Math.min(66.6, Math.max(0, p.y - 16.7))}%`;
-    zonaEl.className = `zona-activa ${lado === 0 ? 'local' : 'visitante'}`;
-  }
-
-  function aplicarPosicion(e) {
-    switch (e.tipo) {
-      case 'posesion': case 'avance': case 'recicla': mover(e.lado, e.franja, e.carril); break;
-      case 'perdida': mover(1 - e.lado, ESPEJO_FRANJA[e.franja], pelota.carril === 'izq' ? 'der' : pelota.carril === 'der' ? 'izq' : 'cen'); break;
-      case 'contragolpe': mover(e.lado, pelota.franja === 'def' ? 'med' : 'ata', pelota.carril); break;
-      case 'gol': case 'parada': case 'fuera': {
-        const x = e.lado === 0 ? 96 : 4;
-        balon.style.left = `${x}%`;
-        balon.style.top = '50%';
-        break;
-      }
-      case 'descanso': case 'final': balon.style.left = '50%'; balon.style.top = '50%'; break;
-      default:
-    }
-  }
-
   function mostrarEvento(e, rapido = false) {
     ultimoMinuto = e.minuto;
     minutoEl.textContent = `${e.minuto}'`;
-    aplicarPosicion(e);
+    if (e.tipo === 'tactica' || e.tipo === 'cambio') vista.sincronizar(partido.estado.eq);
+    vista.evento(e, rapido);
     if (e.tipo === 'gol') {
       golesEl.textContent = `${e.marcador[0]} – ${e.marcador[1]}`;
     }
     if (e.tipo === 'gol' && !rapido) {
       const flash = h('div', { class: 'flash-gol' }, '¡GOL!');
-      campo.append(flash);
-      setTimeout(() => flash.remove(), 1700);
+      setTimeout(() => {
+        campo.append(flash);
+        setTimeout(() => flash.remove(), 1700);
+      }, 900 / velocidad);
     }
     const texto = narrar(e, nombre, equipos);
     if (texto) {
@@ -133,7 +109,7 @@ export function pantallaPartido(app, { club, ir }) {
     if (!e) return terminar();
     const visible = mostrarEvento(e);
     if (e.tipo === 'final') return terminar();
-    const espera = (visible ? ESPERA[e.tipo] ?? 600 : ESPERA_SILENCIOSA) / velocidad;
+    const espera = (ESPERA[e.tipo] ?? (visible ? 800 : ESPERA_SILENCIOSA)) / velocidad;
     temporizador = setTimeout(siguiente, espera);
   }
 
@@ -157,6 +133,7 @@ export function pantallaPartido(app, { club, ir }) {
     cola = [];
     while (!partido.terminado) for (const e of partido.paso()) mostrarEvento(e, true);
     pintarStats();
+    vista.saque(0);
     terminar();
   }
 
@@ -253,5 +230,5 @@ export function pantallaPartido(app, { club, ir }) {
     }, 'Hacer cambio');
   }
 
-  return () => { pausar(); document.querySelectorAll('.modal-fondo').forEach((m) => m.remove()); };
+  return () => { pausar(); vista.destruir(); document.querySelectorAll('.modal-fondo').forEach((m) => m.remove()); };
 }
