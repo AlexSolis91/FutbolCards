@@ -1,22 +1,22 @@
-// Frank Rijkaard. Categoría Estrella: solo Épico y Legendario.
-// Atributos en Legendario (Épico resta 6). Leyenda de su puesto, sin Balón de Oro.
+// Frank Rijkaard. Categoría Figura: solo Raro y Épico (decisión del usuario,
+// 2026-11-25). Atributos en Épico (Raro resta 6).
 export default {
   id: 'frank-rijkaard',
   nombre: 'Frank Rijkaard',
   nacion: 'Países Bajos',
   escuela: 'Fútbol total',
-  categoria: 'estrella',
+  categoria: 'figura',
   roles: ['ancla', 'boxToBox', 'central'],
   pie: 'derecho',
   pieMalo: 4,
   estado: 'aprobada', // publicada directamente por indicación del usuario (2026-11-25)
   atributos: {
-    definicion: 76, cabeza: 86, tiroLejano: 80,
-    paseCorto: 88, paseLargo: 84, vision: 84, centros: 70,
-    regate: 78, control: 86,
-    entrada: 92, marcaje: 90, anticipacion: 94,
-    velocidad: 80, resistencia: 92, fuerza: 92, salto: 86,
-    posicionamiento: 92, compostura: 90,
+    definicion: 72, cabeza: 82, tiroLejano: 76,
+    paseCorto: 84, paseLargo: 80, vision: 80, centros: 66,
+    regate: 74, control: 82,
+    entrada: 88, marcaje: 86, anticipacion: 90,
+    velocidad: 76, resistencia: 88, fuerza: 88, salto: 82,
+    posicionamiento: 88, compostura: 86,
     reflejos: 10, colocacion: 10, juegoAereo: 12, juegoPie: 25,
   },
   bonificaciones: [

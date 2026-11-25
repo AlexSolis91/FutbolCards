@@ -8,7 +8,7 @@
 // Subir VERSION cuando cambie la lista de archivos base o cuando se reemplace
 // o renombre una foto existente (las imágenes se sirven desde la caché).
 
-const VERSION = 'fc-v3';
+const VERSION = 'fc-v4';
 const BASE = [
   './',
   './index.html',
