@@ -310,3 +310,35 @@ test('mover jugadores: casilla vacía, intercambio, banquillo y portería', asyn
   const rep = repararAlineacion(cartas, vieja);
   assert.deepEqual(rep.tactica.alineacion.map((a) => a.casilla), PLANTILLAS['4-4-2']);
 });
+
+test('coherencia del catálogo: rarezas, medias, carta y bonificaciones de nación', async () => {
+  const { JUGADORES } = await import('../js/datos/jugadores/index.js');
+  const { mediaEnRol } = await import('../js/motor/encaje.js');
+  const tope = (j) => {
+    const r = rarezasDe(j).at(-1);
+    const attrs = atributosDeRareza(j, r);
+    return { rareza: r, medias: j.roles.map((rol) => mediaEnRol(attrs, rol)) };
+  };
+  const legendarios = [];
+  const sinLegendario = [];
+  for (const j of JUGADORES) {
+    const t = tope(j);
+    const mejor = Math.max(...t.medias);
+    // La carta muestra la media del primer rol: tiene que ser el mejor.
+    assert.ok(t.medias[0] >= mejor - 0.5, `${j.id}: su primer rol no es el mejor`);
+    // Solo las Estrellas llegan a Legendario; Figura y Base nunca.
+    assert.equal(t.rareza === 'legendario', j.categoria === 'estrella', `${j.id}: categoría y rareza máxima no cuadran`);
+    (t.rareza === 'legendario' ? legendarios : sinLegendario).push({ id: j.id, mejor });
+  }
+  // El 96 es solo de la cúspide (Cristiano, Messi, Pelé y Maradona).
+  const cuspide = new Set(['cristiano-ronaldo', 'lionel-messi', 'pele', 'diego-maradona']);
+  for (const x of legendarios) {
+    assert.equal(Math.round(x.mejor) === 96, cuspide.has(x.id), `${x.id}: el 96 es solo de la cúspide (${x.mejor.toFixed(1)})`);
+  }
+  // Nadie sin Legendario tiene más media máxima que el peor Legendario.
+  const minLeg = Math.min(...legendarios.map((x) => x.mejor));
+  for (const x of sinLegendario) assert.ok(x.mejor < minLeg, `${x.id} (${x.mejor.toFixed(1)}) supera a un Legendario (${minLeg.toFixed(1)})`);
+  // Una sola bonificación por nación (si no, esa selección suma el doble).
+  const naciones = JUGADORES.flatMap((j) => j.bonificaciones.map((b) => b.condicion?.filtro?.nacion).filter(Boolean));
+  assert.equal(new Set(naciones).size, naciones.length, 'hay dos bonificaciones para la misma nación');
+});

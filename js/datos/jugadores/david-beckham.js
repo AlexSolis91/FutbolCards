@@ -1,23 +1,24 @@
-// David Beckham. Categoría Estrella con 3 rarezas: Raro, Épico y Legendario.
-// Atributos en Legendario (Épico resta 6, Raro resta 12).
+// David Beckham. Categoría Figura con 3 rarezas: Común, Raro y Épico.
+// Atributos en Épico (Raro resta 6, Común resta 12). Antes llegaba a
+// Legendario; bajó por coherencia con el resto (2026-11-25).
 export default {
   id: 'david-beckham',
   nombre: 'David Beckham',
   nacion: 'Inglaterra',
   escuela: 'Potencia',
-  categoria: 'estrella',
-  rarezas: ['raro', 'epico', 'legendario'],
+  categoria: 'figura',
+  rarezas: ['comun', 'raro', 'epico'],
   roles: ['regista', 'extremo', 'carrilero'],
   pie: 'derecho',
   pieMalo: 3,
-  estado: 'aprobada', // publicada directamente por indicación del usuario (2026-11-25)
+  estado: 'aprobada', // publicada 2026-11-25; Figura desde 2026-11-25
   atributos: {
-    definicion: 78, cabeza: 66, tiroLejano: 92,
-    paseCorto: 90, paseLargo: 96, vision: 90, centros: 99,
-    regate: 80, control: 88,
-    entrada: 70, marcaje: 64, anticipacion: 82,
-    velocidad: 80, resistencia: 94, fuerza: 74, salto: 66,
-    posicionamiento: 84, compostura: 90,
+    definicion: 76, cabeza: 64, tiroLejano: 90,
+    paseCorto: 88, paseLargo: 94, vision: 88, centros: 97,
+    regate: 78, control: 86,
+    entrada: 68, marcaje: 62, anticipacion: 80,
+    velocidad: 78, resistencia: 92, fuerza: 72, salto: 64,
+    posicionamiento: 82, compostura: 88,
     reflejos: 10, colocacion: 10, juegoAereo: 10, juegoPie: 25,
   },
   bonificaciones: [

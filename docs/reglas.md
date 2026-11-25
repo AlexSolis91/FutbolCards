@@ -31,6 +31,12 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 
 - **Excepción, 3 rarezas** (2026-11-24): algunos jugadores existen en 3 rarezas seguidas. Su ficha lo indica con `rarezas` (ej. Rafael Márquez: `['comun', 'raro', 'epico']`), que manda sobre la categoría. Atributos en la rareza alta; cada rareza por debajo resta 6 (Común = Épico − 12).
 - El usuario manda 2 fotos por jugador (3 si tiene 3 rarezas), en orden de rareza baja a alta.
+- **Coherencia del catálogo** (revisión del 2026-11-25, con prueba automática):
+  - **Estrella** = Balón de Oro o leyenda absoluta de su puesto; es la única categoría que llega a Legendario (90–96).
+  - **Figura** = gran jugador sin ese nivel; su techo es Épico (~88–89) y siempre queda por debajo del Legendario más bajo.
+  - La carta muestra la media de su primer puesto, así que el primer puesto de cada ficha es su mejor puesto.
+  - Una sola bonificación por nación: si no, esa selección suma el doble.
+  - Cambios de esa revisión: Kaká pasó de Figura a Estrella (Épico y Legendario, 93); Beckham pasó de Estrella a Figura (Común, Raro y Épico, 88); Ronaldinho muestra su mejor puesto (Mediapunta, 95); la segunda bonificación de Buffon dejó de ser por nación (Italia ya tenía Azzurri de Maldini).
 - Sobres (cuando existan): la rareza de cada carta sale con las probabilidades de la tabla y luego se elige un jugador que exista en esa rareza. Por eso un Legendario solo puede ser una Estrella.
 - Imágenes: el usuario pasa solo la foto. El juego dibuja el marco, el color, el nombre, la media y los datos.
 - Nombre de archivo = nombre del jugador + rareza (ej. `Messi Legendario.png`).
@@ -50,7 +56,7 @@ Documento vivo: toda regla aprobada se anota aquí antes o junto con el código.
 - Fotos: `python herramientas/optimizar_imagenes.py` convierte `assets/originales/jugadores/<Nombre> <Rareza>.<ext>` en `assets/jugadores/<nombre>-<rareza>.webp`. Solo reduce, **nunca recorta**.
 - La carta encuadra la foto anclada arriba: si sobra, se recorta de abajo o de los lados, nunca la cabeza.
 - Escuelas de juego (estilos, no países): Tiki-taka, Jogo bonito, Catenaccio, Fútbol total, Gegenpressing, Garra, Vértigo, Potencia.
-- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24), Gianluigi Buffon (2026-11-24), Ronaldinho (2026-11-24), Thierry Henry (2026-11-24), Kaká (2026-11-24, Figura), Edgar Davids (2026-11-24, Figura), Lothar Matthäus (2026-11-24), Rafael Márquez (2026-11-24, Figura con 3 rarezas: Común, Raro y Épico), Manuel Neuer (2026-11-24), Xavi Hernández (2026-11-24), Toni Kroos (2026-11-24), Luka Modrić (2026-11-25), Andrea Pirlo (2026-11-25), Roberto Carlos (2026-11-25, Estrella con 3 rarezas: Raro, Épico y Legendario), Ronaldo Nazário (2026-11-25), Sergio Ramos (2026-11-25, Estrella con 3 rarezas: Raro, Épico y Legendario), Dani Alves (2026-11-25, igual), David Beckham (2026-11-25, igual).
+- Aprobados: Cristiano Ronaldo (2026-11-23), Lionel Messi (2026-11-23), Pelé (2026-11-23), Diego Maradona (2026-11-24), Zinedine Zidane (2026-11-24), Paolo Maldini (2026-11-24), Gianluigi Buffon (2026-11-24), Ronaldinho (2026-11-24), Thierry Henry (2026-11-24), Kaká (2026-11-24; Estrella desde 2026-11-25), Edgar Davids (2026-11-24, Figura), Lothar Matthäus (2026-11-24), Rafael Márquez (2026-11-24, Figura con 3 rarezas: Común, Raro y Épico), Manuel Neuer (2026-11-24), Xavi Hernández (2026-11-24), Toni Kroos (2026-11-24), Luka Modrić (2026-11-25), Andrea Pirlo (2026-11-25), Roberto Carlos (2026-11-25, Estrella con 3 rarezas: Raro, Épico y Legendario), Ronaldo Nazário (2026-11-25), Sergio Ramos (2026-11-25, Estrella con 3 rarezas: Raro, Épico y Legendario), Dani Alves (2026-11-25, igual), David Beckham (2026-11-25, Figura con 3 rarezas: Común, Raro y Épico).
 - Desde 2026-11-24 el usuario no revisa las fichas: cada jugador nuevo se publica directamente como `'aprobada'`.
 
 ### Mejora por copias

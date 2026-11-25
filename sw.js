@@ -5,9 +5,10 @@
 //   caché HTTP (GitHub Pages guarda 10 min) para no mezclar archivos viejos y nuevos.
 // - Imágenes y fuentes: primero la copia guardada (cargan al instante).
 // - Música: siempre de la red (los mp3 se piden por partes y no conviene guardarlos).
-// Subir VERSION cuando cambie la lista de archivos base.
+// Subir VERSION cuando cambie la lista de archivos base o cuando se reemplace
+// o renombre una foto existente (las imágenes se sirven desde la caché).
 
-const VERSION = 'fc-v2';
+const VERSION = 'fc-v3';
 const BASE = [
   './',
   './index.html',
@@ -45,10 +46,12 @@ async function primeroRed(peticion) {
 }
 
 async function primeroCache(peticion) {
+  const url = new URL(peticion.url);
   const cache = await caches.open(VERSION);
   const guardada = await cache.match(peticion);
   if (guardada) return guardada;
-  const resp = await fetch(peticion);
+  // Al bajarla por primera vez, sin usar la caché HTTP (podría ser una foto vieja).
+  const resp = await fetch(peticion, url.origin === self.location.origin ? { cache: 'no-cache' } : undefined);
   if (resp.ok || resp.type === 'opaque') cache.put(peticion, resp.clone());
   return resp;
 }

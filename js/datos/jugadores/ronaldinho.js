@@ -6,14 +6,14 @@ export default {
   nacion: 'Brasil',
   escuela: 'Jogo bonito',
   categoria: 'estrella',
-  roles: ['extremo', 'mediapunta', 'interior', 'segundoDelantero'],
+  roles: ['mediapunta', 'extremo', 'interior', 'segundoDelantero'],
   pie: 'derecho',
   pieMalo: 4,
   estado: 'aprobada', // publicada directamente por indicación del usuario (2026-11-24)
   atributos: {
     definicion: 88, cabeza: 66, tiroLejano: 90,
-    paseCorto: 93, paseLargo: 88, vision: 96, centros: 90,
-    regate: 99, control: 98,
+    paseCorto: 93, paseLargo: 88, vision: 95, centros: 90,
+    regate: 98, control: 98,
     entrada: 35, marcaje: 30, anticipacion: 65,
     velocidad: 90, resistencia: 80, fuerza: 80, salto: 72,
     posicionamiento: 88, compostura: 94,

@@ -27,10 +27,12 @@ export default {
       efecto: { tipo: 'atributos', objetivo: { tipo: 'propio' }, atributos: { reflejos: 3, colocacion: 2 } },
     },
     {
+      // Antes era por nación (Italia), igual que Azzurri de Maldini: los
+      // italianos sumaban dos bonificaciones de nación. Cambiada 2026-11-25.
       nombre: 'Berlín 2006',
-      descripcion: 'Con al menos 2 compañeros italianos: todos los italianos ganan +2 Anticipación, +2 Compostura y +1 Posicionamiento.',
-      condicion: { tipo: 'companeros', filtro: { nacion: 'Italia' }, minimo: 2 },
-      efecto: { tipo: 'atributos', objetivo: { tipo: 'filtro', filtro: { nacion: 'Italia' } }, atributos: { anticipacion: 2, compostura: 2, posicionamiento: 1 } },
+      descripcion: 'Con al menos 4 defensas compañeros: todos los defensas ganan +2 Anticipación y +2 Compostura.',
+      condicion: { tipo: 'companeros', filtro: { linea: 'DEF' }, minimo: 4 },
+      efecto: { tipo: 'atributos', objetivo: { tipo: 'filtro', filtro: { linea: 'DEF' } }, atributos: { anticipacion: 2, compostura: 2 } },
     },
   ],
   capitan: {
