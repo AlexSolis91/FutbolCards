@@ -1,22 +1,23 @@
-// Fabio Cannavaro. Categoría Estrella: solo Épico y Legendario (Balón de Oro 2006).
-// Atributos en Legendario (Épico resta 6). Entre Ramos (92) y Maldini (94).
+// Fabio Cannavaro. Categoría Figura: solo Raro y Épico (decisión del usuario,
+// 2026-11-25, pese al Balón de Oro 2006). Atributos en Épico (Raro resta 6).
+// A la par de Nesta (89), por debajo de Ramos (92) y Maldini (94).
 export default {
   id: 'fabio-cannavaro',
   nombre: 'Fabio Cannavaro',
   nacion: 'Italia',
   escuela: 'Catenaccio',
-  categoria: 'estrella',
+  categoria: 'figura',
   roles: ['central', 'libero'],
   pie: 'derecho',
   pieMalo: 3,
   estado: 'aprobada', // publicada directamente por indicación del usuario (2026-11-25)
   atributos: {
-    definicion: 52, cabeza: 88, tiroLejano: 58,
-    paseCorto: 82, paseLargo: 78, vision: 74, centros: 62,
-    regate: 72, control: 80,
-    entrada: 95, marcaje: 94, anticipacion: 95,
-    velocidad: 86, resistencia: 86, fuerza: 86, salto: 92,
-    posicionamiento: 92, compostura: 90,
+    definicion: 48, cabeza: 84, tiroLejano: 54,
+    paseCorto: 78, paseLargo: 74, vision: 70, centros: 58,
+    regate: 68, control: 76,
+    entrada: 91, marcaje: 90, anticipacion: 91,
+    velocidad: 82, resistencia: 82, fuerza: 82, salto: 88,
+    posicionamiento: 88, compostura: 86,
     reflejos: 10, colocacion: 10, juegoAereo: 12, juegoPie: 25,
   },
   bonificaciones: [
