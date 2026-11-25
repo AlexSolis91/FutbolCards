@@ -14,6 +14,7 @@ import edgarDavids from './edgar-davids.js';
 import lotharMatthaus from './lothar-matthaus.js';
 import rafaelMarquez from './rafael-marquez.js';
 import manuelNeuer from './manuel-neuer.js';
+import xaviHernandez from './xavi-hernandez.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez, manuelNeuer];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez, manuelNeuer, xaviHernandez];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
