@@ -35,6 +35,7 @@ import andriyShevchenko from './andriy-shevchenko.js';
 import angelDiMaria from './angel-di-maria.js';
 import michelPlatini from './michel-platini.js';
 import cafu from './cafu.js';
+import guillermoFranco from './guillermo-franco.js';
 
-export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez, manuelNeuer, xaviHernandez, toniKroos, lukaModric, andreaPirlo, robertoCarlos, ronaldoNazario, sergioRamos, daniAlves, davidBeckham, frankRijkaard, ruudGullit, alessandroNesta, francescoTotti, fabioCannavaro, neymarJr, andresIniesta, luisFigo, andriyShevchenko, angelDiMaria, michelPlatini, cafu];
+export const JUGADORES = [cristianoRonaldo, lionelMessi, pele, diegoMaradona, zinedineZidane, paoloMaldini, gianluigiBuffon, ronaldinho, thierryHenry, kaka, edgarDavids, lotharMatthaus, rafaelMarquez, manuelNeuer, xaviHernandez, toniKroos, lukaModric, andreaPirlo, robertoCarlos, ronaldoNazario, sergioRamos, daniAlves, davidBeckham, frankRijkaard, ruudGullit, alessandroNesta, francescoTotti, fabioCannavaro, neymarJr, andresIniesta, luisFigo, andriyShevchenko, angelDiMaria, michelPlatini, cafu, guillermoFranco];
 export const APROBADOS = JUGADORES.filter((j) => j.estado === 'aprobada');
